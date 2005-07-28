@@ -36,12 +36,12 @@
 
 <SPAN CLASS='keyword'>class</SPAN> my_device { <SPAN CLASS='comment'>/* */</SPAN> };
 
-<SPAN CLASS='keyword'>typedef</SPAN> io::stream&lt;my_device&gt;     my_stream;
+<SPAN CLASS='keyword'>typedef</SPAN> io::stream&lt;my_device&gt;         my_stream;
 <SPAN CLASS='keyword'>typedef</SPAN> io::stream_buffer&lt;my_device&gt;  my_streambuf;</PRE>
 
 <P>Here <CODE>io::stream&lt;my_device&gt;</CODE> is a derived class of <CODE>std::basic_streambuf</CODE>, and <CODE>io::stream&lt;my_device&gt;</CODE> is a derived class of <CODE>std::basic_istream</CODE>, <CODE>std::basic_ostream</CODE> or <CODE>std::basic_iostream</CODE> depending on the <A HREF="../guide/modes.html">mode</A> of my_device, <I>i.e.</I>, depending on which of the fundamental i/o operations <A HREF="../functions/read.html"><CODE>read</CODE></A>, <A HREF="../functions/write.html"><CODE>write</CODE></A> and <A HREF="../functions/seek.html"><CODE>seek</CODE></A> it supports.
 
-<P>The template <CODE>io::stream</CODE> is provided as a convenience. It's always possibly to avoid <CODE>io::stream&lt;my_device&gt;</CODE> and simply use <CODE>io::stream</CODE> together with one of the standard library stream templates. <I>E.g.</I>, 
+<P>The template <CODE>io::stream</CODE> is provided as a convenience. It's always possibly to avoid <CODE>io::stream&lt;my_device&gt;</CODE> and simply use <CODE>io::stream_buffer</CODE> together with one of the standard library stream templates. <I>E.g.</I>, 
 
 <PRE CLASS="broken_ie"><SPAN CLASS='preprocessor'>#include</SPAN> <SPAN CLASS='literal'>&lt;ostream&gt;</SPAN>
 <SPAN CLASS='preprocessor'>#include</SPAN> <A CLASS="HEADER" HREF="../../../../boost/iostreams/device/file.hpp"><SPAN CLASS='literal'>&lt;boost/iostreams/device/file.hpp&gt;</SPAN></A>
@@ -51,14 +51,12 @@
 
 <SPAN CLASS='keyword'>int</SPAN> main()
 {
-    io::stream&lt;file_sink&gt; buf(<SPAN CLASS='literal'>"log.txt"</SPAN>);
-    std::ostream out(&buf);
+    io::stream_buffer&lt;file_sink&gt; buf(<SPAN CLASS='literal'>"log.txt"</SPAN>);
+    std::ostream                 out(&buf);
     <SPAN CLASS='comment'>// out writes to log.txt</SPAN>
-}
-<SPAN CLASS='keyword'>typedef</SPAN> io::stream&lt;my_device&gt;     my_stream;
-<SPAN CLASS='keyword'>typedef</SPAN> io::stream_buffer&lt;my_device&gt;  my_streambuf;</PRE>
+}</PRE>
 
-<P>In this example, the <CODE>ostream</CODE> <CODE>out</CODE> uses the stream buffer <CODE>buf</CODE> as its underlying data sink, so that data written to <CODE>out</CODE> goes to the file <I>log.txt</I>. The same effect could be achieved by default constructing <CODE>out</CODE> and telling it to use stream buffer <CODE>buf</CODE> by invoking <CODE>out.rdbuf(&amp;buf)</CODE>.
+<P>In this example, the <CODE>ostream</CODE> <CODE>out</CODE> uses the <CODE>stream_buffer</CODE> <CODE>buf</CODE> as its underlying data sink, so that data written to <CODE>out</CODE> goes to the file <I>log.txt</I>. The same effect could be achieved by default constructing <CODE>out</CODE> and telling it to use stream buffer <CODE>buf</CODE> by invoking <CODE>out.rdbuf(&amp;buf)</CODE>.
 
 <P>Another way to define a new stream or stream buffer class using the Boost Iostreams library is to derive from <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A> or <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A>. 
 <P>The next three items will demonstrate how to write Devices for accessing STL-compatible containers. The source code for the examples can be found in the header <A HREF="../../example/container_device.hpp">&lt;<CODE>libs/iostreams/example/container_device.hpp</CODE>&gt;</A></P>
