@@ -286,7 +286,7 @@
 
         <SPAN CLASS="omitted">...</SPAN>
 
-    template&lt;<SPAN CLASS="keyword">typename</SPAN> U1, <SPAN CLASS="omitted">...</SPAN>, <SPAN CLASS="keyword">typename</SPAN> UN&gt;
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> U1, <SPAN CLASS="omitted">...</SPAN>, <SPAN CLASS="keyword">typename</SPAN> UN&gt;
     <A CLASS="documented" HREF="#stream_forwarding_constructors">stream</A>([<SPAN CLASS="keyword">const</SPAN>] U1& u1, <SPAN CLASS="keyword">const</SPAN> U2& u2, <SPAN CLASS="omitted">...</SPAN>, <SPAN CLASS="keyword">const</SPAN> UN& uN);
 
     <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_open">open</A>( <SPAN CLASS="keyword">const</SPAN> T& t,
@@ -296,15 +296,15 @@
         <SPAN CLASS="comment">// Forwarding overloads of open()</SPAN>
 
     <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> U&gt;
-    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_forwarding_open">open</A>(<SPAN CLASS="keyword">const</SPAN> U& u);
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_forwarding_open">open</A>([<SPAN CLASS="keyword">const</SPAN>] U& u);
 
     <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> U1, <SPAN CLASS="keyword">typename</SPAN> U2&gt;
-    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_forwarding_open">open</A>(<SPAN CLASS="keyword">const</SPAN> U1& u1, <SPAN CLASS="keyword">const</SPAN> U2& u2);
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_forwarding_open">open</A>([<SPAN CLASS="keyword">const</SPAN>] U1& u1, <SPAN CLASS="keyword">const</SPAN> U2& u2);
     
         <SPAN CLASS="omitted">...</SPAN>
 
     <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> U1, <SPAN CLASS="omitted">...</SPAN>, <SPAN CLASS="keyword">typename</SPAN> UN&gt;
-    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_forwarding_open">open</A>(<SPAN CLASS="keyword">const</SPAN> U1& u1, <SPAN CLASS="omitted">...</SPAN>, <SPAN CLASS="keyword">const</SPAN> UN& uN);
+    <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_forwarding_open">open</A>([<SPAN CLASS="keyword">const</SPAN>] U1& u1, <SPAN CLASS="keyword">const</SPAN> U2& u2, <SPAN CLASS="omitted">...</SPAN>, <SPAN CLASS="keyword">const</SPAN> UN& uN);
 
     <SPAN CLASS="keyword">bool</SPAN> <A CLASS="documented" HREF="#stream_is_open">is_open</A>() <SPAN CLASS="keyword">const</SPAN>;
     <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_close">close</A>();
