@@ -23,7 +23,7 @@
 <A NAME="description">
 <H2>Description</H2>
 
-<P>The function template <CODE>copy</CODE> reads data from a given model of <A HREF="../concepts/source.html">Source</A> and writes it to a given model of <A HREF="../concepts/sink.html">Sink</A> until the end of stream is reached. It returns the number of characters written.</P>
+<P>The function template <CODE>copy</CODE> reads data from a given model of <A HREF="../concepts/source.html">Source</A> and writes it to a given model of <A HREF="../concepts/sink.html">Sink</A> until the end of stream is reached. It then closes both components, using the function template <A HREF="close.html"><CODE>close</CODE></A>, and returns the number of characters written.</P>
 
 <P>The size of the temporary buffer used may be supplied as an optional parameter.</P>
 
