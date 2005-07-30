@@ -124,6 +124,11 @@
 
     <SPAN CLASS="keyword">bool</SPAN> <A CLASS="documented" HREF="#stream_buffer_is_open">is_open</A>() <SPAN CLASS="keyword">const</SPAN>;
     <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_buffer_close">close</A>();
+
+        <SPAN CLASS="comment">// Device access</SPAN>
+    
+    T& <A CLASS='documented' HREF="#stream_buffer_operator_star"><SPAN CLASS="documented">operator</SPAN>*</A>();
+    T* <A CLASS='documented' HREF="#stream_buffer_operator_arrow"><SPAN CLASS="documented">operator-&gt;</SPAN></A>();
 };
 
 } } <SPAN CLASS="comment">// namespace boost::io</SPAN></PRE>
@@ -249,6 +254,22 @@
     Disassociates from <CODE>this</CODE> instance of <CODE>stream_buffer</CODE> any instance of the Device <CODE>T</CODE> currently associated with it, calling cleanup functions as appropriate and destroying the associated instance of <CODE>T</CODE>.
 </P>
 
+<A NAME="stream_buffer_operator_star"></A>
+<H4><CODE>stream_buffer::operator*</CODE></H4>
+<PRE>    T& <B>operator*</B>();</PRE>
+    
+<P>
+    Returns a reference to the instance of <CODE>T</CODE> associated with this <CODE>stream_buffer</CODE>, which must be <A HREF="#stream_buffer_is_open"><CODE>open</CODE></A>.
+</P>
+
+<A NAME="stream_buffer_operator_arrow"></A>
+<H4><CODE>stream_buffer::operator-&gt;</CODE></H4>
+<PRE>    T* <B>operator-&gt;</B>();</PRE>
+    
+<P>
+    Returns a pointer to the instance of <CODE>T</CODE> associated with this <CODE>stream_buffer</CODE>, which must be <A HREF="#stream_buffer_is_open"><CODE>open</CODE></A>.
+</P>
+
 <A NAME="stream"></A>
 <H3>Class template <CODE>stream</CODE></H3>
 
@@ -308,6 +329,11 @@
 
     <SPAN CLASS="keyword">bool</SPAN> <A CLASS="documented" HREF="#stream_is_open">is_open</A>() <SPAN CLASS="keyword">const</SPAN>;
     <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#stream_close">close</A>();
+
+        <SPAN CLASS="comment">// Device access</SPAN>
+    
+    T& <A CLASS='documented' HREF="#stream_operator_star"><SPAN CLASS="documented">operator</SPAN>*</A>();
+    T* <A CLASS='documented' HREF="#stream_operator_arrow"><SPAN CLASS="documented">operator-&gt;</SPAN></A>();
 };
 
 } } <SPAN CLASS="comment">// namespace boost::io</SPAN></PRE>
@@ -431,6 +457,22 @@
     
 <P>
     Disassociates from <CODE>this</CODE> instance of <CODE>stream</CODE> any instance of the Device <CODE>T</CODE> currently associated with it, calling cleanup functions as appropriate and destroying the associated instance of <CODE>T</CODE>.
+</P>
+
+<A NAME="stream_operator_star"></A>
+<H4><CODE>stream::operator*</CODE></H4>
+<PRE>    T& <B>operator*</B>();</PRE>
+    
+<P>
+    Returns a reference to the instance of <CODE>T</CODE> associated with this <CODE>stream</CODE>, which must be <A HREF="#stream_is_open"><CODE>open</CODE></A>.
+</P>
+
+<A NAME="stream_operator_arrow"></A>
+<H4><CODE>stream::operator-&gt;</CODE></H4>
+<PRE>    T* <B>operator-&gt;</B>();</PRE>
+    
+<P>
+    Returns a pointer to the instance of <CODE>T</CODE> associated with this <CODE>stream</CODE>, which must be <A HREF="#stream_is_open"><CODE>open</CODE></A>.
 </P>
 
 <A NAME="examples">
