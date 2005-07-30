@@ -100,7 +100,7 @@
     <TR><TD><CODE>s1</CODE></TD><TD>- Object of type <CODE>Ch*</CODE></TD></TR>
     <TR><TD><CODE>s2</CODE></TD><TD>- Object of type <CODE>const Ch*</CODE></TD></TR>
     <TR><TD><CODE>n</CODE></TD><TD>- Object of type <CODE>std::streamsize</CODE></TD></TR>
-    <TR><TD><CODE>off</CODE></TD><TD>- Object of type <CODE>std::streamoff</CODE></TD></TR>
+    <TR><TD><CODE>off</CODE></TD><TD>- Object of type <A HREF="../functions/positioning.html#synopsis"><CODE>stream_offset</CODE></A></TD></TR>
     <TR><TD><CODE>way</CODE></TD><TD>- Object of type <CODE>std::ios_base::seekdir</CODE></TD></TR>
     <TR><TD><CODE>which</CODE></TD><TD>- Object of type <CODE>std::ios_base::openmode</CODE></TD></TR>
     <TR><TD><CODE>io</CODE></TD><TD>- Alias for namespace <CODE>boost::iostreams</CODE></TD></TR>
@@ -180,7 +180,7 @@
     <TR><TH>Expression</TH><TH>Expression Type</TH><TH>Category Precondition</TH><TH>Semantics</TH></TR>
     <TR>
         <TD><PRE CLASS="plain_code"><CODE>f.seek(d, off, way)</CODE></PRE></TD>
-        <TD><CODE>std::streamoff</CODE></TD>
+        <TD><CODE>std::streampos</CODE></TD>
         <TD>
             Convertible to <A HREF="../guide/modes.html#mode_tags"><CODE>seekable</CODE></A> but not to <A HREF="../guide/traits.html#category_tags"><CODE>direct_tag</CODE></A>
         </TD>
@@ -200,7 +200,7 @@
     </TR>
     <TR>
         <TD><PRE CLASS="plain_code"><CODE>f.seek(d, off, way, which)</CODE></PRE></TD>
-        <TD><CODE>std::streamoff</CODE></TD>
+        <TD><CODE>std::streampos</CODE></TD>
         <TD>
             Convertible to <A HREF="../guide/modes.html#mode_tags"><CODE>dual_seekable</CODE></A> or <A HREF="../guide/modes.html#mode_tags"><CODE>bidirectional_seekable</CODE></A> but not to <A HREF="../guide/traits.html#category_tags"><CODE>direct_tag</CODE></A>
         </TD>
