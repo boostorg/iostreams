@@ -64,7 +64,7 @@
 <H2>Streams and Stream Buffers</H2>
 
 <P>
-    Although the Boost.Iostreams Filter and Device concepts can accommodate non-blocking i/o, the C++ standard library stream and stream buffer interfaces cannot. As a result, non-blocking Devices do not work properly with the templates <A HREF="generic_streams.html#stream"><CODE>stream</CODE></A>, <A HREF="generic_streams.html#stream_buffer"><CODE>stream_buffer</CODE></A>, <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A> and <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A>.  
+    Although the Boost.Iostreams Filter and Device concepts can accommodate non-blocking i/o, the C++ standard library stream and stream buffer interfaces cannot, since they lack a means to distinguish between temporary and permanent failures to satisfy a read or write request. As a result, non-blocking Devices do not work properly with the templates <A HREF="generic_streams.html#stream"><CODE>stream</CODE></A>, <A HREF="generic_streams.html#stream_buffer"><CODE>stream_buffer</CODE></A>, <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A> and <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A>.  
 </P>
 
 <!-- Begin Footer -->

@@ -23,7 +23,7 @@
 <H2>Description</H2>
 
 <P>
-    A Sink provides write-access to a sequence of characters of a given type. A Sink may expose this sequence in three ways: 
+    A Sink provides write-access to a sequence of characters of a given type. A Sink may expose this sequence in two ways: 
     <OL>
         <LI STYLE="list-style-type:lower-roman">
             by defining a member function <CODE>write</CODE>, invoked indirectly by the Iostreams library through the function <A HREF="../functions/write.html"><CODE>boost::iostreams::write</CODE></A>;
@@ -38,7 +38,7 @@
 
 <H2>Note</H2>
 
-<P>To be usable with the streams and stream buffers provided by the Boost Iostreams library, Sinks should model <A HREF="blocking.html">Blocking</A>.
+<P>To be usable with the streams and stream buffers provided by the Boost Iostreams library, Sinks must model <A HREF="blocking.html">Blocking</A>.
 
 <H2>Example</H2>
 
