@@ -56,7 +56,7 @@
 <H2>Filters</H2>
 
 <P>
-    Filters are allowed to propagate temporary failure notifications: if a downstream Device consumes or produces fewer characters than requested by a Filter, and if as a result the Filter is not able to statisfy a read or write request, the Filter may return a value indicating that input or output is temporarily unavailable. It is hoped that this ability will suffice to allow the current Filter concepts to be used with both aynchronous and non-blocking i/o. However, in order to be useful with blocking i/o as well, a Filter must never return a temporary failure notification unless it has received a such notification from a downstream Device. This requirement is summarized by stating that Filters must be <SPAN CLASS='term'>blocking-preserving</SPAN>. <I>See</I> <A HREF="../concepts/blocking.html">Blocking</A>.
+    Filters are allowed to propagate temporary failure notifications: if a downstream Device consumes or produces fewer characters than requested by a Filter, and if as a result the Filter is not able to satisfy a read or write request, the Filter may return a value indicating that input or output is temporarily unavailable. It is hoped that this ability will suffice to allow the current Filter concepts to be used with both aynchronous and non-blocking i/o. However, in order to be useful with blocking i/o as well, a Filter must never return a temporary failure notification unless it has received a such notification from a downstream Device. This requirement is summarized by stating that Filters must be <SPAN CLASS='term'>blocking-preserving</SPAN>. <I>See</I> <A HREF="../concepts/blocking.html">Blocking</A>.
 </P>
 
 <!-- Begin Footer -->

@@ -15,15 +15,50 @@
 <!-- End Banner -->
 
 <DL class="page-index" style="margin-top:1em">
-  <DT><A href="#flush">Why is data I've written to a <CODE>filtering_stream</CODE> not reaching the Sink at the end of the chain?</A></DT>
-  <DT><A href="#lifetime">Why does my filter chain work with <CODE>std::cout</CODE> but not with another <CODE>ostream</CODE>?</A></DT>
   <DT><A href="#tee">How do I write to several ostreams at once?</A></DT>
   <DT><A href="#multibyte">How do I write a stream which can read or write multibyte character encodings?</A></DT>
+  <DT><A href="#component_access">How do I access a Filter or Device after I've added it to a chain or attached it to a <CODE>stream</CODE> or <CODE>stream_buffer?</CODE></A></DT>
+  <DT><A href="#auto_close">Can I swap Filters or Devices in the midle of a sequence of i/o operations?</CODE></A></DT>
+  <DT><A href="#flush">Why is data I've written to a <CODE>filtering_stream</CODE> not reaching the Sink at the end of the chain?</A></DT>
+  <DT><A href="#lifetime">Why does my filter chain work with <CODE>std::cout</CODE> but not with another <CODE>ostream</CODE>?</A></DT>
   <DT><A href="#pipe">Why do I get errors stating that <CODE>operator|</CODE> is ambiguous?</A></DT>
   <DT><A href="#finite_state">Why do I get errors when compiling the <CODE>finite_state_filter</CODE> examples?</A></DT>
 </DL>
 
 <HR style="margin-top:1em">
+
+<A NAME="tee"></A>
+<H4>How do I write to several ostreams at once?</H4>
+
+<P>
+     Use a <A HREF="functions/tee.html#tee_filter"><CODE>tee_filter</CODE></A> or <A HREF="functions/tee.html#tee_device"><CODE>tee_device</CODE></A>. <I>See</I> <A HREF="functions/tee.html"><CODE>tee</CODE></A>.
+</P>
+
+<A NAME="multibyte"></A>
+<H4>How do I write a stream which can read or write multibyte character encodings?</H4>
+
+<P>
+     Use a <A HREF="classes/code_converter.html"><CODE>code_converter</CODE></A>. <I>See</I> <A HREF="guide/code_conversion.html"><CODE>Code Conversion</CODE></A>.
+</P>
+
+<A NAME="component_access"></A>
+<H4>How do I access a Filter or Device after I've added it to a chain or attached it to a <CODE>stream</CODE> or <CODE>stream_buffer?</CODE></H4>
+
+<P>
+     If you're using a <A HREF="guide/generic_streams.html#stream"><CODE>stream</CODE></A> or <A HREF="guide/generic_streams.html#stream_buffer"><CODE>stream_buffer</CODE></A>, use <CODE>operator*</CODE> or <CODE>operator-&gt;</CODE>. 
+</P>
+
+<P>
+     If you're using a <A HREF="classes/filtering_stream.html"><CODE>filtering_stream</CODE></A>, <A HREF="classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A> or <A HREF="classes/chain.html"><CODE>chain</CODE></A>, use the member function templates <A HREF="classes/chain.html#component_type"><CODE>component_type</CODE></A> and <A HREF="classes/chain.html#component"><CODE>component</CODE></A>. Alternatively, add your Filter or Device to the chain by reference, using a  <A HREF="../../../doc/html/ref.html" TARGET="_top">reference wrapper</A>.
+</P>
+
+<A NAME="auto_close"></A>
+<H4>Can I swap Filters or Devices in the midle of a sequence of i/o operations?</H4>
+
+<P>
+     If you're performing output, and if all the Filters in you chain are <A HREF="concepts/flushable.html">Flushable</A>, then yes. First call <A HREF="classes/chain.html#strict_sync">strict_sync</A>. If it returns <CODE>true</CODE>, you can safely call <CODE><A HREF="classes/chain.html#set_auto_close">set_auto_close</A>(false)</CODE> and <A HREF="classes/chain.html#pop"><CODE>pop</CODE></A> one or more components without closing the stream. This applies to instances of <A HREF="classes/filtering_stream.html"><CODE>filtering_stream</CODE></A>, <A HREF="classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A> and <A HREF="classes/chain.html"><CODE>chain</CODE></A>.
+</P>
+
 
 <A NAME="flush"></A>
 <H4>Why is data I've written to a <CODE>filtering_stream</CODE> not reaching the Sink at the end of the chain?</H4>
@@ -44,20 +79,6 @@
 
 <P>
      Check to make sure that the <CODE>ostream</CODE> is not being destroyed before the <CODE>filtering_stream</CODE>. If both objects are constructed on the stack within the same block, make sure that the <CODE>ostream</CODE> is constructed <I>first</I>.
-</P>
-
-<A NAME="tee"></A>
-<H4>How do I write to several ostreams at once?</H4>
-
-<P>
-     Use a <A HREF="functions/tee.html#tee_filter"><CODE>tee_filter</CODE></A> or <A HREF="functions/tee.html#tee_device"><CODE>tee_device</CODE></A>. <I>See</I> <A HREF="functions/tee.html"><CODE>tee</CODE></A>.
-</P>
-
-<A NAME="multibyte"></A>
-<H4>How do I write a stream which can read or write multibyte character encodings?</H4>
-
-<P>
-     Use a <A HREF="classes/code_converter.html"><CODE>code_converter</CODE></A>. <I>See</I> <A HREF="guide/code_conversion.html"><CODE>Code Conversion</CODE></A>.
 </P>
 
 <A NAME="pipe"></A>
