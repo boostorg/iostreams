@@ -31,6 +31,7 @@
   <DT><A href="#overview">Overview</A></DT>
   <DT><A href="#devices">Devices</A></DT>
   <DT><A href="#filters">Filters</A></DT>
+  <DT><A href="#streams">Streams and Stream Buffers</A></DT>
 </DL>
 
 <HR STYLE="margin-top:1em">
@@ -57,6 +58,13 @@
 
 <P>
     Filters are allowed to propagate temporary failure notifications: if a downstream Device consumes or produces fewer characters than requested by a Filter, and if as a result the Filter is not able to satisfy a read or write request, the Filter may return a value indicating that input or output is temporarily unavailable. It is hoped that this ability will suffice to allow the current Filter concepts to be used with both aynchronous and non-blocking i/o. However, in order to be useful with blocking i/o as well, a Filter must never return a temporary failure notification unless it has received a such notification from a downstream Device. This requirement is summarized by stating that Filters must be <SPAN CLASS='term'>blocking-preserving</SPAN>. <I>See</I> <A HREF="../concepts/blocking.html">Blocking</A>.
+</P>
+
+<A NAME="streams"></A>
+<H2>Streams and Stream Buffers</H2>
+
+<P>
+    Although the Boost.Iostreams Filter and Device concepts can accommodate non-blocking i/o, the C++ standard library stream and stream buffer interfaces cannot. As a result, non-blocking Devices do not work properly with the templates <A HREF="generic_streams.html#stream"><CODE>stream</CODE></A>, <A HREF="generic_streams.html#stream_buffer"><CODE>stream_buffer</CODE></A>, <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A> and <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A>.  
 </P>
 
 <!-- Begin Footer -->

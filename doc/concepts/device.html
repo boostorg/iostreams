@@ -34,35 +34,35 @@
     <TR><TH>Concept</TH><TH>Definition</TH></TR>
     <TR>
         <TD><A href="source.html">Source</A></TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#input"><CODE>input</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#input"><CODE>input</CODE></A></TD>
     </TR>
     <TR>
         <TD><A href="sink.html">Sink</A></TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#output"><CODE>output</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#output"><CODE>output</CODE></A></TD>
     </TR>
     <TR>
         <TD><A href="bidirectional_device.html">BidirectionalDevice</A></TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#bidirectional"><CODE>bidirectional</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#bidirectional"><CODE>bidirectional</CODE></A></TD>
     </TR>
     <TR>
         <TD><A href="seekable_device.html">SeekableDevice</A></TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#seekable"><CODE>seekable</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#seekable"><CODE>seekable</CODE></A></TD>
     </TR>
     <TR>
         <TD>SeekableSource</TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#input_seekable"><CODE>input_seekable</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#input_seekable"><CODE>input_seekable</CODE></A></TD>
     </TR>
     <TR>
         <TD>SeekableSink</TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#output_seekable"><CODE>output_seekable</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#output_seekable"><CODE>output_seekable</CODE></A></TD>
     </TR>
     <TR>
         <TD>BidirectionalSeekableDevice</TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#bidirectional_seekable"><CODE>bidirectional_seekable</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#bidirectional_seekable"><CODE>bidirectional_seekable</CODE></A></TD>
     </TR>
     <TR>
         <TD>DualSeekableDevice</TD>
-        <TD>Refinement of Device with mode_of convertible to <A HREF="../guide/modes.html#dual_seekable"><CODE>dual_seekable</CODE></A></TD>
+        <TD>Refinement of Device with mode convertible to <A HREF="../guide/modes.html#dual_seekable"><CODE>dual_seekable</CODE></A></TD>
     </TR>
 </TABLE>
 
@@ -205,7 +205,7 @@
         </TD>
         <TD>
              <P CLASS="concept">
-                Repositions the read head (if <CODE>which</CODE> is <CODE>std::ios_base::in</CODE>), the write head (if <CODE>which</CODE> is <CODE>std::ios_base::out</CODE>) or both heads (if <CODE>which</CODE> is <CODE>std::ios_base::in | std::ios_base::out</CODE>) by <CODE>off</CODE> characters, returning the new position, where the offset is calculated from
+                Advances the read head (if <CODE>which</CODE> is <CODE>std::ios_base::in</CODE>), the write head (if <CODE>which</CODE> is <CODE>std::ios_base::out</CODE>) or both heads (if <CODE>which</CODE> is <CODE>std::ios_base::in | std::ios_base::out</CODE>) by <CODE>off</CODE> characters, returning the new position, where the offset is calculated from
             </P>
             <UL STYLE="margin:0,0,0,auto">
                 <LI STYLE="list-style-type:disc;list-style-image:none">the start of the sequence if <CODE>way</CODE> is <CODE>ios_base::beg</CODE>
