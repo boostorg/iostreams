@@ -24,10 +24,7 @@
 <H2>Description</H2>
 
 <P>
-    The class template <CODE>combination</CODE> is an adapter which produces a model of <A HREF="../concepts/bidirectional_device.html">BidirectionalDevice</A> from a model of <A HREF="../concepts/source.html">Source</A> and a model of <A HREF="../concepts/sink.html">Sink</A> pair or from a model of <A HREF="../concepts/input_filter.html">InputFilter</A> and a model of <A HREF="../concepts/output_filter.html">OutputFilter</A>. An instance of <CODE>combination</CODE> is constructed from a pair of instances of its template paratemers; it performs input using the first component and output using the second.
-</P>
-<P>
-    The function template <CODE>combine</CODE> takes a <A HREF="../concepts/source.html">Source</A>/<A HREF="../concepts/sink.html">Sink</A> pair or an <A HREF="../concepts/input_filter.html">InputFilter</A>/<A HREF="../concepts/output_filter.html">OutputFilter</A> pair and returns an appropriate specialization of <CODE>combination</CODE>.
+    The class template <CODE>combination</CODE> takes a <A HREF="../concepts/input_filter.html">InputFilter</A>/<A HREF="../concepts/output_filter.html">OutputFilter</A> pair or a <A HREF="../concepts/source.html">Source</A>/<A HREF="../concepts/sink.html">Sink</A> pair and yields a Filter or Device which performs input using the first component and output using the second. The function template <CODE>combine</CODE> takes a <A HREF="../concepts/input_filter.html">InputFilter</A>/<A HREF="../concepts/output_filter.html">OutputFilter</A> pair or a <A HREF="../concepts/source.html">Source</A>/<A HREF="../concepts/sink.html">Sink</A> pair and returns an appropriate specialization of <CODE>combination</CODE>.
 </P>
 
 <A NAME="headers"></A>
