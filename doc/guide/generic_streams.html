@@ -282,8 +282,9 @@
 </P>
 
 <P>
-    The template <CODE>stream</CODE> derives from a specialization of <CODE>std::basic_istream</CODE>, <CODE>std::basic_ostream</CODE> or <CODE>std::basic_iostream</CODE>, depending on the <A HREF="modes.html">mode</A> of the underlying <A HREF="../concepts/device.html">Device</A>.
+    The template <CODE>stream</CODE> derives from a specialization of <CODE>std::basic_istream</CODE>, <CODE>std::basic_ostream</CODE> or <CODE>std::basic_iostream</CODE>, depending on whether the underlying <A HREF="../concepts/device.html">Device</A> models <A HREF="../concepts/source.html">Source</A>, <A HREF="../concepts/sink.html">Sink</A> or both..
 </P>
+
 
 <H4>Synopsis</H4>
 
