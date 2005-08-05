@@ -57,13 +57,13 @@
 <H3>Concepts</H3>
 
 <P>
-    The fundamental building blocks of the library are the concepts of a <A HREF="concepts/source.html">Source</A>, which provides read access to a sequence of characters, a <A HREF="concepts/sink.html">Sink</A>, which provides write access to a sequence of characters, an <A HREF="concepts/input_filter.html">InputFilter</A>, which filters input read from a Source, and an <A HREF="concepts/output_filter.html">OutputFilter</A>, which filters output written to a Sink. Sources, Sinks and their refinements are called <SPAN CLASS="term">Devices</SPAN>. InputFilters, OutputFilters and their refinements are called <SPAN CLASS="term">Filters</SPAN>.
+    The fundamental building blocks of the library are the concepts of a <A HREF="concepts/source.html">Source</A>, which provides read access to a sequence of characters, a <A HREF="concepts/sink.html">Sink</A>, which provides write access to a sequence of characters, an <A HREF="concepts/input_filter.html">InputFilter</A>, which filters input read from a Source, and an <A HREF="concepts/output_filter.html">OutputFilter</A>, which filters output written to a Sink. Sources, Sinks and their refinements are called <A HREF="concepts/device.html">Devices</A>. InputFilters, OutputFilters and their refinements are called <A HREF="concepts/filter.html">Filters</A>.
 </P>
 
 <H3>Generic Streams and Stream Buffers</H3>
 
 <P>
-    The class templates <A HREF="guide/generic_streams.html#stream_buffer"><CODE>stream_buffer</CODE></A> and <A HREF="guide/generic_streams.html#stream"><CODE>stream</CODE></A> implement standard stream buffers and streams which perform i/o by delegating to a contained Device. The Device is accessed using member functions <CODE>open</CODE>, <CODE>is_open</CODE> and <CODE>close</CODE>, providing an interface similar to the standard file-based streams and stream buffers.
+    The class templates <A HREF="guide/generic_streams.html#stream_buffer"><CODE>stream_buffer</CODE></A> and <A HREF="guide/generic_streams.html#stream"><CODE>stream</CODE></A> implement standard stream buffers and streams which perform i/o by delegating to a contained <A HREF="concepts/device.html">Device</A>. The Device is accessed using member functions <CODE>open</CODE>, <CODE>is_open</CODE> and <CODE>close</CODE>, providing an interface similar to the standard file-based streams and stream buffers.
 </P>
 
 <H3>Filtering Streams and Stream Buffers</H3>
