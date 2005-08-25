@@ -91,11 +91,10 @@
                       std::streamsize buffer_size = <SPAN CLASS="omitted">default value</SPAN>,
                       std::streamsize pback_size = <SPAN CLASS="omitted">default value</SPAN> );
 
-    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N&gt;
-    <SPAN CLASS='keyword'>const</SPAN> std::type_info& <A CLASS='documented' HREF='#component_type'>component_type</A>() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>const</SPAN> std::type_info& <A CLASS='documented' HREF='#component_type'>component_type</A>(<SPAN CLASS="keyword">int</SPAN> n) <SPAN CLASS='keyword'>const</SPAN>;
 
-    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
-    T* <A CLASS='documented' HREF='#component'>component</A>() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+    T* <A CLASS='documented' HREF='#component'>component</A>(<SPAN CLASS="keyword">int</SPAN> n) <SPAN CLASS='keyword'>const</SPAN>;
 
     <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;
     <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#policy_push">push</A>( <SPAN CLASS="keyword">const</SPAN> T& t,
@@ -116,6 +115,14 @@
     <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#set_auto_close">set_auto_close</A>(<SPAN CLASS='keyword'>bool</SPAN> close);
     <SPAN CLASS="keyword">bool</SPAN> <A CLASS="documented" HREF="#sync">sync</A>();
     <SPAN CLASS="keyword">bool</SPAN> <A CLASS="documented" HREF="#strict_sync">strict_sync</A>();
+
+        <SPAN CLASS='comment'>// Deprecated members</SPAN>
+
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N&gt;
+    <SPAN CLASS='keyword'>const</SPAN> std::type_info& <A CLASS='documented' HREF='#component_type'>component_type</A>() <SPAN CLASS='keyword'>const</SPAN>;
+
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
+    T* <A CLASS='documented' HREF='#component'>component</A>() <SPAN CLASS='keyword'>const</SPAN>;
 };
 
 } } // End namespace boost::io</PRE>
@@ -233,35 +240,50 @@
 <A NAME="component_type"></A>
 <H4><CODE>filtering_stream::component_type</CODE></H4>
 
-<PRE CLASS="broken_ie">    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N&gt;
-    <SPAN CLASS='keyword'>const</SPAN> std::type_info& component_type() <SPAN CLASS='keyword'>const</SPAN>;
+<PRE CLASS="broken_ie">    <SPAN CLASS='keyword'>const</SPAN> std::type_info& component_type(<SPAN CLASS="keyword">int</SPAN> n) <SPAN CLASS='keyword'>const</SPAN>;
 </PRE>
 
 <P>
       Returns a reference to an instance <CODE>std::type_info</CODE> corresponding to the type of the <CODE>n</CODE><I>th</I> Filter or Device in the underlying chain, which must have size at least <CODE>n + 1</CODE>. Components are numbered beginning at zero.
 </P>
+
+<PRE CLASS="broken_ie">    <SPAN CLASS='comment'>// Deprecated</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N&gt;
+    <SPAN CLASS='keyword'>const</SPAN> std::type_info& component_type() <SPAN CLASS='keyword'>const</SPAN>;
+</PRE>
+
 <P>
-      The template argument <CODE>N</CODE> cannot be deduced, and must therefroe be explicitly specified.
+      Returns a reference to an instance <CODE>std::type_info</CODE> corresponding to the type of the <CODE>N</CODE><I>th</I> Filter or Device in the underlying chain, which must have size at least <CODE>N + 1</CODE>. Components are numbered beginning at zero. The template argument <CODE>N</CODE> cannot be deduced, and must therefore be explicitly specified.
 </P>
+
 <P>
-      Users of Microsoft Visual Studio versions 6.0-7.0 must use the macro <A HREF='../macros/workarounds.html#boost_iostreams_component_type'><CODE>BOOST_IOSTREAMS_COMPONENT_TYPE</CODE></A> instead of this function.
+      <I>This member is deprecated; use the overload of <CODE>component_type</CODE> that takes an <CODE>int</CODE> argument instead.</I>
 </P>
 
 <A NAME="component"></A>
 <H4><CODE>filtering_stream::component</CODE></H4>
 
-<PRE CLASS="broken_ie">    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
-    T* component() <SPAN CLASS='keyword'>const</SPAN>;
+<PRE CLASS="broken_ie">    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+    T* component(<SPAN CLASS="keyword">int</SPAN> n) <SPAN CLASS='keyword'>const</SPAN>;
 </PRE>
 
 <P>
       Returns a pointer to the <CODE>n</CODE><I>th</I> Filter or Device in the underlying chain, if the chain has size at least <CODE>n + 1</CODE> and the type of the <CODE>n</CODE><I>th</I> Filter or Device is equal to <CODE>T</CODE>. Otherwise, returns a null pointer.
 </P>
 <P>
-      The template arguments <CODE>N</CODE> and <CODE>T</CODE> cannot be deduced, and must therefroe be explicitly specified.
+      Users of Microsoft Visual Studio versions 6.0-7.0 must use the macro <A HREF='../macros/workarounds.html#boost_iostreams_component'><CODE>BOOST_IOSTREAMS_COMPONENT</CODE></A> instead of this function.
+</P>
+
+<PRE CLASS="broken_ie">    <SPAN CLASS='comment'>// Deprecated</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>int</SPAN> N, <SPAN CLASS='keyword'>typename</SPAN> T&gt;
+    T* component() <SPAN CLASS='keyword'>const</SPAN>;
+</PRE>
+
+<P>
+      Returns a pointer to the <CODE>N</CODE><I>th</I> Filter or Device in the underlying chain, if the chain has size at least <CODE>N + 1</CODE> and the type of the <CODE>N</CODE><I>th</I> Filter or Device is equal to <CODE>T</CODE>. Otherwise, returns a null pointer. The template arguments <CODE>N</CODE> and <CODE>T</CODE> cannot be deduced, and must therefore be explicitly specified.
 </P>
 <P>
-      Users of Microsoft Visual Studio versions 6.0-7.0 must use the macro <A HREF='../macros/workarounds.html#boost_iostreams_component'><CODE>BOOST_IOSTREAMS_COMPONENT</CODE></A> instead of this function.
+      <I>This member is deprecated; use the overload of <CODE>component</CODE> that takes an <CODE>int</CODE> argument instead.</I>
 </P>
 
 <A NAME="policy_push"></A>
