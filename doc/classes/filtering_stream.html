@@ -244,7 +244,7 @@
 </PRE>
 
 <P>
-      Returns a reference to an instance <CODE>std::type_info</CODE> corresponding to the type of the <CODE>n</CODE><I>th</I> Filter or Device in the underlying chain, which must have size at least <CODE>n + 1</CODE>. Components are numbered beginning at zero.
+      Returns a reference to an instance <CODE>std::type_info</CODE> corresponding to the type of the <CODE>n</CODE><I>th</I> Filter or Device in the underlying chain, which must have size at least <CODE>n + 1</CODE>. Components are numbered beginning at zero. 
 </P>
 
 <PRE CLASS="broken_ie">    <SPAN CLASS='comment'>// Deprecated</SPAN>
@@ -268,7 +268,7 @@
 </PRE>
 
 <P>
-      Returns a pointer to the <CODE>n</CODE><I>th</I> Filter or Device in the underlying chain, if the chain has size at least <CODE>n + 1</CODE> and the type of the <CODE>n</CODE><I>th</I> Filter or Device is equal to <CODE>T</CODE>. Otherwise, returns a null pointer.
+      Returns a pointer to the <CODE>n</CODE><I>th</I> Filter or Device in the underlying chain, if the chain has size at least <CODE>n + 1</CODE> and the type of the <CODE>n</CODE><I>th</I> Filter or Device is equal to <CODE>T</CODE>. Otherwise, returns a null pointer. The template argument <CODE>T</CODE> cannot be deduced, and must therefore be explicitly specified.
 </P>
 <P>
       Users of Microsoft Visual Studio versions 6.0-7.0 must use the macro <A HREF='../macros/workarounds.html#boost_iostreams_component'><CODE>BOOST_IOSTREAMS_COMPONENT</CODE></A> instead of this function.
