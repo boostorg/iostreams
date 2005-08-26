@@ -162,11 +162,31 @@ public:
     std::streamsize write(const char_type* s, std::streamsize n);
     stream_offset seek(stream_offset off, BOOST_IOS::seekdir way);
 
+    //----------Additional i/o functions--------------------------------------//
+
+    // Returns true if this chain is non-empty and its final link
+    // is a source or sink, i.e., if it is ready to perform i/o.
+    bool is_complete() const;
+    bool auto_close() const;
+    void set_auto_close(bool close);
+    bool sync() { return front().BOOST_IOSTREAMS_PUBSYNC() != -1; }
+    bool strict_sync();
+
+    //----------Container-like interface--------------------------------------//
+
+    typedef typename list_type::size_type size_type;
+    streambuf_type& front() { return *list().front(); }
+    BOOST_IOSTREAMS_DEFINE_PUSH(push, mode, char_type, push_impl)
+    void pop();
+    bool empty() const { return list().empty(); }
+    size_type size() const { return list().size(); }
+    void reset();
+
     //----------Direct component access---------------------------------------//
 
     const std::type_info& component_type(int n) const
     {
-        if (n >= size())
+        if (static_cast<size_type>(n) >= size())
             throw std::out_of_range("bad chain offset");
         return (*boost::next(list().begin(), n))->component_type();
     }
@@ -190,7 +210,7 @@ public:
     template<typename T>
     T* component(int n, boost::type<T>) const
     {
-        if (n >= size())
+        if (static_cast<size_type>(n) >= size())
             throw std::out_of_range("bad chain offset");
         streambuf_type* link = *boost::next(list().begin(), n);
         if (BOOST_IOSTREAMS_COMPARE_TYPE_ID(link->component_type(), typeid(T)))
@@ -198,25 +218,6 @@ public:
         else
             return 0;
     }
-public:
-
-    //----------Container-like interface--------------------------------------//
-
-    typedef typename list_type::size_type size_type;
-    streambuf_type& front() { return *list().front(); }
-    BOOST_IOSTREAMS_DEFINE_PUSH(push, mode, char_type, push_impl)
-    void pop();
-    bool empty() const { return list().empty(); }
-    size_type size() const { return list().size(); }
-    void reset();
-
-    // Returns true if this chain is non-empty and its final link
-    // is a source or sink, i.e., if it is ready to perform i/o.
-    bool is_complete() const;
-    bool auto_close() const;
-    void set_auto_close(bool close);
-    bool sync() { return front().BOOST_IOSTREAMS_PUBSYNC() != -1; }
-    bool strict_sync();
 private:
     template<typename T>
     void push_impl(const T& t, int buffer_size = -1, int pback_size = -1)
