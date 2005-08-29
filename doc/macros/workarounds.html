@@ -188,14 +188,14 @@
 <A NAME="boost_iostreams_component_type"></A>
 <H4><CODE>BOOST_IOSTREAMS_COMPONENT_TYPE</CODE></H4>
 
-<P>Used in place of <CODE>chain.component_type&lt;n&gt;</CODE> for compilers which don't support explicit specification of member function template arguments. <CODE>chain</CODE> can be an instance of <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A>, <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A> or <A HREF="../classes/chain.html"><CODE>basic_chain</CODE></A>.</P>
+<P>Used in place of <CODE>chain.component_type(n)</CODE> for compilers which don't support explicit specification of member function template arguments. <CODE>chain</CODE> can be an instance of <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A>, <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A> or <A HREF="../classes/chain.html"><CODE>basic_chain</CODE></A>.</P>
 
-<P><I>This macro is deprecated. Use the overload of the member function <CODE>component_type</CODE> that takes an <CODE>int</CODE> argument.</I></P>
+<P><I>This macro is deprecated. Use <CODE>chain.component_type(n)</CODE> instead.</I></P>
 
 <A NAME="boost_iostreams_component"></A>
 <H4><CODE>BOOST_IOSTREAMS_COMPONENT</CODE></H4>
 
-<P>Used in place of <CODE>chain.component&lt;n, t&gt;</CODE> for compilers which don't support explicit specification of member function template arguments. <CODE>chain</CODE> can be an instance of <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A>, <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A> or <A HREF="../classes/chain.html"><CODE>basic_chain</CODE></A>.</P>
+<P>Used in place of <CODE>chain.component&lt;t&gt;(n)</CODE> for compilers which don't support explicit specification of member function template arguments. <CODE>chain</CODE> can be an instance of <A HREF="../classes/filtering_stream.html"><CODE>filtering_stream</CODE></A>, <A HREF="../classes/filtering_streambuf.html"><CODE>filtering_streambuf</CODE></A> or <A HREF="../classes/chain.html"><CODE>basic_chain</CODE></A>.</P>
 
 <HR STYLE="margin-top:1em">
 
