@@ -267,7 +267,7 @@ private:
         boost::iostreams::put(next, static_cast<char>(0xFF & (n >> 24)));
     }
 
-    enum {
+    enum flag_type {
         f_header_done = 1,
         f_body_done = f_header_done << 1,
         f_footer_done = f_body_done << 1
@@ -456,7 +456,7 @@ private:
         if (static_cast<int>(read_uint32(rng, gzip::bad_footer)) != this->total_out())
             throw gzip_error(gzip::bad_length);
     }
-    enum {
+    enum flag_type {
         f_header_read  = 1,
         f_footer_read  = f_header_read << 1,
         f_text         = f_footer_read << 1

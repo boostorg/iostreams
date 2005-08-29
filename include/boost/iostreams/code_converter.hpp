@@ -169,7 +169,7 @@ struct code_converter_impl {
 
     policy_type& dev() { return **dev_; }
 
-    enum {
+    enum flag_type {
         f_open             = 1,
         f_input_closed     = f_open << 1,
         f_output_closed    = f_input_closed << 1
