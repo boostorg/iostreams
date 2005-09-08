@@ -204,9 +204,9 @@ public:
     T* component() const { return component<T>(N); }
 #endif
 
-#if !BOOST_WORKAROUND(BOOST_MSVC, < 1310)
-    private:
-#endif
+//#if !BOOST_WORKAROUND(BOOST_MSVC, < 1310) &&
+//    private:
+//#endif
     template<typename T>
     T* component(int n, boost::type<T>) const
     {
@@ -424,16 +424,16 @@ public:
     // Deprecated.
     template<int N>
     const std::type_info& component_type() const
-    { return chain_->component_type<N>(); }
+    { return chain_->component_type(N); }
 
     template<typename T>
-    T* component(int n) const
-    { return chain_->component<T>(n); }
+    T* component(int n) const   // Tru64 needs boost::type.
+    { return chain_->component(n, boost::type<T>()); } 
 
     // Deprecated.
     template<int N, typename T>
-    T* component() const
-    { return chain_->component<N, T>(); }
+    T* component() const        // Tru64 needs boost::type.
+    { return chain_->component(N, boost::type<T>()); }
 #else
     template<typename T>
     T* component(int n, boost::type<T> t) const
