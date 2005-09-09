@@ -21,8 +21,8 @@
 #include <typeinfo>
 #include <stdexcept>                            // logic_error, out_of_range.
 #include <boost/checked_delete.hpp>
-#include <boost/config.hpp>                     // BOOST_MSVC, template friends.
-#include <boost/detail/workaround.hpp>
+#include <boost/config.hpp>                     // BOOST_MSVC, template friends,
+#include <boost/detail/workaround.hpp>          // BOOST_NESTED_TEMPLATE 
 #include <boost/iostreams/constants.hpp>
 #include <boost/iostreams/detail/access_control.hpp>
 #include <boost/iostreams/detail/char_traits.hpp>
@@ -204,9 +204,9 @@ public:
     T* component() const { return component<T>(N); }
 #endif
 
-//#if !BOOST_WORKAROUND(BOOST_MSVC, < 1310) &&
-//    private:
-//#endif
+#if !BOOST_WORKAROUND(BOOST_MSVC, < 1310)
+    private:
+#endif
     template<typename T>
     T* component(int n, boost::type<T>) const
     {
@@ -420,20 +420,40 @@ public:
     const std::type_info& component_type(int n) const
     { return chain_->component_type(n); }
 
+//#if !BOOST_WORKAROUND(BOOST_MSVC, < 1310)
+//    // Deprecated.
+//    template<int N>
+//    const std::type_info& component_type() const
+//    { return chain_->component_type(N); }
+//
+//    template<typename T>
+//    T* component(int n) const   // Tru64 needs boost::type.
+//    { return chain_->component(n, boost::type<T>()); } 
+//
+//    // Deprecated.
+//    template<int N, typename T>
+//    T* component() const        // Tru64 needs boost::type.
+//    { return chain_->component(N, boost::type<T>()); }
+//#else
+//    template<typename T>
+//    T* component(int n, boost::type<T> t) const
+//    { return chain_->component(n, t); }
+//#endif
+
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1310)
     // Deprecated.
     template<int N>
     const std::type_info& component_type() const
-    { return chain_->component_type(N); }
+    { return chain_->BOOST_NESTED_TEMPLATE component_type<N>(); }
 
     template<typename T>
-    T* component(int n) const   // Tru64 needs boost::type.
-    { return chain_->component(n, boost::type<T>()); } 
+    T* component(int n) const
+    { return chain_->BOOST_NESTED_TEMPLATE component<T>(n); }
 
     // Deprecated.
     template<int N, typename T>
-    T* component() const        // Tru64 needs boost::type.
-    { return chain_->component(N, boost::type<T>()); }
+    T* component() const
+    { return chain_->BOOST_NESTED_TEMPLATE component<N, T>(); }
 #else
     template<typename T>
     T* component(int n, boost::type<T> t) const
