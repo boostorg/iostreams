@@ -20,12 +20,17 @@
 // Description: Used to generate the traits classes is_istream, is_ostream,
 //      etc.
 //
+#if BOOST_WORKAROUND(__BORLANDC__, <= 0x564)
+# define BOOST_IOSTREAMS_PVOID ...
+#else
+# define BOOST_IOSTREAMS_PVOID const volatile void*
+#endif
 #define BOOST_IOSTREAMS_BOOL_TRAIT_DEF(trait, type, arity) \
     namespace BOOST_PP_CAT(trait, _impl_) { \
       BOOST_IOSTREAMS_TEMPLATE_PARAMS(arity, T) \
       type_traits::yes_type helper \
           (const volatile type BOOST_IOSTREAMS_TEMPLATE_ARGS(arity, T)*); \
-      type_traits::no_type helper(...); \
+      type_traits::no_type helper(BOOST_IOSTREAMS_PVOID); \
       template<typename T> \
       struct impl { \
            BOOST_STATIC_CONSTANT(bool, value = \
