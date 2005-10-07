@@ -15,7 +15,8 @@
 
 #include <boost/iostreams/detail/config/dyn_link.hpp>
 #include <boost/iostreams/filter/zlib.hpp> 
-#include "zlib.h"   // To configure Boost to work with zlib, see the 
+#include "zlib.h"   // Jean-loup Gailly's and Mark Adler's "zlib.h" header.
+                    // To configure Boost to work with zlib, see the 
                     // installation instructions here:
                     // http://boost.org/libs/iostreams/doc/index.html?path=7
 
@@ -79,6 +80,7 @@ void zlib_error::check(int error)
         throw std::bad_alloc();
     default:
         throw zlib_error(error);
+        ;
     }
 }
 
@@ -138,11 +140,14 @@ int zlib_base::inflate(int flush)
 void zlib_base::reset(bool compress, bool realloc)
 {
     z_stream* s = static_cast<z_stream*>(stream_);
-    zlib_error::check(
+    // Undiagnosed bug:
+    // deflateReset(), etc., return Z_DATA_ERROR
+    //zlib_error::check(
         realloc ?
             (compress ? deflateReset(s) : inflateReset(s)) :
             (compress ? deflateEnd(s) : inflateEnd(s))
-    );
+                ;
+    //);
 }
 
 void zlib_base::do_init
