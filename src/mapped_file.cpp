@@ -181,7 +181,9 @@ void mapped_file_source::open_impl(mapped_file_params p)
                        (p.new_file_size != 0 && !readonly) ? 
                            CREATE_ALWAYS : 
                            OPEN_EXISTING,
-                       FILE_ATTRIBUTE_TEMPORARY,
+                       readonly ?
+                           FILE_ATTRIBUTE_READONLY :
+                           FILE_ATTRIBUTE_TEMPORARY,
                        NULL );
 
     if (pimpl_->handle_ == INVALID_HANDLE_VALUE)
