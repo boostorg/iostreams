@@ -547,11 +547,11 @@ std::streamsize basic_gzip_compressor<Alloc>::read_string
         static_cast<streamsize>(str.size() - offset_);
     streamsize amt = (std::min)(avail, n);
     std::copy( str.data() + offset_,
-                str.data() + offset_ + amt,
-                s );
+               str.data() + offset_ + amt,
+               s );
     offset_ += amt;
     if ( !(flags_ & f_header_done) &&
-            offset_ == static_cast<std::size_t>(str.size()) )
+         offset_ == static_cast<std::size_t>(str.size()) )
     {
         flags_ |= f_header_done;
     }
