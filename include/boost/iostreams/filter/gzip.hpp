@@ -234,14 +234,20 @@ public:
     template<typename Sink>
     void close(Sink& snk, BOOST_IOS::openmode m)
     {
+        namespace io = boost::iostreams;
+
         if (m & BOOST_IOS::out) {
 
-            // Close zlib compressor.
-            base_type::close(snk, BOOST_IOS::out);
+                // Close zlib compressor.
+                base_type::close(snk, BOOST_IOS::out);
 
-            // Write final fields of gzip file format.
-            write_long(this->crc(), snk);
-            write_long(this->total_in(), snk);
+            if (flags_ & f_header_done) {
+
+                // Write final fields of gzip file format.
+                write_long(this->crc(), snk);
+                write_long(this->total_in(), snk);
+            }
+
         }
         #if BOOST_WORKAROUND(__GNUC__, == 2) && defined(__STL_CONFIG_H) || \
             BOOST_WORKAROUND(BOOST_DINKUMWARE_STDLIB, == 1) \
