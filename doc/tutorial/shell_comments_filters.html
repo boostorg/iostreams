@@ -174,7 +174,7 @@
     The way to fix this is to make your Filter <A HREF="../concepts/closable.html">Closable</A>. To do this, you must implement a member function <CODE>close</CODE>. You must also give your filter a <A HREF="../guide/traits.html#category_tags">category tag</A> convertible to <A HREF="../guide/traits.html#category_tags"><CODE>closable_tag</CODE></A>, to tell the Iostream library that your filter implements <CODE>close</CODE>.
 </P>
 
-<P>Your improved Filter looks like this:</P>
+<P>The improved Filter looks like this:</P>
 
 <PRE CLASS="broken_ie"><SPAN CLASS='keyword'>namespace</SPAN> boost { <SPAN CLASS='keyword'>namespace</SPAN> iostreams { <SPAN CLASS='keyword'>namespace</SPAN> example {
 

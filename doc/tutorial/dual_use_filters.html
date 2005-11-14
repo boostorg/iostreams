@@ -60,8 +60,8 @@
         <SPAN CLASS='comment'>/* same as shell_comments_output_filter::put() */</SPAN>
     }
 
-    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Source&gt;
-    <SPAN CLASS="keyword">void</SPAN> close(Source&, std::ios_base::openmode) 
+    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Device&gt;
+    <SPAN CLASS="keyword">void</SPAN> close(Device&, std::ios_base::openmode) 
     { 
         skip_ = <SPAN CLASS="keyword">false</SPAN>; 
     }
