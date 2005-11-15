@@ -175,7 +175,7 @@ std::streamsize file_descriptor::write(const char_type* s, std::streamsize n)
     return n;
 }
 
-stream_offset file_descriptor::seek
+std::streampos file_descriptor::seek
     (stream_offset off, BOOST_IOS::seekdir way)
 {
     using namespace std;
@@ -198,8 +198,7 @@ stream_offset file_descriptor::seek
         if (::GetLastError() != NO_ERROR) {
             throw detail::bad_seek();
         } else {
-            return (static_cast<boost::intmax_t>(lDistanceToMoveHigh) << 32) +
-                   dwResultLow;
+           return offset_to_position((lDistanceToMoveHigh << 32) + dwResultLow);
         }
     }
 #endif // #ifdef BOOST_IOSTREAMS_WINDOWS
@@ -231,7 +230,7 @@ stream_offset file_descriptor::seek
                           SEEK_END );
     if (result == -1)
         throw detail::bad_seek();
-    return result;
+    return offset_to_position(result);
 }
 
 void file_descriptor::close() { close_impl(*pimpl_); }

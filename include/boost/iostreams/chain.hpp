@@ -160,7 +160,7 @@ public:
 
     std::streamsize read(char_type* s, std::streamsize n);
     std::streamsize write(const char_type* s, std::streamsize n);
-    stream_offset seek(stream_offset off, BOOST_IOS::seekdir way);
+    std::streampos seek(stream_offset off, BOOST_IOS::seekdir way);
 
     //----------Additional i/o functions--------------------------------------//
 
@@ -510,7 +510,7 @@ inline std::streamsize chain_base<Self, Ch, Tr, Alloc, Mode>::write
 { return iostreams::write(*list().front(), s, n); }
 
 template<typename Self, typename Ch, typename Tr, typename Alloc, typename Mode>
-inline stream_offset chain_base<Self, Ch, Tr, Alloc, Mode>::seek
+inline std::streampos chain_base<Self, Ch, Tr, Alloc, Mode>::seek
     (stream_offset off, BOOST_IOS::seekdir way)
 { return iostreams::seek(*list().front(), off, way); }
 

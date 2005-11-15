@@ -136,7 +136,7 @@ struct seek_if_impl<random_access> {
 template<>
 struct seek_if_impl<any_tag> {
     template<typename T>
-    static stream_offset 
+    static std::streampos 
     seek(T&, stream_offset, BOOST_IOS::seekdir, BOOST_IOS::openmode)
     { throw cant_seek(); }
 };
