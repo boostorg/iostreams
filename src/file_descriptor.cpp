@@ -182,10 +182,7 @@ std::streampos file_descriptor::seek
 #ifdef BOOST_IOSTREAMS_WINDOWS
     if (pimpl_->flags_ & impl::has_handle) {
         LONG lDistanceToMove = static_cast<LONG>(off & 0xffffffff);
-        LONG lDistanceToMoveHigh =
-            off < 0xffffffff ?
-                static_cast<LONG>(off >> 32) :
-                0;
+        LONG lDistanceToMoveHigh = static_cast<LONG>(off >> 32);
         DWORD dwResultLow =
             ::SetFilePointer( pimpl_->handle_,
                               lDistanceToMove,
