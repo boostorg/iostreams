@@ -58,7 +58,7 @@ public:
     indirect_streambuf();
 
     void open(const T& t BOOST_IOSTREAMS_PUSH_PARAMS());
-    bool is_open();
+    bool is_open() const;
     void close();
     bool auto_close() const;
     void set_auto_close(bool close);
@@ -189,7 +189,7 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::open
 }
 
 template<typename T, typename Tr, typename Alloc, typename Mode>
-inline bool indirect_streambuf<T, Tr, Alloc, Mode>::is_open()
+inline bool indirect_streambuf<T, Tr, Alloc, Mode>::is_open() const
 { return (flags_ & f_open) != 0; }
 
 template<typename T, typename Tr, typename Alloc, typename Mode>
