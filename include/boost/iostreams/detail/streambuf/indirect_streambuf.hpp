@@ -118,7 +118,7 @@ private:
     void sync_impl();
     void close_impl(BOOST_IOS::openmode);
 
-    enum {
+    enum flag_type {
         f_open             = 1,
         f_input_closed     = f_open << 1,
         f_output_closed    = f_input_closed << 1,
@@ -328,7 +328,10 @@ template<typename T, typename Tr, typename Alloc, typename Mode>
 inline typename indirect_streambuf<T, Tr, Alloc, Mode>::pos_type
 indirect_streambuf<T, Tr, Alloc, Mode>::seekpos
     (pos_type sp, BOOST_IOS::openmode)
-{ return seek_impl(sp, BOOST_IOS::beg, BOOST_IOS::in | BOOST_IOS::out); }
+{ 
+    return seek_impl( position_to_offset(sp), BOOST_IOS::beg, 
+                      BOOST_IOS::in | BOOST_IOS::out ); 
+}
 
 template<typename T, typename Tr, typename Alloc, typename Mode>
 typename indirect_streambuf<T, Tr, Alloc, Mode>::pos_type
