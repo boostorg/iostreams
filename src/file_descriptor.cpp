@@ -49,7 +49,72 @@
 
 namespace boost { namespace iostreams {
 
+struct file_descriptor::impl {
+    impl()
+        : fd_(-1), flags_(0)
+    {}
+    
+    impl(int fd, bool close_on_exit)
+        : fd_(fd), flags_(0)
+    {
+        if (close_on_exit) flags_ |= impl::close_on_exit;
+    }
+    
+#ifdef BOOST_IOSTREAMS_WINDOWS
+    impl(handle_type handle, bool close_on_exit)
+        : handle_(handle), flags_(has_handle)
+    {
+        if (close_on_exit)
+            flags_ |= impl::close_on_exit;
+    }
+#endif
+    
+    ~impl() {
+        if (flags_ & close_on_exit)
+            close_impl(*this);
+    }
+    
+    enum flags {
+        close_on_exit = 1,
+        has_handle = 2,
+        append = 4
+    };
+    
+    int          fd_;
+#ifdef BOOST_IOSTREAMS_WINDOWS
+    handle_type  handle_;
+#endif
+    int          flags_;
+};
+
 //------------------Implementation of file_descriptor-------------------------//
+
+file_descriptor::file_descriptor()
+    : pimpl_(new impl)
+{}
+
+file_descriptor::file_descriptor(int fd, bool close_on_exit)
+    : pimpl_(new impl(fd, close_on_exit))
+{}
+
+#ifdef BOOST_IOSTREAMS_WINDOWS
+file_descriptor(handle_type handle, bool close_on_exit)
+    : pimpl_(new impl(handle, close_on_exit))
+{}
+#endif
+
+file_descriptor::file_descriptor( const std::string& path,
+                            BOOST_IOS::openmode mode,
+                            BOOST_IOS::openmode base_mode )
+    : pimpl_(new impl)
+{
+    open(path, mode, base_mode);
+}
+
+bool file_descriptor::is_open() const
+{
+    return pimpl_->flags_ != 0;
+}
 
 void file_descriptor::open
     ( const std::string& path, BOOST_IOS::openmode m,
