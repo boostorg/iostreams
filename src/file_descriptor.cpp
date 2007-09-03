@@ -98,7 +98,7 @@ file_descriptor::file_descriptor(int fd, bool close_on_exit)
 {}
 
 #ifdef BOOST_IOSTREAMS_WINDOWS
-file_descriptor(handle_type handle, bool close_on_exit)
+file_descriptor::file_descriptor(handle_type handle, bool close_on_exit)
     : pimpl_(new impl(handle, close_on_exit))
 {}
 #endif
