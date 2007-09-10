@@ -34,13 +34,22 @@ using boost::unit_test::test_suite;
 struct error_device
 {
     typedef char   char_type;
-    typedef bio::seekable_device_tag category;
+    struct category
+        : bio::seekable_device_tag,
+          bio::closable_tag
+        { };
     
-    error_device(char const*) {}
+    error_device(char const*) : is_open_flag(true) {}
+    
+    void open(char const*) { is_open_flag=true; }
+    bool is_open() const { return is_open_flag; }
+    void close() { is_open_flag=false; }
     
     std::streamsize read(char_type* s, std::streamsize n);
     std::streamsize write(const char_type* s, std::streamsize n);
     std::streampos seek(bio::stream_offset off, BOOST_IOS::seekdir way);
+private:
+    bool is_open_flag;
 };
 
 std::streamsize error_device::read(char_type*, std::streamsize)
@@ -63,7 +72,7 @@ typedef bio::stream<error_device> test_stream;
 
 void check_stream_for_badbit(std::iostream& stream)
 {
-    BOOST_CHECK_MESSAGE(!stream.good(), "stream still good");
+    BOOST_REQUIRE_MESSAGE(!stream.good(), "stream still good");
     BOOST_CHECK_MESSAGE(!stream.eof(), "eofbit set but not expected");
     BOOST_CHECK_MESSAGE(stream.bad(), "stream did not set badbit");
     BOOST_CHECK_MESSAGE(stream.fail(), "stream did not fail");
@@ -74,34 +83,34 @@ void check_stream_for_badbit(std::iostream& stream)
 }
 
 // error checking concepts ****************************************************
-template<void (*const function)(std::iostream&)>
+template<void (*const function)(test_stream&)>
 void wrap_nothrow()
 {
     test_stream stream("foo");
-    BOOST_CHECK_NO_THROW( function(stream) );
+    BOOST_REQUIRE_NO_THROW( function(stream) );
     check_stream_for_badbit(stream);
 }
 
-template<void (*const function)(std::iostream&)>
+template<void (*const function)(test_stream&)>
 void wrap_throw()
 {
     typedef std::ios_base ios;
     test_stream stream("foo");
     
-    stream.exceptions(ios::failbit | ios::badbit);
-    BOOST_CHECK_THROW( function(stream), std::exception );
+    BOOST_REQUIRE_NO_THROW( stream.exceptions(ios::failbit | ios::badbit) );
+    BOOST_REQUIRE_THROW( function(stream), std::exception );
     
     check_stream_for_badbit(stream);
 }
 
-template<void (*const function)(std::iostream&)>
+template<void (*const function)(test_stream&)>
 void wrap_throw_delayed()
 {
     typedef std::ios_base ios;
     test_stream stream("foo");
     
-    function(stream);
-    BOOST_CHECK_THROW(
+    BOOST_REQUIRE_NO_THROW( function(stream) );
+    BOOST_REQUIRE_THROW(
             stream.exceptions(ios::failbit | ios::badbit),
             ios::failure
         );
@@ -110,13 +119,13 @@ void wrap_throw_delayed()
 }
 
 // error raising **************************************************************
-void test_read(std::iostream& stream)
+void test_read(test_stream& stream)
 {
     char data[10];
     stream.read(data, 10);
 }
 
-void test_write(std::iostream& stream)
+void test_write_flush(test_stream& stream)
 {
     char data[10] = {0};
     stream.write(data, 10);
@@ -124,12 +133,20 @@ void test_write(std::iostream& stream)
     stream.flush();
 }
 
-void test_seekg(std::iostream& stream)
+void test_write_close(test_stream& stream)
+{
+    char data[10] = {0};
+    stream.write(data, 10);
+        //force use of streambuf
+    stream.close();
+}
+
+void test_seekg(test_stream& stream)
 {
     stream.seekg(10);
 }
 
-void test_seekp(std::iostream& stream)
+void test_seekp(test_stream& stream)
 {
     stream.seekp(10);
 }
@@ -143,9 +160,13 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&wrap_throw        <&test_read>));
     test->add(BOOST_TEST_CASE(&wrap_throw_delayed<&test_read>));
     
-    test->add(BOOST_TEST_CASE(&wrap_nothrow      <&test_write>));
-    test->add(BOOST_TEST_CASE(&wrap_throw        <&test_write>));
-    test->add(BOOST_TEST_CASE(&wrap_throw_delayed<&test_write>));
+    test->add(BOOST_TEST_CASE(&wrap_nothrow      <&test_write_flush>));
+    test->add(BOOST_TEST_CASE(&wrap_throw        <&test_write_flush>));
+    test->add(BOOST_TEST_CASE(&wrap_throw_delayed<&test_write_flush>));
+    
+    test->add(BOOST_TEST_CASE(&wrap_nothrow      <&test_write_close>));
+    test->add(BOOST_TEST_CASE(&wrap_throw        <&test_write_close>));
+    test->add(BOOST_TEST_CASE(&wrap_throw_delayed<&test_write_close>));
     
     test->add(BOOST_TEST_CASE(&wrap_nothrow      <&test_seekg>));
     test->add(BOOST_TEST_CASE(&wrap_throw        <&test_seekg>));
