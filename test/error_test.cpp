@@ -98,7 +98,7 @@ void wrap_throw()
     test_stream stream("foo");
     
     BOOST_REQUIRE_NO_THROW( stream.exceptions(ios::failbit | ios::badbit) );
-    BOOST_REQUIRE_THROW( function(stream), std::exception );
+    BOOST_CHECK_THROW( function(stream), std::exception );
     
     check_stream_for_badbit(stream);
 }
@@ -110,7 +110,7 @@ void wrap_throw_delayed()
     test_stream stream("foo");
     
     BOOST_REQUIRE_NO_THROW( function(stream) );
-    BOOST_REQUIRE_THROW(
+    BOOST_CHECK_THROW(
             stream.exceptions(ios::failbit | ios::badbit),
             ios::failure
         );
