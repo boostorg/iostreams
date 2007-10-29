@@ -9,7 +9,7 @@
 #include <boost/iostreams/stream.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/test/test_tools.hpp>
-#include <boost/test/unit_test.hpp>  
+#include <boost/test/unit_test.hpp>
 #include "detail/temp_file.hpp"
 #include "detail/verification.hpp"
 
@@ -17,7 +17,7 @@ using namespace std;
 using namespace boost;
 using namespace boost::iostreams;
 using namespace boost::iostreams::test;
-using boost::unit_test::test_suite;    
+using boost::unit_test::test_suite;
 
 class closable_source : public source {
 public:
@@ -34,12 +34,12 @@ class closable_input_filter : public input_filter {
 public:
     closable_input_filter() : open_(new bool(true)) { }
 
-    template<typename Source> 
+    template<typename Source>
     int get(Source&) { return EOF; }
 
     void open() { *open_ = true; }
 
-    template<typename Source> 
+    template<typename Source>
     void close(Source&) { *open_ = false; }
 
     bool is_open() const { return *open_; }
@@ -174,7 +174,7 @@ void auto_close_filter()
     BOOST_CHECK(!src.is_open());
 }
 
-test_suite* init_unit_test_suite(int, char* []) 
+test_suite* init_unit_test_suite(int, char* [])
 {
     test_suite* test = BOOST_TEST_SUITE("auto_close test");
     test->add(BOOST_TEST_CASE(&auto_close_source));
