@@ -46,6 +46,7 @@ rule test-iostreams ( sources * : requirements * ) {
           [ test-iostreams counter_test.cpp ]
           [ test-iostreams direct_adapter_test.cpp ]
           [ test-iostreams example_test.cpp ]
+          [ test-iostreams error_test.cpp ]
           [ test-iostreams file_test.cpp ]
           [ test-iostreams 
                 file_descriptor_test.cpp 
