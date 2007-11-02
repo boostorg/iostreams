@@ -33,19 +33,19 @@ struct external_device_closer {
           dummy_(true), nothrow_(dummy_)
         { }
     external_device_closer(Device& dev, BOOST_IOS::openmode which, bool& nothrow)
-        : device_(&dev), which_(which), 
+        : device_(&dev), which_(which),
           dummy_(true), nothrow_(nothrow)
         { }
-    ~external_device_closer() 
-    { 
-        try { 
-            boost::iostreams::close(*device_, which_); 
+    ~external_device_closer()
+    {
+        try {
+            boost::iostreams::close(*device_, which_);
         } catch (...) {
             if (!nothrow_) {
                 nothrow_ = true;
                 throw;
             }
-        } 
+        }
     }
     Device*               device_;
     BOOST_IOS::openmode   which_;
@@ -56,24 +56,24 @@ struct external_device_closer {
 template<typename Filter, typename Device>
 struct external_filter_closer {
     external_filter_closer(Filter& flt, Device& dev, BOOST_IOS::openmode which)
-        : filter_(flt), device_(dev), which_(which), 
-          dummy_(true), nothrow_(dummy_) 
+        : filter_(flt), device_(dev), which_(which),
+          dummy_(true), nothrow_(dummy_)
         { }
-    external_filter_closer( Filter& flt, Device& dev, 
+    external_filter_closer( Filter& flt, Device& dev,
                             BOOST_IOS::openmode which, bool& nothrow )
-        : filter_(flt), device_(dev), which_(which), 
-          dummy_(true), nothrow_(nothrow) 
+        : filter_(flt), device_(dev), which_(which),
+          dummy_(true), nothrow_(nothrow)
         { }
-    ~external_filter_closer() 
-    { 
-        try { 
-            boost::iostreams::close(filter_, device_, which_); 
-        } catch (...) { 
+    ~external_filter_closer()
+    {
+        try {
+            boost::iostreams::close(filter_, device_, which_);
+        } catch (...) {
             if (!nothrow_) {
                 nothrow_ = true;
                 throw;
             }
-        } 
+        }
     }
     Filter&               filter_;
     Device&               device_;
@@ -84,7 +84,7 @@ struct external_filter_closer {
 
 template<typename FilterOrDevice, typename DeviceOrDummy = int>
 struct external_closer_traits {
-    typedef typename 
+    typedef typename
             mpl::if_<
                 is_device<FilterOrDevice>,
                 external_device_closer<FilterOrDevice>,
@@ -93,24 +93,28 @@ struct external_closer_traits {
 };
 
 template<typename FilterOrDevice, typename DeviceOrDummy = int>
-struct external_closer 
+struct external_closer
     : external_closer_traits<FilterOrDevice, DeviceOrDummy>::type
-{ 
-    typedef typename 
+{
+    typedef typename
             external_closer_traits<
                 FilterOrDevice, DeviceOrDummy
             >::type base_type;
+
     external_closer(FilterOrDevice& dev, BOOST_IOS::openmode which)
         : base_type(dev, which)
     { BOOST_STATIC_ASSERT(is_device<FilterOrDevice>::value); };
+
     external_closer( FilterOrDevice& dev, BOOST_IOS::openmode which,
                      bool& nothrow )
         : base_type(dev, which, nothrow)
     { BOOST_STATIC_ASSERT(is_device<FilterOrDevice>::value); };
+
     external_closer( FilterOrDevice& flt, DeviceOrDummy& dev,
                      BOOST_IOS::openmode which )
         : base_type(flt, dev, which)
     { BOOST_STATIC_ASSERT(is_filter<FilterOrDevice>::value); };
+
     external_closer( FilterOrDevice& flt, DeviceOrDummy& dev,
                      BOOST_IOS::openmode which, bool& nothrow )
         : base_type(flt, dev, which, nothrow)
