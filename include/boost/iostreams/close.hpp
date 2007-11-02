@@ -101,21 +101,33 @@ struct close_impl<any_tag> {
 template<>
 struct close_impl<closable_tag> {
     template<typename T>
-    static void close(T& t, BOOST_IOS::openmode which)
+    static bool should_close(BOOST_IOS::openmode const which)
     {
         typedef typename category_of<T>::type category;
-        const bool in =  is_convertible<category, input>::value &&
-                        !is_convertible<category, output>::value;
-        if (in == ((which & BOOST_IOS::in) != 0))
+        static const bool hasIn = is_convertible<category, input>::value;
+        static const bool hasOut = is_convertible<category, output>::value;
+        BOOST_STATIC_ASSERT(hasIn || hasOut); //needs input or output
+        
+        if(hasIn && hasOut)
+            return false;
+        return
+                (which & BOOST_IOS::in) && hasIn
+                ||
+                (which & BOOST_IOS::out) && hasOut
+            ;
+    }
+    
+    template<typename T>
+    static void close(T& t, BOOST_IOS::openmode which)
+    {
+        if ( should_close<T>(which) )
             t.close();
     }
+    
     template<typename T, typename Sink>
     static void close(T& t, Sink& snk, BOOST_IOS::openmode which)
     {
-        typedef typename category_of<T>::type category;
-        const bool in =  is_convertible<category, input>::value &&
-                        !is_convertible<category, output>::value;
-        if (in == ((which & BOOST_IOS::in) != 0)) {
+        if ( should_close<T>(which) ) {
             non_blocking_adapter<Sink> nb(snk);
             t.close(nb);
         }
@@ -126,6 +138,7 @@ template<>
 struct close_impl<two_sequence> {
     template<typename T>
     static void close(T& t, BOOST_IOS::openmode which) { t.close(which); }
+    
     template<typename T, typename Sink>
     static void close(T& t, Sink& snk, BOOST_IOS::openmode which)
     {
