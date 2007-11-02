@@ -32,10 +32,12 @@ struct external_device_closer {
         : device_(&dev), which_(which),
           dummy_(true), nothrow_(dummy_)
         { }
+
     external_device_closer(Device& dev, BOOST_IOS::openmode which, bool& nothrow)
         : device_(&dev), which_(which),
           dummy_(true), nothrow_(nothrow)
         { }
+
     ~external_device_closer()
     {
         try {
@@ -47,6 +49,7 @@ struct external_device_closer {
             }
         }
     }
+
     Device*               device_;
     BOOST_IOS::openmode   which_;
     bool                  dummy_;
@@ -59,11 +62,13 @@ struct external_filter_closer {
         : filter_(flt), device_(dev), which_(which),
           dummy_(true), nothrow_(dummy_)
         { }
+
     external_filter_closer( Filter& flt, Device& dev,
                             BOOST_IOS::openmode which, bool& nothrow )
         : filter_(flt), device_(dev), which_(which),
           dummy_(true), nothrow_(nothrow)
         { }
+
     ~external_filter_closer()
     {
         try {
@@ -75,6 +80,7 @@ struct external_filter_closer {
             }
         }
     }
+
     Filter&               filter_;
     Device&               device_;
     BOOST_IOS::openmode   which_;
