@@ -56,15 +56,15 @@ typedef stream<error_device> test_stream;
 
 //------------------Stream state tester---------------------------------------//
 
-void check_stream_for_badbit(std::iostream& stream)
+void check_stream_for_badbit(std::iostream& str)
 {
-    BOOST_CHECK_MESSAGE(!stream.good(), "stream still good");
-    BOOST_CHECK_MESSAGE(!stream.eof(), "eofbit set but not expected");
-    BOOST_CHECK_MESSAGE(stream.bad(), "stream did not set badbit");
-    BOOST_CHECK_MESSAGE(stream.fail(), "stream did not fail");
-    BOOST_CHECK_MESSAGE(stream.operator ! (),
+    BOOST_CHECK_MESSAGE(!str.good(), "stream still good");
+    BOOST_CHECK_MESSAGE(!str.eof(), "eofbit set but not expected");
+    BOOST_CHECK_MESSAGE(str.bad(), "stream did not set badbit");
+    BOOST_CHECK_MESSAGE(str.fail(), "stream did not fail");
+    BOOST_CHECK_MESSAGE(str.operator ! (),
             "stream does not report failure by operator !");
-    BOOST_CHECK_MESSAGE(0 == stream.operator void* (),
+    BOOST_CHECK_MESSAGE(0 == str.operator void* (),
             "stream does not report failure by operator void*");
 }
 
@@ -113,28 +113,28 @@ struct wrap_throw_delayed {
 
 //------------------Stream operations that throw------------------------------//
 
-void test_read(std::iostream& stream)
+void test_read(std::iostream& str)
 {
     char data[10];
-    stream.read(data, 10);
+    str.read(data, 10);
 }
 
-void test_write(std::iostream& stream)
+void test_write(std::iostream& str)
 {
     char data[10] = {0};
-    stream.write(data, 10);
+    str.write(data, 10);
         //force use of streambuf
-    stream.flush();
+    str.flush();
 }
 
-void test_seekg(std::iostream& stream)
+void test_seekg(std::iostream& str)
 {
-    stream.seekg(10);
+    str.seekg(10);
 }
 
-void test_seekp(std::iostream& stream)
+void test_seekp(std::iostream& str)
 {
-    stream.seekp(10);
+    str.seekp(10);
 }
 
 test_suite* init_unit_test_suite(int, char* []) 
