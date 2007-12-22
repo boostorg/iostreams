@@ -157,6 +157,9 @@ std::streamsize file_descriptor::read(char_type* s, std::streamsize n)
 std::streamsize file_descriptor::write(const char_type* s, std::streamsize n)
 {
 #ifdef BOOST_IOSTREAMS_WINDOWS
+# ifndef INVALID_SET_FILE_POINTER
+#  define INVALID_SET_FILE_POINTER ((DWORD)-1)
+# endif
     if (pimpl_->flags_ & impl::has_handle) {
         if (pimpl_->flags_ & impl::append) {
             DWORD const dwResult =
