@@ -159,9 +159,13 @@ std::streamsize file_descriptor::write(const char_type* s, std::streamsize n)
 #ifdef BOOST_IOSTREAMS_WINDOWS
     if (pimpl_->flags_ & impl::has_handle) {
         if (pimpl_->flags_ & impl::append) {
-            ::SetFilePointer(pimpl_->handle_, 0, NULL, FILE_END);
-            if (::GetLastError() != NO_ERROR)
+            DWORD const dwResult =
+                ::SetFilePointer(pimpl_->handle_, 0, NULL, FILE_END);
+            if ( dwResult == INVALID_SET_FILE_POINTER &&
+                 ::GetLastError() != NO_ERROR )
+            {
                 throw detail::bad_seek();
+            }
         }
         DWORD ignore;
         if (!::WriteFile(pimpl_->handle_, s, n, &ignore, NULL))
