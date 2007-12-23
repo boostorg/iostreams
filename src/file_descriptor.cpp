@@ -31,6 +31,9 @@
 # include <io.h>         // low-level file i/o.
 # define WINDOWS_LEAN_AND_MEAN
 # include <windows.h>
+# ifndef INVALID_SET_FILE_POINTER
+#  define INVALID_SET_FILE_POINTER ((DWORD)-1)
+# endif
 #else
 # include <sys/types.h>  // mode_t.
 # include <unistd.h>     // low-level file i/o.
@@ -157,9 +160,6 @@ std::streamsize file_descriptor::read(char_type* s, std::streamsize n)
 std::streamsize file_descriptor::write(const char_type* s, std::streamsize n)
 {
 #ifdef BOOST_IOSTREAMS_WINDOWS
-# ifndef INVALID_SET_FILE_POINTER
-#  define INVALID_SET_FILE_POINTER ((DWORD)-1)
-# endif
     if (pimpl_->flags_ & impl::has_handle) {
         if (pimpl_->flags_ & impl::append) {
             DWORD const dwResult =
@@ -199,7 +199,9 @@ std::streampos file_descriptor::seek
                                   way == BOOST_IOS::cur ?
                                     FILE_CURRENT :
                                     FILE_END );
-        if (::GetLastError() != NO_ERROR) {
+        if ( dwResultLow == INVALID_SET_FILE_POINTER &&
+             ::GetLastError() != NO_ERROR )
+        {
             throw detail::bad_seek();
         } else {
            return offset_to_position(
