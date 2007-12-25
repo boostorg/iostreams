@@ -23,8 +23,6 @@ rule test-iostreams ( sources * : requirements * ) {
             : # build requirements
                 <toolset>msvc,<stdlib>stlport:<runtime-link>static
                 <toolset>msvc:<cxxflags>"-wd4996"
-                <toolset>msvc:<cxxflags>"-wd4512"
-                <toolset>msvc:<warnings>all
                 <toolset>cw-9.3,<os>darwin:<runtime-link>static
                 <define>BOOST_IOSTREAMS_NO_LIB
                 <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
