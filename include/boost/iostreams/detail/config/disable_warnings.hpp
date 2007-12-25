@@ -13,6 +13,7 @@
 # pragma warning(disable:4130)    // Logical operation on address of string constant.
 # pragma warning(disable:4224)    // Parameter previously defined as type.
 # pragma warning(disable:4244)    // Conversion: possible loss of data.
+# pragma warning(disable:4512)    // Assignment operator could not be generated.
 # pragma warning(disable:4706)    // Assignment within conditional expression.
 #else
 # if BOOST_WORKAROUND(__BORLANDC__, < 0x600)
