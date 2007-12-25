@@ -31,7 +31,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
-#include <boost/iostreams/detail/config/disable_warnings.hpp> // VC7.1 C4244.
+#include <boost/iostreams/detail/config/disable_warnings.hpp>
 
 namespace boost { namespace iostreams {
 

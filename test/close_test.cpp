@@ -24,8 +24,8 @@
 #include <boost/iostreams/tee.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/test/unit_test.hpp>  
-#include "./detail/closable.hpp"
-#include "./detail/operation_sequence.hpp"
+#include "detail/closable.hpp"
+#include "detail/operation_sequence.hpp"
 
 using namespace std;
 using namespace boost;

@@ -138,19 +138,22 @@ std::streamsize copy_impl( Source& src, Sink& snk,
 // Function object that delegates to one of the above four 
 // overloads of compl_impl()
 template<typename Source, typename Sink>
-struct copy_operation {
+class copy_operation {
+public:
     typedef std::streamsize result_type;
     copy_operation(Source& src, Sink& snk, std::streamsize buffer_size)
-        : src(src), snk(snk), buffer_size(buffer_size)
+        : src_(src), snk_(snk), buffer_size_(buffer_size)
         { }
     std::streamsize operator()() 
     {
-        return copy_impl( src, snk, buffer_size, 
+        return copy_impl( src_, snk_, buffer_size_, 
                           is_direct<Source>(), is_direct<Sink>() );
     }
-    Source&          src;
-    Sink&            snk;
-    std::streamsize  buffer_size;
+private:
+    copy_operation& operator=(const copy_operation&);
+    Source&          src_;
+    Sink&            snk_;
+    std::streamsize  buffer_size_;
 };
 
 // Primary overload of copy_impl. Delegates to one of the above four 
