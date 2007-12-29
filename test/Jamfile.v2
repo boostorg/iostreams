@@ -87,7 +87,7 @@ rule test-iostreams ( sources * : requirements * ) {
                   : <define>LARGE_FILE_KEEP=$(LARGE_FILE_KEEP)
                     $(KEEP) ] ;
       }
-      if $(LARGE_FILE_TEMP) && !$(LARGE_FILE_KEEP)
+      if $(LARGE_FILE_TEMP)
       {
           all-tests += 
               [ test-iostreams 
