@@ -13,6 +13,8 @@
  */
 
 #include <cstdio>            // SEEK_SET, etc.
+#include <ctime>
+#include <string>
 #include <boost/config.hpp>  // BOOST_STRINGIZE
 #include <boost/iostreams/detail/config/rtl.hpp>
 #include <boost/iostreams/detail/config/windows_posix.hpp>
@@ -20,6 +22,7 @@
 #include <boost/iostreams/detail/ios.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/positioning.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -82,29 +85,106 @@ void remove_large_file()
 #endif
 }
 
+//------------------Definition of large_file_exists---------------------------//
+
+// Returns true if the large file exists, has the correct size, and has been
+// modified since the last commit affecting this source file; if the file exists
+// but is invalid, deletes the file.
+bool large_file_exists()
+{
+    // Last mod date
+    time_t last_mod;
+
+#ifdef BOOST_IOSTREAMS_WINDOWS
+
+    // Check existence
+    WIN32_FIND_DATA info;
+    HANDLE hnd = FindFirstFile(TEXT(file_name), &info);
+    if (hnd == INVALID_HANDLE_VALUE) 
+        return false;
+
+    // Check size
+    FindClose(hnd);
+    stream_offset size = 
+        (static_cast<stream_offset>(info.nFileSizeHigh) << 32) + 
+        static_cast<stream_offset>(info.nFileSizeLow);
+    if (size != file_size) {
+        remove_large_file();
+        return false;
+    }
+
+    // Fetch last mod date
+    SYSTEMTIME stime;
+    if (!FileTimeToSystemTime(&info.ftLastWriteTime, &stime)) {
+        remove_large_file();
+        return false;    
+    }
+    tm ctime;
+    ctime.tm_year = stime.wYear - 1900;
+    ctime.tm_mon = stime.wMonth - 1;
+    ctime.tm_mday = stime.wDay;
+    ctime.tm_hour = stime.wHour;
+    ctime.tm_min = stime.wMinute;
+    ctime.tm_sec = stime.wSecond;
+    ctime.tm_isdst = 0;
+    last_mod = mktime(&ctime);
+
+#else
+
+    // Check existence
+    struct BOOST_IOSTREAMS_FD_STAT info;
+    if (BOOST_IOSTREAMS_FD_STAT(file_name, &info))
+        return false;
+
+    // Check size
+    if (info.st_size != file_size) {
+        remove_large_file();
+        return false;
+    }
+
+    // Fetch last mod date
+    last_mod = info.st_mtime;
+
+#endif
+
+    // Fetch last mod date of this file
+    string timestamp = 
+        "$Date$";
+    if (timestamp.size() != 53) { // Length of SVN auto-generated SVN timestamp
+        remove_large_file();
+        return false;
+    }
+    tm commit;
+    try {
+        commit.tm_year = lexical_cast<int>(timestamp.substr(7, 4)) - 1900;
+        commit.tm_mon = lexical_cast<int>(timestamp.substr(12, 2)) - 1;
+        commit.tm_mday = lexical_cast<int>(timestamp.substr(15, 2));
+        commit.tm_hour = lexical_cast<int>(timestamp.substr(18, 2));
+        commit.tm_min = lexical_cast<int>(timestamp.substr(21, 2));
+        commit.tm_sec = lexical_cast<int>(timestamp.substr(24, 2));
+    } catch (const bad_lexical_cast&) {
+        remove_large_file();
+        return false;
+    }
+
+    // If last commit was two days or more before file timestamp, existing 
+    // file is okay; otherwise, it must be regenerated
+    return difftime(last_mod, mktime(&commit)) >= 60 * 60 * 48; 
+}
+
 //------------------Definition of create_large_file---------------------------//
 
 // Creates and initializes the large file if it does not already exist
 bool create_large_file()
 {
+    // If file exists, has correct size, and is recent, we're done
+    if (keep_file && large_file_exists())
+        return true;
+
 #ifdef BOOST_IOSTREAMS_WINDOWS
 
-    // If file exists and has correct size, we're done
-    WIN32_FIND_DATA info;
-    HANDLE hnd = FindFirstFile(TEXT(file_name), &info);
-    if (hnd != INVALID_HANDLE_VALUE) {
-        FindClose(hnd);
-        __int64 size = 
-            (static_cast<__int64>(info.nFileSizeHigh) << 32) + 
-            static_cast<__int64>(info.nFileSizeLow);
-        if (size == file_size)
-            return true;
-        else
-            remove_large_file();
-    }
-
     // Create file
-    hnd =
+    HANDLE hnd =
         CreateFile(
             TEXT(file_name),
             GENERIC_WRITE,
@@ -169,15 +249,6 @@ bool create_large_file()
 	return true;
 
 #else // #ifdef BOOST_IOSTREAMS_WINDOWS
-
-    // If file exists and has correct size, we're done
-    struct stat info;
-    if (!stat(file_name, &info)) {
-        if (info.st_size == file_size)
-            return true;
-        else
-            remove_large_file();
-    }
 
     // Create file
     int oflag = O_WRONLY | O_CREAT;
@@ -259,7 +330,7 @@ bool check_character(file_descriptor_source& file, char value)
 void large_file_test()
 {
     BOOST_REQUIRE_MESSAGE(
-        sizeof(stream_offset) >= 64,
+        sizeof(stream_offset) >= 8,
         "large offsets not supported"
     );
 

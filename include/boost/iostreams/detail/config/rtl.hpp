@@ -36,7 +36,7 @@
 #define BOOST_IOSTREAMS_FD_READ   BOOST_IOSTREAMS_RTL(read)
 #define BOOST_IOSTREAMS_FD_WRITE  BOOST_IOSTREAMS_RTL(write)
 
-// Handle lseek and truncate
+// Handle lseek, ftruncate, stat, and off_t
 #if defined(BOOST_IOSTREAMS_WINDOWS) && !defined(__CYGWIN__)
 # if defined(BOOST_MSVC) || defined(__MSVCRT__) // MSVC, MinGW
 #  define BOOST_IOSTREAMS_FD_SEEK    _lseeki64
@@ -52,10 +52,12 @@
      /**/
 #  define BOOST_IOSTREAMS_FD_SEEK      lseek64  // GCC for some 32-bit *nix
 #  define BOOST_IOSTREAMS_FD_TRUNCATE  ftruncate64
+#  define BOOST_IOSTREAMS_FD_STAT      stat64
 #  define BOOST_IOSTREAMS_FD_OFFSET    off64_t
-# else                                        // Cygwin, Darwin, ...
+# else                                          // Cygwin, Darwin, ...
 #  define BOOST_IOSTREAMS_FD_SEEK      lseek
 #  define BOOST_IOSTREAMS_FD_TRUNCATE  ftruncate
+#  define BOOST_IOSTREAMS_FD_STAT      stat
 #  define BOOST_IOSTREAMS_FD_OFFSET    off_t
 # endif
 #endif
