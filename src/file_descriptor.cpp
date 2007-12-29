@@ -13,6 +13,8 @@
 #define BOOST_IOSTREAMS_SOURCE
 
 #include <cassert>
+#include <cerrno>
+#include <cstdio>                                 // SEEK_SET, etc.
 #include <boost/config.hpp>                       // BOOST_JOIN
 #include <boost/iostreams/detail/error.hpp>
 #include <boost/iostreams/detail/config/dyn_link.hpp>
@@ -24,9 +26,6 @@
 
     // OS-specific headers for low-level i/o.
 
-#include <cassert>
-#include <cstdio>        // SEEK_SET, etc.
-#include <errno.h>
 #include <fcntl.h>       // file opening flags.
 #include <sys/stat.h>    // file access permissions.
 #ifdef BOOST_IOSTREAMS_WINDOWS
@@ -116,6 +115,9 @@ void file_descriptor::open
     }
     if (m & BOOST_IOS::trunc)
         oflag |= O_CREAT;
+    #ifdef _LARGEFILE64_SOURCE
+        oflag |= O_LARGEFILE;
+    #endif
 
         // Calculate pmode argument to open.
 
