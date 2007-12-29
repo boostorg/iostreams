@@ -258,6 +258,11 @@ bool check_character(file_descriptor_source& file, char value)
 
 void large_file_test()
 {
+    BOOST_REQUIRE_MESSAGE(
+        sizeof(stream_offset) >= 64,
+        "large offsets not supported"
+    );
+
     // Prepare file and file descriptor
     large_file              large;
     file_descriptor_source  file;
