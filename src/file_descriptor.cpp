@@ -12,6 +12,7 @@
 // than using it (possibly importing code).
 #define BOOST_IOSTREAMS_SOURCE
 
+#include <cassert>
 #include <boost/config.hpp> // BOOST_JOIN
 #include <boost/iostreams/detail/error.hpp>
 #include <boost/iostreams/detail/config/dyn_link.hpp>
@@ -31,6 +32,9 @@
 # include <io.h>         // low-level file i/o.
 # define WINDOWS_LEAN_AND_MEAN
 # include <windows.h>
+# ifndef INVALID_SET_FILE_POINTER
+#  define INVALID_SET_FILE_POINTER ((DWORD)-1)
+# endif
 #else
 # include <sys/types.h>  // mode_t.
 # include <unistd.h>     // low-level file i/o.
@@ -64,14 +68,16 @@ void file_descriptor::open
              ==
          (BOOST_IOS::in | BOOST_IOS::out) )
     {
-        assert(!(m & BOOST_IOS::app));
+        if (m & BOOST_IOS::app)
+            throw BOOST_IOSTREAMS_FAILURE("bad open mode");
         dwDesiredAccess = GENERIC_READ | GENERIC_WRITE;
         dwCreationDisposition =
             (m & BOOST_IOS::trunc) ?
                 OPEN_ALWAYS :
                 OPEN_EXISTING;
     } else if (m & BOOST_IOS::in) {
-        assert(!(m & (BOOST_IOS::app |BOOST_IOS::trunc)));
+        if (m & (BOOST_IOS::app |BOOST_IOS::trunc))
+            throw BOOST_IOSTREAMS_FAILURE("bad open mode");
         dwDesiredAccess = GENERIC_READ;
         dwCreationDisposition = OPEN_EXISTING;
     } else if (m & BOOST_IOS::out) {
@@ -79,6 +85,8 @@ void file_descriptor::open
         dwCreationDisposition = OPEN_ALWAYS;
         if (m & BOOST_IOS::app)
             pimpl_->flags_ |= impl::append;
+    } else {
+        throw BOOST_IOSTREAMS_FAILURE("bad open mode");
     }
 
     HANDLE handle =
@@ -159,9 +167,13 @@ std::streamsize file_descriptor::write(const char_type* s, std::streamsize n)
 #ifdef BOOST_IOSTREAMS_WINDOWS
     if (pimpl_->flags_ & impl::has_handle) {
         if (pimpl_->flags_ & impl::append) {
-            ::SetFilePointer(pimpl_->handle_, 0, NULL, FILE_END);
-            if (::GetLastError() != NO_ERROR)
+            DWORD const dwResult =
+                ::SetFilePointer(pimpl_->handle_, 0, NULL, FILE_END);
+            if ( dwResult == INVALID_SET_FILE_POINTER &&
+                 ::GetLastError() != NO_ERROR )
+            {
                 throw detail::bad_seek();
+            }
         }
         DWORD ignore;
         if (!::WriteFile(pimpl_->handle_, s, n, &ignore, NULL))
@@ -192,10 +204,14 @@ std::streampos file_descriptor::seek
                                   way == BOOST_IOS::cur ?
                                     FILE_CURRENT :
                                     FILE_END );
-        if (::GetLastError() != NO_ERROR) {
+        if ( dwResultLow == INVALID_SET_FILE_POINTER &&
+             ::GetLastError() != NO_ERROR )
+        {
             throw detail::bad_seek();
         } else {
-           return offset_to_position((lDistanceToMoveHigh << 32) + dwResultLow);
+           return offset_to_position(
+ 	   	              (stream_offset(lDistanceToMoveHigh) << 32) + dwResultLow
+                  );
         }
     }
 #endif // #ifdef BOOST_IOSTREAMS_WINDOWS
