@@ -42,9 +42,10 @@ namespace boost { namespace iostreams { namespace detail {
 template<typename Direct>
 class direct_adapter_base {
 public:
-    typedef typename char_type_of<Direct>::type char_type;
+    typedef typename char_type_of<Direct>::type  char_type;
+    typedef typename mode_of<Direct>::type       mode_type;
     struct category 
-        : mode_of<Direct>::type,
+        : mode_type,
           device_tag,
           closable_tag
           #ifndef BOOST_IOSTREAMS_NO_LOCALE
