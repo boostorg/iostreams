@@ -222,7 +222,7 @@ inline std::streampos direct_adapter<Direct>::seek
     pointers& get = ptrs_.first();
     pointers& put = ptrs_.second();
     if (way == BOOST_IOS::cur && get.ptr != put.ptr)
-       bad_seek();
+       throw bad_seek();
     ptrdiff_t next = 0;
     if ((which & BOOST_IOS::in) || !is_double::value) {
         if (way == BOOST_IOS::beg)
@@ -234,7 +234,7 @@ inline std::streampos direct_adapter<Direct>::seek
         if (next >= 0 && next < get.end - get.beg)
             get.ptr = get.beg + next;
         else
-            bad_seek();
+            throw bad_seek();
     }
     if ((which & BOOST_IOS::out) && is_double::value) {
         if (way == BOOST_IOS::beg)
@@ -246,7 +246,7 @@ inline std::streampos direct_adapter<Direct>::seek
         if (next >= 0 && next < put.end - put.beg)
             put.ptr = put.beg + next;
         else
-            bad_seek();
+            throw bad_seek();
     }
     return offset_to_position(next);
 }
