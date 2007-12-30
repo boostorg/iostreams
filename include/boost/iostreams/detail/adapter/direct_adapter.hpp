@@ -231,7 +231,7 @@ inline std::streampos direct_adapter<Direct>::seek
             next = get.ptr - get.beg + off; 
         else
             next = get.end - get.beg + off; 
-        if (next >= 0 && next < get.end - get.beg)
+        if (next >= 0 && next <= get.end - get.beg)
             get.ptr = get.beg + next;
         else
             throw bad_seek();
@@ -243,7 +243,7 @@ inline std::streampos direct_adapter<Direct>::seek
             next = put.ptr - put.beg + off; 
         else
             next = put.end - put.beg + off; 
-        if (next >= 0 && next < put.end - put.beg)
+        if (next >= 0 && next <= put.end - put.beg)
             put.ptr = put.beg + next;
         else
             throw bad_seek();
