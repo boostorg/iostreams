@@ -21,6 +21,7 @@
 #include <boost/iostreams/detail/execute.hpp>
 #include <boost/iostreams/detail/ios.hpp>
 #include <boost/iostreams/device/file_descriptor.hpp>
+#include <boost/iostreams/device/mapped_file.hpp>
 #include <boost/iostreams/positioning.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/test/test_tools.hpp>
@@ -150,7 +151,7 @@ bool large_file_exists()
     // Fetch last mod date of this file
     string timestamp = 
         "$Date$";
-    if (timestamp.size() != 53) { // Length of SVN auto-generated SVN timestamp
+    if (timestamp.size() != 53) { // Length of auto-generated SVN timestamp
         remove_large_file();
         return false;
     }
@@ -190,10 +191,8 @@ bool create_large_file()
             GENERIC_WRITE,
             0,
             NULL,
-            OPEN_ALWAYS,
-            FILE_ATTRIBUTE_NORMAL | 
-                FILE_FLAG_RANDOM_ACCESS |
-                FILE_FLAG_WRITE_THROUGH,
+            CREATE_ALWAYS,
+            FILE_ATTRIBUTE_NORMAL,
             NULL
         );
     if (!hnd)
@@ -217,35 +216,25 @@ bool create_large_file()
         return false;
     }
 
+    // Close handle; all further access is via mapped_file
+    CloseHandle(hnd);
+
     // Initialize file data
     for (int z = 0; z <= 8; ++z) {
-
-        // Seek
-        length.HighPart = 0;
-        length.LowPart = 0;
-        length.QuadPart = z * gigabyte;
-        LARGE_INTEGER ptr;
-        if ( !SetFilePointerEx(hnd, length, &ptr, FILE_BEGIN) ||
-             ptr.QuadPart != z * gigabyte )
-        {
-            CloseHandle(hnd);
-            remove_large_file();
-            return false;
-        }
-
-        // Write a character
-        char buf[1] = { z + 1 };
-        DWORD result;
-        BOOL success = WriteFile(hnd, buf, 1, &result, NULL);
-        if (!success || result != 1) {
-            CloseHandle(hnd);
-            remove_large_file();
+        try {
+            mapped_file_params params;
+            params.path = file_name;
+            params.offset = z * gigabyte;
+            params.length = 1;
+            params.mode = BOOST_IOS::out;
+            mapped_file file(params);
+            file.begin()[0] = z + 1;
+        } catch (...) {
             return false;
         }
     }
 
     // Close file
-    CloseHandle(hnd);
 	return true;
 
 #else // #ifdef BOOST_IOSTREAMS_WINDOWS
