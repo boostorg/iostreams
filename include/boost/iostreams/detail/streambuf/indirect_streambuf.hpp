@@ -346,10 +346,8 @@ indirect_streambuf<T, Tr, Alloc, Mode>::seek_impl
          eback() - gptr() <= off && off <= egptr() - gptr() ) 
     {   // Small seek optimization
         gbump(off);
-        return offset_to_position(
-                   obj().seek(0, BOOST_IOS::cur, BOOST_IOS::in, next_) -
-                   static_cast<std::streamoff>(egptr() - gptr())
-               );
+        return obj().seek(0, BOOST_IOS::cur, BOOST_IOS::in, next_) -
+               static_cast<off_type>(egptr() - gptr());
     }
     if (pptr() != 0) 
         this->BOOST_IOSTREAMS_PUBSYNC(); // sync() confuses VisualAge 6.
