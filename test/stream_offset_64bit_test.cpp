@@ -43,8 +43,9 @@ void stream_offset_64bit_test()
             stringstream s;
             s << "off != position_to_offset(offset_to_position(off)) "
                  "failed for (off >> 32) == " 
-              << (off >> 32) << " and (off & 0xFFFFFFFF) == "
-              << (off & 0xFFFFFFFF);
+              << static_cast<unsigned int>(off >> 32) 
+              << " and (off & 0xFFFFFFFF) == "
+              << static_cast<unsigned int>(off & 0xFFFFFFFF);
             BOOST_REQUIRE_MESSAGE(0, s.str().c_str());
         }
     }
