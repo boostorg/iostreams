@@ -38,7 +38,7 @@ template<typename PosType> // Hande custom pos_type's.
 inline stream_offset position_to_offset(PosType pos)
 { return std::streamoff(pos); }
 
-#if ((defined(_YVALS) && !defined(__IBMCPP__)) || defined(_CPPLIB_VER)) && \
+#if (defined(_YVALS) || defined(_CPPLIB_VER)) && \
      !defined(__SGI_STL_PORT) && !defined(_STLPORT_VERSION) \
      && !defined(__QNX__) \
    /**/
