@@ -416,6 +416,11 @@ template<typename Filter, typename Device, typename Mode>
 void composite_device<Filter, Device, Mode>::close()
 {
     BOOST_STATIC_ASSERT((!is_convertible<Mode, two_sequence>::value));
+    BOOST_STATIC_ASSERT(
+        !(is_convertible<filter_mode, dual_use>::value) ||
+        !(is_convertible<device_mode, input>::value) ||
+        !(is_convertible<device_mode, output>::value)
+    );
 
     // Close input sequences in reverse order and output sequences 
     // in forward order
@@ -443,17 +448,10 @@ template<typename Filter, typename Device, typename Mode>
 void composite_device<Filter, Device, Mode>::close(BOOST_IOS::openmode which)
 {
     BOOST_STATIC_ASSERT((is_convertible<Mode, two_sequence>::value));
-    BOOST_STATIC_ASSERT(
-        !(is_convertible<filter_mode, dual_use>::value) ||
-        !(is_convertible<device_mode, input>::value) ||
-        !(is_convertible<device_mode, output>::value)
-    );
+    BOOST_STATIC_ASSERT(!(is_convertible<filter_mode, dual_use>::value));
 
     // Close input sequences in reverse order
-    if ( which == BOOST_IOS::in &&
-         ( !is_convertible<filter_mode, dual_use>::value ||
-            is_convertible<device_mode, input>::value ) )
-    {
+    if (which == BOOST_IOS::in) {
         detail::execute_all(
             detail::call_close(device_, BOOST_IOS::in),
             detail::call_close(filter_, device_, BOOST_IOS::in) 
@@ -461,10 +459,7 @@ void composite_device<Filter, Device, Mode>::close(BOOST_IOS::openmode which)
     }
 
     // Close output sequences in forward order
-    if ( which == BOOST_IOS::out &&
-         ( !is_convertible<filter_mode, dual_use>::value ||
-            is_convertible<device_mode, output>::value ) )
-    {
+    if (which == BOOST_IOS::out) {
         detail::execute_all(
             detail::call_close(filter_, device_, BOOST_IOS::out),
             detail::call_close(device_, BOOST_IOS::out)

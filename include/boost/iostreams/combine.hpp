@@ -99,22 +99,22 @@ public:
 
     template<typename Sink>
     void close(Sink& snk, BOOST_IOS::openmode which)
-        {
-            if (which == BOOST_IOS::in) {
-                if (is_convertible<in_category, dual_use>::value) {
-                    iostreams::close(in_, snk, BOOST_IOS::in);
-                } else {
-                    detail::close_all(in_, snk);
-                }
-            }
-            if (which == BOOST_IOS::out) {
-                if (is_convertible<in_category, dual_use>::value) {
-                    iostreams::close(out_, snk, BOOST_IOS::out);
-                } else {
-                    detail::close_all(out_, snk);
-                }
+    {
+        if (which == BOOST_IOS::in) {
+            if (is_convertible<in_category, dual_use>::value) {
+                iostreams::close(in_, snk, BOOST_IOS::in);
+            } else {
+                detail::close_all(in_, snk);
             }
         }
+        if (which == BOOST_IOS::out) {
+            if (is_convertible<out_category, dual_use>::value) {
+                iostreams::close(out_, snk, BOOST_IOS::out);
+            } else {
+                detail::close_all(out_, snk);
+            }
+        }
+    }
     #ifndef BOOST_NO_STD_LOCALE
         void imbue(const std::locale& loc);
     #endif

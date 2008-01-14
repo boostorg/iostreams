@@ -142,6 +142,54 @@ void combine_test()
         BOOST_CHECK_OPERATION_SEQUENCE(seq);
     }
 
+    // Combine a dual-use filter and an input filter
+    {
+        operation_sequence    seq;
+        chain<bidirectional>  ch;
+        operation             dummy;
+        ch.push(
+            io::combine(
+                closable_filter<input>(seq.new_operation(2)),
+                closable_filter<dual_use>(
+                    dummy,
+                    seq.new_operation(3)
+                )
+            )
+        );
+        ch.push(
+            closable_device<bidirectional>(
+                seq.new_operation(1),
+                seq.new_operation(4)
+            )
+        );
+        BOOST_CHECK_NO_THROW(ch.reset());
+        BOOST_CHECK_OPERATION_SEQUENCE(seq);
+    }
+
+    // Combine a dual-use filter and an output filter
+    {
+        operation_sequence    seq;
+        chain<bidirectional>  ch;
+        operation             dummy;
+        ch.push(
+            io::combine(
+                closable_filter<dual_use>(
+                    seq.new_operation(2),
+                    dummy
+                ),
+                closable_filter<output>(seq.new_operation(3))
+            )
+        );
+        ch.push(
+            closable_device<bidirectional>(
+                seq.new_operation(1),
+                seq.new_operation(4)
+            )
+        );
+        BOOST_CHECK_NO_THROW(ch.reset());
+        BOOST_CHECK_OPERATION_SEQUENCE(seq);
+    }
+
     // Combine two dual-use filters
     {
         operation_sequence    seq;
