@@ -146,22 +146,23 @@ void combine_test()
     {
         operation_sequence    seq;
         chain<bidirectional>  ch;
+        operation             dummy;
         ch.push(
             io::combine(
                 closable_filter<dual_use>(
                     seq.new_operation(2),
-                    seq.new_operation(3)
+                    dummy
                 ),
                 closable_filter<dual_use>(
-                    seq.new_operation(4),
-                    seq.new_operation(5)
+                    dummy,
+                    seq.new_operation(3)
                 )
             )
         );
         ch.push(
             closable_device<bidirectional>(
                 seq.new_operation(1),
-                seq.new_operation(6)
+                seq.new_operation(4)
             )
         );
         BOOST_CHECK_NO_THROW(ch.reset());
