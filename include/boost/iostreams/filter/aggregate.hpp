@@ -15,10 +15,13 @@
 #include <cassert>
 #include <iterator>                           // back_inserter
 #include <vector>
+#include <boost/iostreams/constants.hpp>      // default_device_buffer_size 
 #include <boost/iostreams/categories.hpp>
 #include <boost/iostreams/detail/char_traits.hpp>
 #include <boost/iostreams/detail/ios.hpp>     // openmode, streamsize.
 #include <boost/iostreams/pipeline.hpp>
+#include <boost/iostreams/read.hpp>           // check_eof 
+#include <boost/iostreams/write.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
@@ -58,8 +61,8 @@ public:
         state_ |= f_read;
         if (!(state_ & f_eof))
             do_read(src);
-        streamsize amt =
-            (std::min)(n, static_cast<streamsize>(data_.size() - ptr_));
+        std::streamsize amt =
+            (std::min)(n, static_cast<std::streamsize>(data_.size() - ptr_));
         if (amt) {
             BOOST_IOSTREAMS_CHAR_TRAITS(char_type)::copy(s, &data_[ptr_], amt);
             ptr_ += amt;
@@ -110,9 +113,9 @@ private:
         using std::streamsize;
         vector_type data;
         while (true) {
-            const streamsize  size = default_device_buffer_size;
-            Ch                buf[size];
-            streamsize        amt;
+            const std::streamsize  size = default_device_buffer_size;
+            Ch                     buf[size];
+            std::streamsize        amt;
             if ((amt = boost::iostreams::read(src, buf, size)) == -1)
                 break;
             data.insert(data.end(), buf, buf + amt);

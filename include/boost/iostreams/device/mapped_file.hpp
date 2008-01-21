@@ -62,7 +62,9 @@ struct mapped_file_impl;
 
 struct mapped_file_params {
     explicit mapped_file_params()
-    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER)
+    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER) || \
+        defined(__BORLANDC__) && defined(_CPPLIB_VER)
+        /**/
         : mode(std::ios_base::openmode(0)),
     #else
         : mode(),
@@ -72,7 +74,8 @@ struct mapped_file_params {
         { }
     explicit mapped_file_params(const std::string& path)
         : path(path),
-    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER)
+    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER) || \
+        defined(__BORLANDC__) && defined(_CPPLIB_VER)
           mode(std::ios_base::openmode(0)),
     #else
           mode(),
@@ -221,6 +224,7 @@ struct BOOST_IOSTREAMS_DECL mapped_file_sink : private mapped_file {
           public closable_tag
         { };
     using mapped_file::close;
+    using mapped_file::size;
     explicit mapped_file_sink(mapped_file_params p);
     explicit mapped_file_sink( const std::string& path,
                                size_type length = max_length,

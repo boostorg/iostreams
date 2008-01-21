@@ -18,7 +18,9 @@
 #include <boost/config.hpp>                        // BOOST_STATIC_CONSTANT.
 #include <boost/iostreams/categories.hpp>
 #include <boost/iostreams/detail/ios.hpp>          // openmode, streamsize.
+#include <boost/iostreams/read.hpp>                // check_eof 
 #include <boost/iostreams/pipeline.hpp>
+#include <boost/iostreams/write.hpp>
 
 // Must come last.
 #include <boost/iostreams/detail/config/disable_warnings.hpp> // VC7.1 C4244.
@@ -70,7 +72,7 @@ public:
         state_ |= f_read;
 
         // Handle unfinished business.
-        streamsize result = 0;
+        std::streamsize result = 0;
         if (!cur_line_.empty() && (result = read_line(s, n)) == n)
             return n;
 
@@ -143,8 +145,8 @@ private:
     std::streamsize read_line(char_type* s, std::streamsize n)
     {
         using namespace std;
-        streamsize result =
-            (std::min) (n, static_cast<streamsize>(cur_line_.size()));
+        std::streamsize result =
+            (std::min) (n, static_cast<std::streamsize>(cur_line_.size()));
         traits_type::copy(s, cur_line_.data(), result);
         cur_line_.erase(0, result);
         return result;

@@ -311,10 +311,9 @@ template<typename Device, typename Codevt, typename Alloc>
 std::streamsize code_converter<Device, Codevt, Alloc>::read
     (char_type* s, std::streamsize n)
 {
-    using namespace std;
     const extern_type*   next;        // Next external char.
     intern_type*         nint;        // Next internal char.
-    streamsize           total = 0;   // Characters read.
+    std::streamsize      total = 0;   // Characters read.
     int                  status = iostreams::char_traits<char>::good();
     bool                 partial = false;
     buffer_type&         buf = in();
@@ -330,28 +329,28 @@ std::streamsize code_converter<Device, Codevt, Alloc>::read
         }
 
         // Convert.
-        codecvt_base::result result =
+        std::codecvt_base::result result =
             cvt().in( buf.state(),
                       buf.ptr(), buf.eptr(), next,
                       s + total, s + n, nint );
         buf.ptr() += next - buf.ptr();
-        total = static_cast<streamsize>(nint - s);
+        total = static_cast<std::streamsize>(nint - s);
 
         switch (result) {
-        case codecvt_base::partial:
+        case std::codecvt_base::partial:
             partial = true;
             break;
-        case codecvt_base::ok:
+        case std::codecvt_base::ok:
             break;
-        case codecvt_base::noconv:
+        case std::codecvt_base::noconv:
             {
-                streamsize amt = 
-                    std::min<streamsize>(next - buf.ptr(), n - total);
+                std::streamsize amt = 
+                    std::min<std::streamsize>(next - buf.ptr(), n - total);
                 detail::strncpy_if_same(s + total, buf.ptr(), amt);
                 total += amt;
             }
             break;
-        case codecvt_base::error:
+        case std::codecvt_base::error:
         default:
             buf.state() = state_type();
             throw code_conversion_error();
@@ -366,11 +365,10 @@ template<typename Device, typename Codevt, typename Alloc>
 std::streamsize code_converter<Device, Codevt, Alloc>::write
     (const char_type* s, std::streamsize n)
 {
-    using namespace std;
     buffer_type&        buf = out();
     extern_type*        next;              // Next external char.
     const intern_type*  nint;              // Next internal char.
-    streamsize          total = 0;         // Characters written.
+    std::streamsize     total = 0;         // Characters written.
     bool                partial = false;
 
     while (total < n) {
@@ -383,7 +381,7 @@ std::streamsize code_converter<Device, Codevt, Alloc>::write
         }
        
         // Convert.
-        codecvt_base::result result =
+        std::codecvt_base::result result =
             cvt().out( buf.state(),
                        s + total, s + n, nint,
                        buf.eptr(), buf.end(), next );
@@ -391,21 +389,21 @@ std::streamsize code_converter<Device, Codevt, Alloc>::write
         buf.eptr() += progress;
 
         switch (result) {
-        case codecvt_base::partial:
+        case std::codecvt_base::partial:
             partial = true; // Fall through.
-        case codecvt_base::ok:
-            total = static_cast<streamsize>(nint - s);
+        case std::codecvt_base::ok:
+            total = static_cast<std::streamsize>(nint - s);
             break;
-        case codecvt_base::noconv:
+        case std::codecvt_base::noconv:
             {
-                streamsize amt = 
-                    std::min<streamsize>( nint - total - s, 
-                                          buf.end() - buf.eptr() );
+                std::streamsize amt = 
+                    std::min<std::streamsize>( nint - total - s, 
+                                               buf.end() - buf.eptr() );
                 detail::strncpy_if_same(buf.eptr(), s + total, amt);
                 total += amt;
             }
             break;
-        case codecvt_base::error:
+        case std::codecvt_base::error:
         default:
             buf.state() = state_type();
             throw code_conversion_error();

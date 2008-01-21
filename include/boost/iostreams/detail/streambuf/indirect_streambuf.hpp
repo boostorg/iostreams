@@ -7,6 +7,8 @@
 // A. Langer and K. Kreft, "Standard C++ IOStreams and Locales",
 // Addison-Wesley, 2000, pp. 228-43.
 
+// User "GMSB" provided an optimization for small seeks.
+
 #ifndef BOOST_IOSTREAMS_DETAIL_INDIRECT_STREAMBUF_HPP_INCLUDED
 #define BOOST_IOSTREAMS_DETAIL_INDIRECT_STREAMBUF_HPP_INCLUDED
 
@@ -122,7 +124,7 @@ private:
     enum flag_type {
         f_open             = 1,
         f_output_buffered  = f_open << 1,
-        f_auto_close       = f_output_buffered << 1,
+        f_auto_close       = f_output_buffered << 1
     };
 
     optional<wrapper>           storage_;
@@ -165,7 +167,7 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::open
     // Construct input buffer.
     if (can_read()) {
         pback_size_ = (std::max)(2, pback_size); // STLPort needs 2.
-        streamsize size =
+        std::streamsize size =
             pback_size_ +
             ( buffer_size ? buffer_size: 1 );
         in().resize(size);
@@ -236,8 +238,9 @@ indirect_streambuf<T, Tr, Alloc, Mode>::underflow()
     if (gptr() < egptr()) return traits_type::to_int_type(*gptr());
 
     // Fill putback buffer.
-    streamsize keep = (std::min)( static_cast<streamsize>(gptr() - eback()),
-                                  pback_size_ );
+    std::streamsize keep = 
+        (std::min)( static_cast<std::streamsize>(gptr() - eback()),
+                    pback_size_ );
     if (keep)
         traits_type::move( buf.data() + (pback_size_ - keep),
                            gptr() - keep, keep );
@@ -248,7 +251,7 @@ indirect_streambuf<T, Tr, Alloc, Mode>::underflow()
           buf.data() + pback_size_ );
 
     // Read from source.
-    streamsize chars =
+    std::streamsize chars =
         obj().read(buf.data() + pback_size_, buf.size() - pback_size_, next_);
     if (chars == -1) {
         this->set_true_eof(true);
@@ -329,10 +332,9 @@ indirect_streambuf<T, Tr, Alloc, Mode>::seekoff
 template<typename T, typename Tr, typename Alloc, typename Mode>
 inline typename indirect_streambuf<T, Tr, Alloc, Mode>::pos_type
 indirect_streambuf<T, Tr, Alloc, Mode>::seekpos
-    (pos_type sp, BOOST_IOS::openmode)
+    (pos_type sp, BOOST_IOS::openmode which)
 { 
-    return seek_impl( position_to_offset(sp), BOOST_IOS::beg, 
-                      BOOST_IOS::in | BOOST_IOS::out ); 
+    return seek_impl(position_to_offset(sp), BOOST_IOS::beg, which); 
 }
 
 template<typename T, typename Tr, typename Alloc, typename Mode>
@@ -340,6 +342,13 @@ typename indirect_streambuf<T, Tr, Alloc, Mode>::pos_type
 indirect_streambuf<T, Tr, Alloc, Mode>::seek_impl
     (stream_offset off, BOOST_IOS::seekdir way, BOOST_IOS::openmode which)
 {
+    if ( gptr() != 0 && way == BOOST_IOS::cur && which == BOOST_IOS::in && 
+         eback() - gptr() <= off && off <= egptr() - gptr() ) 
+    {   // Small seek optimization
+        gbump(off);
+        return obj().seek(0, BOOST_IOS::cur, BOOST_IOS::in, next_) -
+               static_cast<off_type>(egptr() - gptr());
+    }
     if (pptr() != 0) 
         this->BOOST_IOSTREAMS_PUBSYNC(); // sync() confuses VisualAge 6.
     if (way == BOOST_IOS::cur && gptr())
@@ -365,7 +374,11 @@ inline void indirect_streambuf<T, Tr, Alloc, Mode>::close_impl
         sync();
         setp(0, 0);
     }
-    obj().close(which, next_);
+    if ( !is_convertible<category, dual_use>::value ||
+         is_convertible<Mode, input>::value == (which == BOOST_IOS::in) )
+    {
+        obj().close(which, next_);
+    }
 }
 
 //----------State changing functions------------------------------------------//
