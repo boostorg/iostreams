@@ -1,5 +1,6 @@
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2004-2007 Jonathan Turkanis
 // (C) Copyright Craig Henderson 2002 'boost/memmap.hpp' from sandbox
-// (C) Copyright Jonathan Turkanis 2004.
 // (C) Copyright Jonathan Graehl 2004.
 
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -122,9 +123,6 @@ void mapped_file_source::open( const std::string& path,
 
 mapped_file_source::size_type mapped_file_source::size() const
 { return pimpl_->size_; }
-
-bool mapped_file_source::is_open() const
-{ return !!pimpl_ && pimpl_->handle_ != 0; }
 
 void mapped_file_source::close() { pimpl_->close(); }
 
@@ -283,6 +281,9 @@ void mapped_file_source::open_impl(mapped_file_params p)
     pimpl_->data_ = reinterpret_cast<char*>(data);
 }
 
+bool mapped_file_source::is_open() const
+{ return !!pimpl_ && pimpl_->handle_ != INVALID_HANDLE_VALUE; }
+
 int mapped_file_source::alignment()
 {
     SYSTEM_INFO info;
@@ -367,6 +368,9 @@ void mapped_file_source::open_impl(mapped_file_params p)
 
     return;
 }
+
+bool mapped_file_source::is_open() const
+{ return !!pimpl_ && pimpl_->handle_ != 0; }
 
 int mapped_file_source::alignment()
 { return static_cast<int>(sysconf(_SC_PAGESIZE)); }

@@ -8,8 +8,9 @@
  *
  * File:        libs/iostreams/test/large_file_test.cpp
  * Date:        Tue Dec 25 21:34:47 MST 2007
- * Copyright:   2007 CodeRage
+ * Copyright:   2007-2008 CodeRage, LLC
  * Author:      Jonathan Turkanis
+ * Contact:     turkanis at coderage dot com
  */
 
 #include <cstdio>            // SEEK_SET, etc.
@@ -27,6 +28,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
     // OS-specific headers for low-level i/o.
 
