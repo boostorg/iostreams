@@ -6,7 +6,7 @@
 // See http://www.boost.org/libs/iostreams for documentation.
 
 // Adapted from <boost/config/auto_link.hpp> and from
-// http://beta.boost.org/development/separate_compilation.html, by John Maddock.
+// http://www.boost.org/more/separate_compilation.html, by John Maddock.
 
 #ifndef BOOST_IOSTREAMS_DETAIL_CONFIG_BZIP2_HPP_INCLUDED
 #define BOOST_IOSTREAMS_DETAIL_CONFIG_BZIP2_HPP_INCLUDED

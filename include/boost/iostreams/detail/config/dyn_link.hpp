@@ -5,7 +5,7 @@
 
 // See http://www.boost.org/libs/iostreams for documentation.
 
-// Adapted from http://beta.boost.org/development/separate_compilation.html, by
+// Adapted from http://www.boost.org/more/separate_compilation.html, by
 // John Maddock.
 
 #ifndef BOOST_IOSTREAMS_DETAIL_CONFIG_DYN_LINK_HPP_INCLUDED
