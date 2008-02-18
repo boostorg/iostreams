@@ -42,6 +42,9 @@ typedef stream_buffer<warray>  array_wstreambuf;
 typedef io::filtering_stream<seekable>           filtering_iostream;
 typedef io::filtering_stream<seekable, wchar_t>  filtering_wiostream;
 
+typedef io::detail::linked_streambuf<char>     linkedbuf;
+typedef io::detail::linked_streambuf<wchar_t>  wlinkedbuf;
+
 #define BOOST_CHECK_BOOL_TRAIT(trait, type, status) \
     BOOST_CHECK(trait< type >::value == status)
     /**/
@@ -59,7 +62,8 @@ typedef io::filtering_stream<seekable, wchar_t>  filtering_wiostream;
     filtering_istream_, filtering_wistream_, \
     filtering_ostream_, filtering_wostream_, \
     filtering_iostream_, filtering_wiostream_, \
-    filtering_istreambuf_, filtering_wistreambuf_ ) \
+    filtering_istreambuf_, filtering_wistreambuf_, \
+    linkedbuf_, wlinkedbuf_ ) \
     BOOST_CHECK_BOOL_TRAIT(trait, std::istream, istream_); \
     BOOST_CHECK_BOOL_TRAIT(trait, std::wistream, wistream_); \
     BOOST_CHECK_BOOL_TRAIT(trait, std::ostream, ostream_); \
@@ -99,6 +103,8 @@ typedef io::filtering_stream<seekable, wchar_t>  filtering_wiostream;
     BOOST_CHECK_BOOL_TRAIT(trait, filtering_wiostream, filtering_wiostream_); \
     BOOST_CHECK_BOOL_TRAIT(trait, io::filtering_istreambuf, filtering_istreambuf_); \
     BOOST_CHECK_BOOL_TRAIT(trait, io::filtering_wistreambuf, filtering_wistreambuf_); \
+    BOOST_CHECK_BOOL_TRAIT(trait, linkedbuf, linkedbuf_); \
+    BOOST_CHECK_BOOL_TRAIT(trait, wlinkedbuf, wlinkedbuf_); \
     BOOST_CHECK_BOOL_TRAIT(trait, io::array, false); \
     BOOST_CHECK_BOOL_TRAIT(trait, int, false);
     /**/
@@ -112,7 +118,8 @@ void bool_trait_test()
         true, true, false, false, true, true, false, false,
         true, true, false, false, true, true, false, false,
         true, true, false, false, true, true, false, false,
-        true, true, false, false, true, true, false, false
+        true, true, false, false, true, true, false, false,
+        false, false
     );
 
     // Test is_ostream
@@ -122,7 +129,8 @@ void bool_trait_test()
         false, false, true, true, true, true, false, false,
         false, false, true, true, true, true, false, false,
         false, false, true, true, true, true, false, false,
-        false, false, true, true, true, true, false, false
+        false, false, true, true, true, true, false, false,
+        false, false
     );
 
     // Test is_iostream
@@ -132,7 +140,8 @@ void bool_trait_test()
         false, false, false, false, true, true, false, false,
         false, false, false, false, true, true, false, false,
         false, false, false, false, true, true, false, false,
-        false, false, false, false, true, true, false, false
+        false, false, false, false, true, true, false, false,
+        false, false
     );
 
     // Test is_streambuf
@@ -142,7 +151,8 @@ void bool_trait_test()
         false, false, false, false, false, false, true, true,
         false, false, false, false, false, false, true, true,
         false, false, false, false, false, false, true, true,
-        false, false, false, false, false, false, true, true
+        false, false, false, false, false, false, true, true,
+        true, true
     );
 
     // Test is_std_io
@@ -152,7 +162,8 @@ void bool_trait_test()
         true, true, true, true, true, true, true, true,
         true, true, true, true, true, true, true, true,
         true, true, true, true, true, true, true, true,
-        true, true, true, true, true, true, true, true
+        true, true, true, true, true, true, true, true,
+        true, true
     );
 
     // Test is_std_file_device
@@ -162,7 +173,8 @@ void bool_trait_test()
         true, true, true, true, true, true, true, true,
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false,
+        false, false
     );
 
     // Test is_std_string_device
@@ -172,7 +184,8 @@ void bool_trait_test()
         false, false, false, false, false, false, false, false,
         true, true, true, true, true, true, true, true,
         false, false, false, false, false, false, false, false,
-        false, false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false,
+        false, false
     );
 
     // Test is_boost_stream
@@ -182,7 +195,8 @@ void bool_trait_test()
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
         true, true, true, true, true, true, false, false,
-        false, false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false,
+        false, false
     );
 
     // Test is_boost_stream_buffer
@@ -192,7 +206,8 @@ void bool_trait_test()
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, true, true,
-        false, false, false, false, false, false, false, false
+        false, false, false, false, false, false, false, false,
+        false, false
     );
 
     // Test is_filtering_stream
@@ -202,7 +217,8 @@ void bool_trait_test()
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
-        true, true, true, true, true, true, false, false
+        true, true, true, true, true, true, false, false,
+        false, false
     );
 
     // Test is_filtering_streambuf
@@ -212,7 +228,8 @@ void bool_trait_test()
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
-        false, false, false, false, false, false, true, true
+        false, false, false, false, false, false, true, true,
+        false, false
     );
 
     // Test is_boost
@@ -222,7 +239,8 @@ void bool_trait_test()
         false, false, false, false, false, false, false, false,
         false, false, false, false, false, false, false, false,
         true, true, true, true, true, true, true, true,
-        true, true, true, true, true, true, true, true
+        true, true, true, true, true, true, true, true,
+        false, false
     );
 }
 
