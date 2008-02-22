@@ -156,7 +156,7 @@
 <PRE CLASS="broken_ie"><SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> T&gt;     
 <SPAN CLASS="keyword">void</SPAN> <A CLASS="documented" HREF="#close_device">close</A>(T& t, std::ios_base::openmode which);</PRE>
 
-<P>If <CODE>t</CODE> is a <A HREF="../guide/filtering_streams.html">filtering stream or stream buffer</A>, <CODE>close</CODE> calls <CODE>pop</CODE>:</P>
+<P>If <CODE>t</CODE> is a <A HREF="../guide/filtering_streams.html">filtering stream or stream buffer</A>, <CODE>close</CODE> calls <A HREF="../classes/filtering_stream.html#pop"><CODE>pop</CODE></A>. The semantics depends on its <A HREF="../guide/traits.html#category">category</A> as follows:</P>
 
 <TABLE STYLE="margin-left:2em" BORDER=1 CELLPADDING=4>
     <TR><TH><CODE>category&lt;T&gt;::type</CODE></TH><TH>semantics</TH></TR>
