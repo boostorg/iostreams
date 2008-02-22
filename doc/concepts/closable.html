@@ -50,7 +50,6 @@
 <P>For Filters controlling a single sequence, the signature of <CODE>close</CODE> is:</P>
 <PRE CLASS="broken_ie">    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Device&gt;
     <SPAN CLASS="keyword">void</SPAN> close(Device&amp;);</PRE>
-<P>The implementation of the member function <CODE>close</CODE> may read from, write to, or seek within the given Device, depending on the <A HREF="../guide/modes.html">mode</A> of the device.</P>
 
 <H4>Two-Sequence Devices</H4>
 
@@ -69,7 +68,7 @@
 
 <H4>Dual-Use Filters</H4>
 
-<P>The signature of  <CODE>close</CODE> for <A HREF="dual_use_filter.html">DualUserFilters</A> is the same as that for two-sequence Filters.</P>
+<P>The signature of  <CODE>close</CODE> for <A HREF="dual_use_filter.html">DualUserFilters</A> is the same as that for two-sequence Filters:</P>
 <PRE CLASS="broken_ie">    <SPAN CLASS="keyword">template</SPAN>&lt;<SPAN CLASS="keyword">typename</SPAN> Device&gt;
     <SPAN CLASS="keyword">void</SPAN> close(Device&amp;, std::ios_base::openmode);</PRE>
 <P>This function will be called only once, depending on whether the filter is being used for input or output.</P>
