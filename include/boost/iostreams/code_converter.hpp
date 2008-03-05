@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -311,7 +312,6 @@ template<typename Device, typename Codevt, typename Alloc>
 std::streamsize code_converter<Device, Codevt, Alloc>::read
     (char_type* s, std::streamsize n)
 {
-    using namespace std;
     const extern_type*   next;        // Next external char.
     intern_type*         nint;        // Next internal char.
     std::streamsize      total = 0;   // Characters read.
@@ -338,12 +338,12 @@ std::streamsize code_converter<Device, Codevt, Alloc>::read
         total = static_cast<std::streamsize>(nint - s);
 
         switch (result) {
-        case codecvt_base::partial:
+        case std::codecvt_base::partial:
             partial = true;
             break;
-        case codecvt_base::ok:
+        case std::codecvt_base::ok:
             break;
-        case codecvt_base::noconv:
+        case std::codecvt_base::noconv:
             {
                 std::streamsize amt = 
                     std::min<std::streamsize>(next - buf.ptr(), n - total);
@@ -351,7 +351,7 @@ std::streamsize code_converter<Device, Codevt, Alloc>::read
                 total += amt;
             }
             break;
-        case codecvt_base::error:
+        case std::codecvt_base::error:
         default:
             buf.state() = state_type();
             throw code_conversion_error();
@@ -366,7 +366,6 @@ template<typename Device, typename Codevt, typename Alloc>
 std::streamsize code_converter<Device, Codevt, Alloc>::write
     (const char_type* s, std::streamsize n)
 {
-    using namespace std;
     buffer_type&        buf = out();
     extern_type*        next;              // Next external char.
     const intern_type*  nint;              // Next internal char.
@@ -391,12 +390,12 @@ std::streamsize code_converter<Device, Codevt, Alloc>::write
         buf.eptr() += progress;
 
         switch (result) {
-        case codecvt_base::partial:
+        case std::codecvt_base::partial:
             partial = true; // Fall through.
-        case codecvt_base::ok:
+        case std::codecvt_base::ok:
             total = static_cast<std::streamsize>(nint - s);
             break;
-        case codecvt_base::noconv:
+        case std::codecvt_base::noconv:
             {
                 std::streamsize amt = 
                     std::min<std::streamsize>( nint - total - s, 
@@ -405,7 +404,7 @@ std::streamsize code_converter<Device, Codevt, Alloc>::write
                 total += amt;
             }
             break;
-        case codecvt_base::error:
+        case std::codecvt_base::error:
         default:
             buf.state() = state_type();
             throw code_conversion_error();

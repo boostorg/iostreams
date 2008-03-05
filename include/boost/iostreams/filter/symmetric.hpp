@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -153,10 +154,7 @@ public:
     template<typename Sink>
     void close(Sink& snk, BOOST_IOS::openmode which)
     {
-        using namespace std;
-        if ((state() & f_write) == 0 && which == BOOST_IOS::in)
-            close_impl();
-        if ((state() & f_write) != 0 && which == BOOST_IOS::out) {
+        if ((state() & f_write) != 0) {
 
             // Repeatedly invoke filter() with no input.
             try {
@@ -174,6 +172,8 @@ public:
                 try { close_impl(); } catch (...) { }
                 throw;
             }
+            close_impl();
+        } else {
             close_impl();
         }
     }

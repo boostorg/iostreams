@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 // See http://www.boost.org/libs/iostreams for documentation.
@@ -124,7 +125,7 @@ private:
     enum flag_type {
         f_open             = 1,
         f_output_buffered  = f_open << 1,
-        f_auto_close       = f_output_buffered << 1,
+        f_auto_close       = f_output_buffered << 1
     };
 
     optional<wrapper>           storage_;
@@ -332,10 +333,9 @@ indirect_streambuf<T, Tr, Alloc, Mode>::seekoff
 template<typename T, typename Tr, typename Alloc, typename Mode>
 inline typename indirect_streambuf<T, Tr, Alloc, Mode>::pos_type
 indirect_streambuf<T, Tr, Alloc, Mode>::seekpos
-    (pos_type sp, BOOST_IOS::openmode)
+    (pos_type sp, BOOST_IOS::openmode which)
 { 
-    return seek_impl( position_to_offset(sp), BOOST_IOS::beg, 
-                      BOOST_IOS::in | BOOST_IOS::out ); 
+    return seek_impl(position_to_offset(sp), BOOST_IOS::beg, which); 
 }
 
 template<typename T, typename Tr, typename Alloc, typename Mode>
@@ -375,7 +375,11 @@ inline void indirect_streambuf<T, Tr, Alloc, Mode>::close_impl
         sync();
         setp(0, 0);
     }
-    obj().close(which, next_);
+    if ( !is_convertible<category, dual_use>::value ||
+         is_convertible<Mode, input>::value == (which == BOOST_IOS::in) )
+    {
+        obj().close(which, next_);
+    }
 }
 
 //----------State changing functions------------------------------------------//

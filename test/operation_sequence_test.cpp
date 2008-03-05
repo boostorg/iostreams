@@ -4,14 +4,14 @@
  * 
  * See http://www.boost.org/libs/iostreams for documentation.
  *
- * Verifies that the close() member functions of filters and devices
- * are called with the correct arguments in the correct order when 
- * they are combined using chains or adapters.
+ * Tests the facilities defined in the header
+ * libs/iostreams/test/detail/operation_sequence.hpp
  *
  * File:        libs/iostreams/test/operation_sequence_test.cpp
  * Date:        Mon Dec 10 18:58:19 MST 2007
- * Copyright:   2007 CodeRage
+ * Copyright:   2007-2008 CodeRage, LLC
  * Author:      Jonathan Turkanis
+ * Contact:     turkanis at coderage dot com
  */
 
 #include <stdexcept>

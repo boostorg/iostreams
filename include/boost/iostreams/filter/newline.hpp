@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -19,8 +20,12 @@
 #include <stdexcept>                       // logic_error.
 #include <boost/config.hpp>                // BOOST_STATIC_CONSTANT.
 #include <boost/iostreams/categories.hpp>
-#include <boost/iostreams/detail/char_traits.hpp>
+#include <boost/iostreams/detail/char_traits.hpp>	
+#include <boost/iostreams/detail/ios.hpp>  // BOOST_IOSTREAMS_FAILURE 
+#include <boost/iostreams/read.hpp>        // get 
+#include <boost/iostreams/write.hpp>       // put 
 #include <boost/iostreams/pipeline.hpp>
+#include <boost/iostreams/putback.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
@@ -211,8 +216,7 @@ public:
         typedef typename iostreams::category_of<Sink>::type category;
         if ((flags_ & f_write) != 0 && (flags_ & f_has_CR) != 0)
             newline_if_sink(dest);
-        if (which == BOOST_IOS::out)
-            flags_ &= newline::platform_mask;
+        flags_ &= ~f_has_LF; // Restore original flags.
     }
 private:
 
@@ -398,24 +402,21 @@ public:
     {
         using iostreams::newline::final_newline;
 
-        if (which == BOOST_IOS::out) {
+        // Update final_newline flag.
+        if ( (source() & f_has_CR) != 0 ||
+             (source() & f_line_complete) != 0 )
+        {
+            source() |= final_newline;
+        }
 
-            // Update final_newline flag.
-            if ( (source() & f_has_CR) != 0 ||
-                (source() & f_line_complete) != 0 )
-            {
-                source() |= final_newline;
-            }
+        // Clear non-sticky flags.
+        source() &= ~(f_has_CR | f_line_complete);
 
-            // Clear non-sticky flags.
-            source() &= ~(f_has_CR | f_line_complete);
-
-            // Check for errors.
-            if ( (target_ & final_newline) != 0 &&
-                 (source() & final_newline) == 0 )
-            {
-                fail();
-            }
+        // Check for errors.
+        if ( (target_ & final_newline) != 0 &&
+             (source() & final_newline) == 0 )
+        {
+            fail();
         }
     }
 private:

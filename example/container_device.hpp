@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2005.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2005-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -30,7 +31,8 @@ public:
     std::streamsize read(char_type* s, std::streamsize n)
     {
         using namespace std;
-        std::streamsize amt = static_cast<streamsize>(container_.size() - pos_);
+        std::streamsize amt = 
+            static_cast<std::streamsize>(container_.size() - pos_);
         std::streamsize result = (min)(n, amt);
         if (result != 0) {
             std::copy( container_.begin() + pos_,

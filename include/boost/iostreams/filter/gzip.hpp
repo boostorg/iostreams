@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -134,7 +135,7 @@ struct gzip_params : zlib_params {
                  std::string comment    = "",
                  std::time_t mtime      = 0 )
         : zlib_params(level, method, window_bits, mem_level, strategy),
-          file_name(file_name), mtime(mtime)
+          file_name(file_name), comment(comment), mtime(mtime)
         { }
     std::string  file_name;
     std::string  comment;
@@ -250,6 +251,8 @@ public:
                 close_impl();
                 throw;
             }
+            close_impl();
+        } else {
             close_impl();
         }
     }

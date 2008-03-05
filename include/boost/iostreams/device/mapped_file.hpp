@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // (C) Copyright Craig Henderson 2002.   'boost/memmap.hpp' from sandbox
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
@@ -62,7 +63,9 @@ struct mapped_file_impl;
 
 struct mapped_file_params {
     explicit mapped_file_params()
-    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER)
+    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER) || \
+        defined(__BORLANDC__) && defined(_CPPLIB_VER)
+        /**/
         : mode(std::ios_base::openmode(0)),
     #else
         : mode(),
@@ -72,7 +75,8 @@ struct mapped_file_params {
         { }
     explicit mapped_file_params(const std::string& path)
         : path(path),
-    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER)
+    #if BOOST_WORKAROUND(BOOST_MSVC, < 1400) && defined(BOOST_RWSTD_VER) || \
+        defined(__BORLANDC__) && defined(_CPPLIB_VER)
           mode(std::ios_base::openmode(0)),
     #else
           mode(),

@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -94,19 +95,20 @@ std::streamsize copy_impl( Source& src, Sink& snk,
                            std::streamsize buffer_size,
                            mpl::false_, mpl::true_ )
 {
-    using namespace std;
     typedef typename char_type_of<Source>::type  char_type;
     typedef std::pair<char_type*, char_type*>    pair_type;
     detail::basic_buffer<char_type>  buf(buffer_size);
     pair_type                        p = snk.output_sequence();
     std::streamsize                  total = 0;
-    ptrdiff_t                        capacity = p.second - p.first;
+    std::ptrdiff_t                   capacity = p.second - p.first;
     while (true) {
         std::streamsize amt = 
             iostreams::read(
                 src, 
                 buf.data(),
-                (std::min)(buffer_size, capacity - total)
+                buffer_size < capacity - total ?
+                    buffer_size :
+                    static_cast<std::streamsize>(capacity - total)
             );
         if (amt == -1)
             break;
