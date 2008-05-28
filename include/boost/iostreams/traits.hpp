@@ -21,6 +21,7 @@
 
 #include <iosfwd>            // stream types, char_traits.
 #include <boost/config.hpp>  // partial spec, deduced typename.
+#include <boost/detail/workaround.hpp>
 #include <boost/iostreams/categories.hpp>
 #include <boost/iostreams/detail/bool_trait_def.hpp> 
 #include <boost/iostreams/detail/config/wide_streams.hpp>
@@ -38,11 +39,17 @@
 # include <boost/range/iterator_range.hpp>
 # include <boost/range/value_type.hpp>
 #endif // #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-#include <boost/type_traits/is_convertible.hpp>     
+#include <boost/ref.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace iostreams {
 
 //----------Definitions of predicates for streams and stream buffers----------//
+
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+# pragma warning(push)
+# pragma warning(disable:6334)
+#endif
 
 #ifndef BOOST_IOSTREAMS_NO_STREAM_TEMPLATES //--------------------------------//
 
@@ -67,6 +74,10 @@ BOOST_IOSTREAMS_BOOL_TRAIT_DEF(is_iostream, std::iostream, 0)
 BOOST_IOSTREAMS_BOOL_TRAIT_DEF(is_streambuf, std::streambuf, 0)
 
 #endif // #ifndef BOOST_IOSTREAMS_NO_STREAM_TEMPLATES //----------------------//
+
+#if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)
+# pragma warning(pop)
+#endif
 
 template<typename T>
 struct is_std_io
@@ -269,6 +280,16 @@ struct category_of {
             >::type type;
 };
 
+// Partial specialization for reference wrappers
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //---------------------------//
+
+template<typename T>
+struct category_of< reference_wrapper<T> >
+    : category_of<T>
+    { };
+
+#endif // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //-----------------//
+
 //------------------Definition of get_category--------------------------------//
 
 // 
@@ -292,7 +313,7 @@ struct int_type_of {
 #endif
 };
 
-//------------------Definition of mode----------------------------------------//
+//------------------Definition of mode_of-------------------------------------//
 
 namespace detail {
 
@@ -323,6 +344,16 @@ struct io_mode_id {
 
 template<typename T> // Borland 5.6.4 requires this circumlocution.
 struct mode_of : detail::io_mode_impl< detail::io_mode_id<T>::value > { };
+
+// Partial specialization for reference wrappers
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //---------------------------//
+
+template<typename T>
+struct mode_of< reference_wrapper<T> >
+    : mode_of<T>
+    { };
+
+#endif // #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION //-----------------//
                     
 //------------------Definition of is_device, is_filter and is_direct----------//
 

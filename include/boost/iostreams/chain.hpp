@@ -140,6 +140,10 @@ protected:
     chain_base(const chain_base& rhs): pimpl_(rhs.pimpl_) { }
 public:
 
+    // dual_use is a pseudo-mode to facilitate filter writing, 
+    // not a genuine mode.
+    BOOST_STATIC_ASSERT((!is_convertible<mode, dual_use>::value));
+
     //----------Buffer sizing-------------------------------------------------//
 
     // Sets the size of the buffer created for the devices to be added to this
@@ -408,7 +412,7 @@ private:
         typedef typename traits_type::int_type         int_type; \
         typedef typename traits_type::off_type         off_type; \
         name_() { } \
-        name_(const name_& rhs) { *this = rhs; } \
+        name_(const name_& rhs) : base_type(rhs) { } \
         name_& operator=(const name_& rhs) \
         { base_type::operator=(rhs); return *this; } \
     }; \
