@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -127,12 +128,12 @@ void zlib_base::after(const char*& src_begin, char*& dest_begin, bool compress)
     dest_begin = next_out;
 }
 
-int zlib_base::deflate(int flush)
+int zlib_base::xdeflate(int flush)
 { 
     return ::deflate(static_cast<z_stream*>(stream_), flush);
 }
 
-int zlib_base::inflate(int flush)
+int zlib_base::xinflate(int flush)
 { 
     return ::inflate(static_cast<z_stream*>(stream_), flush);
 }
@@ -153,7 +154,7 @@ void zlib_base::reset(bool compress, bool realloc)
 void zlib_base::do_init
     ( const zlib_params& p, bool compress, 
       #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-          zlib::alloc_func alloc, zlib::free_func free, 
+          zlib::xalloc_func /* alloc */, zlib::xfree_func /* free*/, 
       #endif
       void* derived )
 {

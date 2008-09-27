@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2004
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2004-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -132,7 +133,10 @@ private:
     }
 
     std::codecvt_base::result 
-    do_unshift(state_type& state, char* first2, char* last2, char*& next2) const
+    do_unshift( state_type& state, 
+                char* /* first2 */, 
+                char* last2, 
+                char*& next2 ) const
     {
         using namespace std;
         next2 = last2;
@@ -231,7 +235,10 @@ class stateless_null_padded_codecvt
     }
 
     std::codecvt_base::result 
-    do_unshift(state_type&, char* first2, char* last2, char*& next2) const
+    do_unshift( state_type&, 
+                char* /* first2 */, 
+                char* /* last2 */, 
+                char*& /* next2 */ ) const
     {  
         return std::codecvt_base::ok;
     }

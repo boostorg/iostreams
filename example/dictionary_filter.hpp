@@ -1,4 +1,5 @@
-// (C) Copyright Jonathan Turkanis 2003.
+// (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
+// (C) Copyright 2003-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
@@ -51,7 +52,7 @@ private:
             if (c == EOF || !std::isalpha((unsigned char) c)) {
                 dictionary_.replace(current_word_);
                 cout.write( current_word_.data(),
-                            static_cast<streamsize>(current_word_.size()) );
+                            static_cast<std::streamsize>(current_word_.size()) );
                 current_word_.erase();
                 if (c == EOF)
                     break;
@@ -167,8 +168,9 @@ private:
     bool write_current_word(Sink& dest)
     {
         using namespace std;
-        streamsize amt = static_cast<streamsize>(current_word_.size() - off_);
-        streamsize result =
+        std::streamsize amt = 
+            static_cast<std::streamsize>(current_word_.size() - off_);
+        std::streamsize result =
             iostreams::write(dest, current_word_.data() + off_, amt);
         if (result == amt) {
             current_word_.erase();
@@ -183,7 +185,6 @@ private:
     dictionary&             dictionary_;
     std::string             current_word_;
     std::string::size_type  off_;
-    bool                    initialized_;
 };
 
 //------------------Implementation of dictionary------------------------------//
