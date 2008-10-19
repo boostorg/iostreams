@@ -123,6 +123,7 @@ private:
             detail::stream_traits<
                 Device, Tr
             >::stream_type                       stream_type;
+    typedef Device                               policy_type;
 public:
     stream() { }
     BOOST_IOSTREAMS_FORWARD( stream, open_impl, Device,

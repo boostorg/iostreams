@@ -47,9 +47,8 @@ typedef unsigned int uint;
 typedef unsigned char byte;
 typedef unsigned long ulong;
 
-// Prefix 'x' prevents symbols from being redefined when Z_PREFIX is defined
-typedef void* (*xalloc_func)(void*, zlib::uint, zlib::uint);
-typedef void (*xfree_func)(void*, void*);
+typedef void* (*alloc_func)(void*, zlib::uint, zlib::uint);
+typedef void (*free_func)(void*, void*);
 
                     // Compression levels
 
@@ -192,8 +191,8 @@ protected:
                  char*& dest_begin, char* dest_end );
     void after( const char*& src_begin, char*& dest_begin, 
                 bool compress );
-    int xdeflate(int flush);  // Prefix 'x' prevents symbols from being 
-    int xinflate(int flush);  // redefined when Z_PREFIX is defined
+    int deflate(int flush);
+    int inflate(int flush);
     void reset(bool compress, bool realloc);
 public:
     zlib::ulong crc() const { return crc_; }
@@ -202,8 +201,8 @@ public:
 private:
     void do_init( const zlib_params& p, bool compress, 
                   #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-                      zlib::xalloc_func, 
-                      zlib::xfree_func, 
+                      zlib::alloc_func, 
+                      zlib::free_func, 
                   #endif
                   void* derived );
     void*        stream_;         // Actual type: z_stream*.
@@ -342,7 +341,7 @@ bool zlib_compressor_impl<Alloc>::filter
       char*& dest_begin, char* dest_end, bool flush )
 {
     before(src_begin, src_end, dest_begin, dest_end);
-    int result = xdeflate(flush ? zlib::finish : zlib::no_flush);
+    int result = deflate(flush ? zlib::finish : zlib::no_flush);
     after(src_begin, dest_begin, true);
     zlib_error::check(result);
     return result != zlib::stream_end; 
@@ -375,7 +374,7 @@ bool zlib_decompressor_impl<Alloc>::filter
       char*& dest_begin, char* dest_end, bool /* flush */ )
 {
     before(src_begin, src_end, dest_begin, dest_end);
-    int result = xinflate(zlib::sync_flush);
+    int result = inflate(zlib::sync_flush);
     after(src_begin, dest_begin, false);
     zlib_error::check(result);
     return result != zlib::stream_end;

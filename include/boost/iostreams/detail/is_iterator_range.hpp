@@ -8,12 +8,7 @@
 #ifndef BOOST_IOSTREAMS_DETAIL_IS_ITERATOR_RANGE_HPP_INCLUDED
 #define BOOST_IOSTREAMS_DETAIL_IS_ITERATOR_RANGE_HPP_INCLUDED       
  
-#include <boost/config.hpp>
-#include <boost/detail/workaround.hpp>
 #include <boost/iostreams/detail/bool_trait_def.hpp>
-
-// Must come last.
-#include <boost/iostreams/detail/config/disable_warnings.hpp>
 
 namespace boost { 
 
@@ -43,7 +38,5 @@ namespace iostreams {
 # endif // # if !BOOST_WORKAROUND(BOOST_MSVC, < 1300) //----------------------//
 
 } // End namespace boost.
-
-#include <boost/iostreams/detail/config/enable_warnings.hpp>
 
 #endif // #ifndef BOOST_IOSTREAMS_DETAIL_IS_ITERATOR_RANGE_HPP_INCLUDED

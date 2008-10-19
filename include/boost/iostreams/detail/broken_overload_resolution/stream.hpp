@@ -35,6 +35,7 @@ private:
             detail::stream_traits<
                 Device, Tr
             >::stream_type                       stream_type;
+    typedef Device                               policy_type;
 public:
     stream() { }
     template<typename U0>
