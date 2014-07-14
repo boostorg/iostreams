@@ -110,16 +110,16 @@ const bool default_noheader                  = false;
 struct zlib_params {
 
     // Non-explicit constructor.
-    zlib_params( int level           = zlib::default_compression,
-                 int method          = zlib::deflated,
-                 int window_bits     = zlib::default_window_bits, 
-                 int mem_level       = zlib::default_mem_level, 
-                 int strategy        = zlib::default_strategy,
-                 bool noheader       = zlib::default_noheader,
-                 bool calculate_crc  = zlib::default_crc )
-        : level(level), method(method), window_bits(window_bits),
-          mem_level(mem_level), strategy(strategy),  
-          noheader(noheader), calculate_crc(calculate_crc)
+    zlib_params( int level_          = zlib::default_compression,
+                 int method_         = zlib::deflated,
+                 int window_bits_    = zlib::default_window_bits, 
+                 int mem_level_      = zlib::default_mem_level, 
+                 int strategy_       = zlib::default_strategy,
+                 bool noheader_      = zlib::default_noheader,
+                 bool calculate_crc_ = zlib::default_crc )
+        : level(level_), method(method_), window_bits(window_bits_),
+          mem_level(mem_level_), strategy(strategy_),  
+          noheader(noheader_), calculate_crc(calculate_crc_)
         { }
     int level;
     int method;
