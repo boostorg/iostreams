@@ -472,7 +472,7 @@ public:
     BOOST_IOSTREAMS_DEFINE_PUSH(push, mode, char_type, push_impl)
     void pop() { chain_->pop(); }
     bool empty() const { return chain_->empty(); }
-    size_type size() { return chain_->size(); }
+    size_type size() const { return chain_->size(); }
     void reset() { chain_->reset(); }
 
     // Returns a copy of the underlying chain.
