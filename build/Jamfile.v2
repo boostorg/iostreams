@@ -159,8 +159,6 @@ lib boost_iostreams
     : $(sources) 
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1 
       <define>BOOST_IOSTREAMS_USE_DEPRECATED
-      [ ac.check-library /zlib//zlib : <library>/zlib//zlib
-        <source>zlib.cpp <source>gzip.cpp ]
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
     ;
