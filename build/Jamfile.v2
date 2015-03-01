@@ -33,6 +33,9 @@ for local v in NO_COMPRESSION
 if $(NO_COMPRESSION) != 1 && $(NO_ZLIB) != 1
 {
     using zlib : : <build-name>boost_zlib <tag>@tag : : true ;
+    zlib-requirements =
+        [ ac.check-library /zlib//zlib : <library>/zlib//zlib
+          <source>zlib.cpp <source>gzip.cpp ] ;
 }
 else
 {
@@ -159,8 +162,7 @@ lib boost_iostreams
     : $(sources) 
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1 
       <define>BOOST_IOSTREAMS_USE_DEPRECATED
-      [ ac.check-library /zlib//zlib : <library>/zlib//zlib
-        <source>zlib.cpp <source>gzip.cpp ]
+      $(zlib-requirements)
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
     ;
