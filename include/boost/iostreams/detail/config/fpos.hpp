@@ -23,7 +23,7 @@
 #endif
 
 # if (defined(_YVALS) || defined(_CPPLIB_VER)) && !defined(__SGI_STL_PORT) && \
-     !defined(_STLPORT_VERSION) && !defined(__QNX__)
+     !defined(_STLPORT_VERSION) && !defined(__QNX__) && !defined(_VX_CPU)
      /**/
 #  define BOOST_IOSTREAMS_HAS_DINKUMWARE_FPOS
 # endif
