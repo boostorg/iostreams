@@ -248,6 +248,8 @@ public:
     void close(Sink& snk, BOOST_IOS::openmode m)
     {
         try {
+            if (!(flags_ & f_header_done))
+                write(snk, 0, 0);
             // Close zlib compressor.
             base_type::close(snk, m);
 
