@@ -27,6 +27,7 @@
 #include <boost/config.hpp>               // Put size_t in std.
 #include <boost/detail/workaround.hpp>
 #include <boost/cstdint.hpp>              // uint8_t, uint32_t.
+#include <boost/iostreams/checked_operations.hpp>
 #include <boost/iostreams/constants.hpp>  // buffer size.
 #include <boost/iostreams/detail/adapter/non_blocking_adapter.hpp>
 #include <boost/iostreams/detail/adapter/range_adapter.hpp>
@@ -235,7 +236,7 @@ public:
         if (!(flags_ & f_header_done)) {
             std::streamsize amt = 
                 static_cast<std::streamsize>(header_.size() - offset_);
-            offset_ += boost::iostreams::write(snk, header_.data() + offset_, amt);
+            offset_ += boost::iostreams::write_if(snk, header_.data() + offset_, amt);
             if (offset_ == header_.size())
                 flags_ |= f_header_done;
             else
@@ -248,6 +249,9 @@ public:
     void close(Sink& snk, BOOST_IOS::openmode m)
     {
         try {
+            if (m == BOOST_IOS::out && !(flags_ & f_header_done))
+                this->write(snk, 0, 0);
+
             // Close zlib compressor.
             base_type::close(snk, m);
 
