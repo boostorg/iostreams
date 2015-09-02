@@ -135,7 +135,7 @@ public:
         }
 
         // Check for errors
-        if (next < 0 || next >= container_.size())
+        if (next < 0 || next >= static_cast<stream_offset>(container_.size()))
             throw BOOST_IOSTREAMS_FAILURE("bad seek offset");
 
         pos_ = next;
