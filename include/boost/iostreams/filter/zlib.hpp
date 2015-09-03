@@ -35,7 +35,7 @@
 // Must come last.
 #ifdef BOOST_MSVC
 # pragma warning(push)
-# pragma warning(disable:4251 4231 4660)         // Dependencies not exported.
+# pragma warning(disable:4251 4275 4231 4660)         // Dependencies not exported.
 #endif
 #include <boost/config/abi_prefix.hpp>           
 
