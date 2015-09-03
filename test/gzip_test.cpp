@@ -117,6 +117,11 @@ void array_source_test()
     BOOST_CHECK_EQUAL(data, res);
 }
 
+#if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4309)  // Truncation of constant value
+#endif
+
 void header_test()
 {
     // This test is in response to https://svn.boost.org/trac/boost/ticket/5908
@@ -155,6 +160,10 @@ void header_test()
     BOOST_CHECK_EQUAL(0x4ef39c22, hdr.mtime());
     BOOST_CHECK_EQUAL(gzip::os_unix, hdr.os());
 }
+
+#if defined(BOOST_MSVC)
+# pragma warning(pop)
+#endif
 
 void empty_file_test()
 {
