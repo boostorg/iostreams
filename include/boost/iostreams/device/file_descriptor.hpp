@@ -30,7 +30,7 @@
 // Must come last.
 #if defined(BOOST_MSVC)
 # pragma warning(push)
-# pragma warning(disable:4251)  // DLL interface for shared_ptr
+# pragma warning(disable:4251)  // Missing DLL interface for shared_ptr
 #endif
 #include <boost/config/abi_prefix.hpp>
 
