@@ -69,14 +69,14 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           [ test-iostreams example_test.cpp ]
           [ test-iostreams execute_test.cpp ]
           [ test-iostreams file_test.cpp ]
-#          [ test-iostreams file_descriptor_test.cpp
-#                ../build//boost_iostreams ]
-#          [ test-iostreams deprecated_file_descriptor_test.cpp
-#                ../build//boost_iostreams
-#               : <define>BOOST_IOSTREAMS_USE_DEPRECATED ]
-#          [ compile-fail-iostreams deprecated_file_descriptor_test.cpp
-#                :
-#                : deprecated_file_descriptor_fail ]
+          [ test-iostreams file_descriptor_test.cpp
+                ../build//boost_iostreams ]
+          [ test-iostreams deprecated_file_descriptor_test.cpp
+                ../build//boost_iostreams
+                : <define>BOOST_IOSTREAMS_USE_DEPRECATED ]
+          [ compile-fail-iostreams deprecated_file_descriptor_test.cpp
+                :
+                : deprecated_file_descriptor_fail ]
           [ test-iostreams filtering_stream_test.cpp ]
           [ test-iostreams finite_state_filter_test.cpp ]
           [ test-iostreams flush_test.cpp ]
@@ -85,8 +85,8 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
                 /boost/regex//boost_regex ]
           [ test-iostreams invert_test.cpp ]
           [ test-iostreams line_filter_test.cpp ]
-#          [ test-iostreams mapped_file_test.cpp 
-#                ../build//boost_iostreams ]
+          [ test-iostreams mapped_file_test.cpp 
+                ../build//boost_iostreams ]
           [ test-iostreams path_test.cpp ]
           [ test-iostreams newline_test.cpp ]
           [ test-iostreams null_test.cpp ]
@@ -107,43 +107,44 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           [ test-iostreams symmetric_filter_test.cpp ]
           [ test-iostreams tee_test.cpp ]
           [ test-iostreams wide_stream_test.cpp ]
-#          [ test-iostreams windows_pipe_test.cpp
-#               ../build//boost_iostreams
-#               : <build>no <target-os>windows:<build>yes ]
-         ;  
-#      if $(LARGE_FILE_KEEP) 
-#      {
-#          all-tests += 
-#              [ test-iostreams 
-#                    large_file_test.cpp 
-#                    ../src/file_descriptor.cpp
-#                    ../src/mapped_file.cpp
-#                  : <define>LARGE_FILE_KEEP=$(LARGE_FILE_KEEP)
-#                    <link>static ] ;
-#      }
-#      if $(LARGE_FILE_TEMP)
-#      {
-#          all-tests += 
-#              [ test-iostreams 
-#                    large_file_test.cpp 
-#                    ../src/file_descriptor.cpp
-#                    ../src/mapped_file.cpp
-#                  : <define>LARGE_FILE_TEMP=$(LARGE_FILE_TEMP)
-#                    <link>static ] ;
-#      }
-#      if ! $(NO_BZIP2)
-#      {     
-#          all-tests += [ test-iostreams 
-#                    bzip2_test.cpp ../build//boost_iostreams ] ;
-#      }
-#      if ! $(NO_ZLIB)
-#      {              
-#          all-tests += 
-#              [ test-iostreams 
-#                    gzip_test.cpp ../build//boost_iostreams ]
-#              [ test-iostreams 
-#                    zlib_test.cpp ../build//boost_iostreams ] ;
-#      }
+          [ test-iostreams windows_pipe_test.cpp
+               ../build//boost_iostreams
+               : <build>no <target-os>windows:<build>yes ]
+          ;  
+
+      if $(LARGE_FILE_KEEP) 
+      {
+          all-tests += 
+              [ test-iostreams 
+                    large_file_test.cpp 
+                    ../src/file_descriptor.cpp
+                    ../src/mapped_file.cpp
+                  : <define>LARGE_FILE_KEEP=$(LARGE_FILE_KEEP)
+                    <link>static ] ;
+      }
+      if $(LARGE_FILE_TEMP)
+      {
+          all-tests += 
+              [ test-iostreams 
+                    large_file_test.cpp 
+                    ../src/file_descriptor.cpp
+                    ../src/mapped_file.cpp
+                  : <define>LARGE_FILE_TEMP=$(LARGE_FILE_TEMP)
+                    <link>static ] ;
+      }
+      if ! $(NO_BZIP2)
+      {     
+          all-tests += [ test-iostreams 
+                    bzip2_test.cpp ../build//boost_iostreams ] ;
+      }
+      if ! $(NO_ZLIB)
+      {              
+          all-tests += 
+              [ test-iostreams 
+                    gzip_test.cpp ../build//boost_iostreams ]
+              [ test-iostreams 
+                    zlib_test.cpp ../build//boost_iostreams ] ;
+      }
           
     test-suite "iostreams" : $(all-tests) ;
-   
+    
