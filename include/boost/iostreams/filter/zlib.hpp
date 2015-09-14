@@ -347,7 +347,7 @@ bool zlib_compressor_impl<Alloc>::filter
     int result = xdeflate(flush ? zlib::finish : zlib::no_flush);
     after(src_begin, dest_begin, true);
     zlib_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(result);
-    return result != zlib::stream_end; 
+    return result == zlib::okay; 
 }
 
 template<typename Alloc>
@@ -381,7 +381,8 @@ bool zlib_decompressor_impl<Alloc>::filter
     int result = xinflate(zlib::sync_flush);
     after(src_begin, dest_begin, false);
     zlib_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(result);
-    return !(eof_ = result == zlib::stream_end);
+    eof_ = result == zlib::stream_end;
+    return result == zlib::okay;
 }
 
 template<typename Alloc>
