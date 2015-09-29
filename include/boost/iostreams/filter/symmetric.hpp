@@ -85,7 +85,7 @@ public:
     #define BOOST_PP_LOCAL_MACRO(n) \
         BOOST_IOSTREAMS_TEMPLATE_PARAMS(n, T) \
         explicit symmetric_filter( \
-              int buffer_size BOOST_PP_COMMA_IF(n) \
+              std::streamsize buffer_size BOOST_PP_COMMA_IF(n) \
               BOOST_PP_ENUM_BINARY_PARAMS(n, const T, &t) ) \
             : pimpl_(new impl(buffer_size BOOST_PP_COMMA_IF(n) \
                      BOOST_PP_ENUM_PARAMS(n, t))) \
@@ -252,7 +252,7 @@ private:
     // Expands to a sequence of ctors which forward to SymmetricFilter.
     #define BOOST_PP_LOCAL_MACRO(n) \
         BOOST_IOSTREAMS_TEMPLATE_PARAMS(n, T) \
-        impl( int buffer_size BOOST_PP_COMMA_IF(n) \
+        impl( std::streamsize buffer_size BOOST_PP_COMMA_IF(n) \
               BOOST_PP_ENUM_BINARY_PARAMS(n, const T, &t) ) \
             : SymmetricFilter(BOOST_PP_ENUM_PARAMS(n, t)), \
               buf_(buffer_size), state_(0) \
