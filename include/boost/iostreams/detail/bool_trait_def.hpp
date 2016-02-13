@@ -15,6 +15,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
+#include <boost/type_traits/integral_constant.hpp>
  
 // 
 // Macro name: BOOST_IOSTREAMS_BOOL_TRAIT_DEF
@@ -45,5 +46,14 @@
         : mpl::bool_<BOOST_PP_CAT(trait, _impl_)::impl<T>::value> \
     { BOOST_MPL_AUX_LAMBDA_SUPPORT(1, trait, (T)) }; \
     /**/
+
+#ifndef BOOST_IOSTREAMS_AUX_BOOL_C_BASE
+#   define BOOST_IOSTREAMS_AUX_BOOL_C_BASE(C) : public ::boost::integral_constant<bool,C>
+#endif 
+
+#ifndef BOOST_IOSTREAMS_AUX_BOOL_TRAIT_VALUE_DECL
+#   define BOOST_IOSTREAMS_AUX_BOOL_TRAIT_VALUE_DECL(C) /**/
+#endif
+
 
 #endif // #ifndef BOOST_IOSTREAMS_DETAIL_BOOL_TRAIT_DEF_HPP_INCLUDED
