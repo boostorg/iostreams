@@ -26,7 +26,12 @@ using namespace boost::iostreams::test;
 namespace io = boost::iostreams;
 using boost::unit_test::test_suite;     
 
-struct gzip_alloc : std::allocator<char> { };
+struct gzip_alloc : std::allocator<char> {
+    gzip_alloc() { }
+    gzip_alloc(const gzip_alloc& other) { }
+    template<typename T>
+    gzip_alloc(const std::allocator<T>& other) { }
+};
 
 void compression_test()
 {
@@ -112,6 +117,11 @@ void array_source_test()
     BOOST_CHECK_EQUAL(data, res);
 }
 
+#if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4309)  // Truncation of constant value
+#endif
+
 void header_test()
 {
     // This test is in response to https://svn.boost.org/trac/boost/ticket/5908
@@ -151,6 +161,23 @@ void header_test()
     BOOST_CHECK_EQUAL(gzip::os_unix, hdr.os());
 }
 
+#if defined(BOOST_MSVC)
+# pragma warning(pop)
+#endif
+
+void empty_file_test()
+{
+    // This test is in response to https://svn.boost.org/trac/boost/ticket/5237
+    // The previous implementation of gzip_compressor only wrote the gzip file
+    // header when the first bytes of uncompressed input were processed, causing
+    // incorrect behavior for empty files
+    BOOST_CHECK(
+        test_filter_pair( gzip_compressor(),
+                          gzip_decompressor(),
+                          std::string() )
+    );
+}
+
 test_suite* init_unit_test_suite(int, char* []) 
 {
     test_suite* test = BOOST_TEST_SUITE("gzip test");
@@ -158,5 +185,6 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&multiple_member_test));
     test->add(BOOST_TEST_CASE(&array_source_test));
     test->add(BOOST_TEST_CASE(&header_test));
+    test->add(BOOST_TEST_CASE(&empty_file_test));
     return test;
 }
