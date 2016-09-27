@@ -27,9 +27,12 @@
 # if (defined(_YVALS) || defined(_CPPLIB_VER)) && !defined(__SGI_STL_PORT) && \
      !defined(_STLPORT_VERSION) && !defined(__QNX__)
      /**/
+     
+#include <boost/iostreams/detail/ios.hpp>
+
 #  define BOOST_IOSTREAMS_HAS_DINKUMWARE_FPOS
 
-#if defined(BOOST_MSVC) && BOOST_MSVC >= 1900
+#if !defined(_FPOSOFF)
 #define BOOST_IOSTREAMS_FPOSOFF(fp) ((long long)(fp))
 #else
 #define BOOST_IOSTREAMS_FPOSOFF(fp) _FPOSOFF(fp)
