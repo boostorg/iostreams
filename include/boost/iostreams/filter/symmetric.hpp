@@ -42,7 +42,7 @@
 #endif
 
 #include <boost/assert.hpp>
-#include <memory>                               // allocator, auto_ptr.
+#include <memory>                               // allocator.
 #include <boost/config.hpp>                     // BOOST_DEDUCED_TYPENAME.
 #include <boost/iostreams/char_traits.hpp>
 #include <boost/iostreams/constants.hpp>        // buffer size.
