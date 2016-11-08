@@ -14,7 +14,6 @@
 
 #include <boost/assert.hpp>
 #include <exception>
-#include <functional>                           // unary_function.
 #include <iterator>                             // advance.
 #include <list>
 #include <memory>                               // allocator, auto_ptr or unique_ptr.
@@ -292,7 +291,9 @@ private:
     static void set_auto_close(streambuf_type* b, bool close)
     { b->set_auto_close(close); }
 
-    struct closer  : public std::unary_function<streambuf_type*, void>  {
+    struct closer {
+        typedef streambuf_type* argument_type;
+        typedef void result_type;
         closer(BOOST_IOS::openmode m) : mode_(m) { }
         void operator() (streambuf_type* b)
         {
