@@ -87,9 +87,9 @@ const bool default_small       = false;
 struct bzip2_params {
 
     // Non-explicit constructor for compression.
-    bzip2_params( int block_size   = bzip2::default_block_size,
-                  int work_factor  = bzip2::default_work_factor )
-        : block_size(block_size), work_factor(work_factor)
+    bzip2_params( int block_size_  = bzip2::default_block_size,
+                  int work_factor_ = bzip2::default_work_factor )
+        : block_size(block_size_), work_factor(work_factor_)
         { }
 
     // Constructor for decompression.

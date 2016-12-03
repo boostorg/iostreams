@@ -143,11 +143,11 @@ struct gzip_params : zlib_params {
                  int window_bits        = gzip::default_window_bits,
                  int mem_level          = gzip::default_mem_level,
                  int strategy           = gzip::default_strategy,
-                 std::string file_name  = "",
-                 std::string comment    = "",
-                 std::time_t mtime      = 0 )
+                 std::string file_name_  = "",
+                 std::string comment_    = "",
+                 std::time_t mtime_      = 0 )
         : zlib_params(level, method, window_bits, mem_level, strategy),
-          file_name(file_name), comment(comment), mtime(mtime)
+          file_name(file_name_), comment(comment_), mtime(mtime_)
         { }
     std::string  file_name;
     std::string  comment;
@@ -505,7 +505,7 @@ public:
                 if (footer_.done()) {
                     if (footer_.crc() != this->crc())
                         boost::throw_exception(gzip_error(gzip::bad_crc));
-                    int c = boost::iostreams::get(peek);
+                    c = boost::iostreams::get(peek);
                     if (traits_type::is_eof(c)) {
                         state_ = s_done;
                     } else {
