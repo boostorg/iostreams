@@ -169,16 +169,16 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::open
         pback_size_ = (std::max)(std::streamsize(2), pback_size); // STLPort needs 2.
         std::streamsize size =
             pback_size_ +
-            ( buffer_size ? buffer_size: 1 );
-        in().resize(size);
+            ( buffer_size ? buffer_size: std::streamsize(1) );
+        in().resize(static_cast<int>(size));
         if (!shared_buffer())
             init_get_area();
     }
 
     // Construct output buffer.
     if (can_write() && !shared_buffer()) {
-        if (buffer_size != 0)
-            out().resize(buffer_size);
+        if (buffer_size != std::streamsize(0))
+            out().resize(static_cast<int>(buffer_size));
         init_put_area();
     }
 
@@ -346,8 +346,8 @@ indirect_streambuf<T, Tr, Alloc, Mode>::seek_impl
     if ( gptr() != 0 && way == BOOST_IOS::cur && which == BOOST_IOS::in && 
          eback() - gptr() <= off && off <= egptr() - gptr() ) 
     {   // Small seek optimization
-        gbump(off);
-        return obj().seek(0, BOOST_IOS::cur, BOOST_IOS::in, next_) -
+        gbump(static_cast<int>(off));
+        return obj().seek(stream_offset(0), BOOST_IOS::cur, BOOST_IOS::in, next_) -
                static_cast<off_type>(egptr() - gptr());
     }
     if (pptr() != 0) 
@@ -394,7 +394,7 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::sync_impl()
         else {
             const char_type* ptr = pptr();
             setp(out().begin() + amt, out().end());
-            pbump(ptr - pptr());
+            pbump(static_cast<int>(ptr - pptr()));
         }
     }
 }
