@@ -178,6 +178,61 @@ void empty_file_test()
     );
 }
 
+void multipart_test()
+{
+    // This test verifies that the gzip_decompressor properly handles a file
+    // that was written in multiple parts using Z_FULL_FLUSH, and in particular
+    // handles the CRC properly when one of those parts is empty.
+    const char multipart_file[] = {
+        '\x1f', '\x8b', '\x08', '\x00', '\x00', '\x00', '\x00', '\x00', '\x02', '\xff', '\xf2', '\xc9',
+        '\xcc', '\x4b', '\x55', '\x30', '\xe4', '\xf2', '\x01', '\x51', '\x46', '\x10', '\xca', '\x98',
+        '\x0b', '\x00', '\x00', '\x00', '\xff', '\xff', '\x03', '\x00', '\xdb', '\xa7', '\x83', '\xc9',
+        '\x15', '\x00', '\x00', '\x00', '\x1f', '\x8b', '\x08', '\x00', '\x00', '\x00', '\x00', '\x00',
+        '\x02', '\xff', '\xf2', '\xc9', '\xcc', '\x4b', '\x55', '\x30', '\xe1', '\xf2', '\x01', '\x51',
+        '\xa6', '\x10', '\xca', '\x8c', '\x0b', '\x00', '\x00', '\x00', '\xff', '\xff', '\x03', '\x00',
+        '\x41', '\xe3', '\xcc', '\xaa', '\x15', '\x00', '\x00', '\x00', '\x1f', '\x8b', '\x08', '\x00',
+        '\x00', '\x00', '\x00', '\x00', '\x02', '\xff', '\x02', '\x00', '\x00', '\x00', '\xff', '\xff',
+        '\x03', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x1f', '\x8b',
+        '\x08', '\x00', '\x00', '\x00', '\x00', '\x00', '\x02', '\xff', '\xf2', '\xc9', '\xcc', '\x4b',
+        '\x55', '\x30', '\xe7', '\xf2', '\x01', '\x51', '\x16', '\x10', '\xca', '\x92', '\x0b', '\x00',
+        '\x00', '\x00', '\xff', '\xff', '\x03', '\x00', '\x2b', '\xac', '\xd3', '\xf5', '\x15', '\x00',
+        '\x00', '\x00'
+    };
+
+    filtering_istream in;
+    std::string line;
+
+    in.push(gzip_decompressor());
+    in.push(io::array_source(multipart_file, sizeof(multipart_file)));
+
+    // First part
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 1", line);
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 2", line);
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 3", line);
+
+    // Second part immediately follows
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 4", line);
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 5", line);
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 6", line);
+
+    // Then an empty part, followed by one last 3-line part.
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 7", line);
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 8", line);
+    std::getline(in, line);
+    BOOST_CHECK_EQUAL("Line 9", line);
+
+    // Check for gzip errors too.
+    BOOST_CHECK(!in.bad());
+}
+
 test_suite* init_unit_test_suite(int, char* []) 
 {
     test_suite* test = BOOST_TEST_SUITE("gzip test");
@@ -186,5 +241,6 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&array_source_test));
     test->add(BOOST_TEST_CASE(&header_test));
     test->add(BOOST_TEST_CASE(&empty_file_test));
+    test->add(BOOST_TEST_CASE(&multipart_test));
     return test;
 }
