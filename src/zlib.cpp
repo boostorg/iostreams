@@ -76,7 +76,7 @@ void zlib_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(int error)
     switch (error) {
     case Z_OK: 
     case Z_STREAM_END: 
-    //case Z_BUF_ERROR: 
+    case Z_BUF_ERROR: 
         return;
     case Z_MEM_ERROR: 
         boost::throw_exception(std::bad_alloc());
