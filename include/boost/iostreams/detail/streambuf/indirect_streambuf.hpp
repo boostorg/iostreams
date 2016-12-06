@@ -170,7 +170,7 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::open
         std::streamsize size =
             pback_size_ +
             ( buffer_size ? buffer_size: std::streamsize(1) );
-        in().resize(static_cast<int>(size));
+        in().resize(size);
         if (!shared_buffer())
             init_get_area();
     }
@@ -178,7 +178,7 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::open
     // Construct output buffer.
     if (can_write() && !shared_buffer()) {
         if (buffer_size != std::streamsize(0))
-            out().resize(static_cast<int>(buffer_size));
+            out().resize(buffer_size);
         init_put_area();
     }
 
