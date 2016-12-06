@@ -242,7 +242,7 @@ public:
     typedef typename base_type::char_type               char_type;
     typedef typename base_type::category                category;
     basic_bzip2_compressor( const bzip2_params& = bzip2::default_block_size, 
-                            std::streamsize buffer_size =  default_device_buffer_size );
+                            int buffer_size =  default_device_buffer_size );
 };
 BOOST_IOSTREAMS_PIPABLE(basic_bzip2_compressor, 1)
 
@@ -264,7 +264,7 @@ public:
     typedef typename base_type::char_type               char_type;
     typedef typename base_type::category                category;
     basic_bzip2_decompressor( bool small = bzip2::default_small,
-                              std::streamsize buffer_size = default_device_buffer_size );
+                              int buffer_size = default_device_buffer_size );
 };
 BOOST_IOSTREAMS_PIPABLE(basic_bzip2_decompressor, 1)
 
@@ -386,7 +386,7 @@ inline void bzip2_decompressor_impl<Alloc>::init()
 
 template<typename Alloc>
 basic_bzip2_compressor<Alloc>::basic_bzip2_compressor
-        (const bzip2_params& p, std::streamsize buffer_size) 
+        (const bzip2_params& p, int buffer_size) 
     : base_type(buffer_size, p) 
     { }
 
@@ -394,7 +394,7 @@ basic_bzip2_compressor<Alloc>::basic_bzip2_compressor
 
 template<typename Alloc>
 basic_bzip2_decompressor<Alloc>::basic_bzip2_decompressor
-        (bool small, std::streamsize buffer_size) 
+        (bool small, int buffer_size) 
     : base_type(buffer_size, small)
     { }
 
