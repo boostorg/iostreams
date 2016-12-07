@@ -172,46 +172,6 @@ void file_descriptor_impl::open(const detail::path& p, BOOST_IOS::openmode mode)
             }
     }
     
-#if 0
-    
-    if ( (mode & (BOOST_IOS::in | BOOST_IOS::out))
-             ==
-         (BOOST_IOS::in | BOOST_IOS::out) )
-    {
-        if (mode & BOOST_IOS::app)
-            boost::throw_exception(BOOST_IOSTREAMS_FAILURE("bad open mode"));
-        dwDesiredAccess = GENERIC_READ | GENERIC_WRITE;
-        dwCreationDisposition =
-            (mode & BOOST_IOS::trunc) ?
-                CREATE_ALWAYS :
-                OPEN_EXISTING;
-    } else if (mode & BOOST_IOS::in) {
-        if (mode & (BOOST_IOS::app | BOOST_IOS::trunc))
-            boost::throw_exception(BOOST_IOSTREAMS_FAILURE("bad open mode"));
-        dwDesiredAccess = GENERIC_READ;
-        dwCreationDisposition = OPEN_EXISTING;
-    } else if (mode & BOOST_IOS::out) {
-        if ( (mode & (BOOST_IOS::app | BOOST_IOS::trunc))
-                 ==
-              (BOOST_IOS::app | BOOST_IOS::trunc) )
-            boost::throw_exception(BOOST_IOSTREAMS_FAILURE("bad open mode"));
-        if (mode & BOOST_IOS::app) {
-            dwCreationDisposition = OPEN_ALWAYS;
-            dwDesiredAccess = 
-                FILE_APPEND_DATA |
-                FILE_WRITE_ATTRIBUTES |
-                FILE_WRITE_EA |
-                STANDARD_RIGHTS_WRITE |
-                SYNCHRONIZE;
-        } else {
-            dwDesiredAccess = GENERIC_WRITE;
-            dwCreationDisposition = CREATE_ALWAYS;
-        }
-    } else {
-        boost::throw_exception(BOOST_IOSTREAMS_FAILURE("bad open mode"));
-    }
-    
-#endif
 
     HANDLE handle = p.is_wide() ?
         ::CreateFileW( p.c_wstr(),
