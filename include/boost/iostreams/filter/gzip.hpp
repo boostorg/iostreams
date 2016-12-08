@@ -32,7 +32,7 @@
 #include <boost/iostreams/detail/adapter/non_blocking_adapter.hpp>
 #include <boost/iostreams/detail/adapter/range_adapter.hpp>
 #include <boost/iostreams/detail/char_traits.hpp>
-#include <boost/iostreams/detail/ios.hpp> // failure.
+#include <boost/iostreams/detail/ios.hpp> // failure, streamsize.
 #include <boost/iostreams/detail/error.hpp>
 #include <boost/iostreams/operations.hpp>
 #include <boost/iostreams/device/back_inserter.hpp>
@@ -197,7 +197,7 @@ public:
           closable_tag
         { };
     basic_gzip_compressor( const gzip_params& = gzip::default_compression,
-                           int buffer_size = default_device_buffer_size );
+                           std::streamsize buffer_size = default_device_buffer_size );
 
     template<typename Source>
     std::streamsize read(Source& src, char_type* s, std::streamsize n)
@@ -411,7 +411,7 @@ public:
           closable_tag
         { };
     basic_gzip_decompressor( int window_bits = gzip::default_window_bits,
-                             int buffer_size = default_device_buffer_size );
+                             std::streamsize buffer_size = default_device_buffer_size );
 
     template<typename Sink>
     std::streamsize write(Sink& snk, const char_type* s, std::streamsize n)
@@ -645,7 +645,7 @@ typedef basic_gzip_decompressor<> gzip_decompressor;
 
 template<typename Alloc>
 basic_gzip_compressor<Alloc>::basic_gzip_compressor
-    (const gzip_params& p, int buffer_size)
+    (const gzip_params& p, std::streamsize buffer_size)
     : base_type(normalize_params(p), buffer_size),
       offset_(0), flags_(0)
 {
@@ -731,7 +731,7 @@ std::streamsize basic_gzip_compressor<Alloc>::read_string
 
 template<typename Alloc>
 basic_gzip_decompressor<Alloc>::basic_gzip_decompressor
-    (int window_bits, int buffer_size)
+    (int window_bits, std::streamsize buffer_size)
     : base_type(make_params(window_bits), buffer_size),
       state_(s_start)
     { }

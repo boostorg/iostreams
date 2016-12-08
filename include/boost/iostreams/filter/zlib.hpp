@@ -263,7 +263,7 @@ public:
     typedef typename base_type::char_type               char_type;
     typedef typename base_type::category                category;
     basic_zlib_compressor( const zlib_params& = zlib::default_compression, 
-                           int buffer_size = default_device_buffer_size );
+                           std::streamsize buffer_size = default_device_buffer_size );
     zlib::ulong crc() { return this->filter().crc(); }
     int total_in() {  return this->filter().total_in(); }
 };
@@ -287,9 +287,9 @@ public:
     typedef typename base_type::char_type               char_type;
     typedef typename base_type::category                category;
     basic_zlib_decompressor( int window_bits = zlib::default_window_bits,
-                             int buffer_size = default_device_buffer_size );
+                             std::streamsize buffer_size = default_device_buffer_size );
     basic_zlib_decompressor( const zlib_params& p,
-                             int buffer_size = default_device_buffer_size );
+                             std::streamsize buffer_size = default_device_buffer_size );
     zlib::ulong crc() { return this->filter().crc(); }
     int total_out() {  return this->filter().total_out(); }
     bool eof() { return this->filter().eof(); }
@@ -396,19 +396,19 @@ void zlib_decompressor_impl<Alloc>::close() {
 
 template<typename Alloc>
 basic_zlib_compressor<Alloc>::basic_zlib_compressor
-    (const zlib_params& p, int buffer_size) 
+    (const zlib_params& p, std::streamsize buffer_size) 
     : base_type(buffer_size, p) { }
 
 //------------------Implementation of zlib_decompressor-----------------------//
 
 template<typename Alloc>
 basic_zlib_decompressor<Alloc>::basic_zlib_decompressor
-    (int window_bits, int buffer_size) 
+    (int window_bits, std::streamsize buffer_size) 
     : base_type(buffer_size, window_bits) { }
 
 template<typename Alloc>
 basic_zlib_decompressor<Alloc>::basic_zlib_decompressor
-    (const zlib_params& p, int buffer_size) 
+    (const zlib_params& p, std::streamsize buffer_size) 
     : base_type(buffer_size, p) { }
 
 //----------------------------------------------------------------------------//
