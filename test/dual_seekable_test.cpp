@@ -11,6 +11,7 @@
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/test/unit_test.hpp>
+#include "detail/temp_file.hpp"
 #include "detail/verification.hpp"
 
 using namespace std;
