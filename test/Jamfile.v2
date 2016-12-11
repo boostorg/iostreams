@@ -66,6 +66,7 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           [ test-iostreams copy_test.cpp ]
           [ test-iostreams counter_test.cpp ]
           [ test-iostreams direct_adapter_test.cpp ]
+          [ test-iostreams dual_seekable_test.cpp ]
           [ test-iostreams example_test.cpp ]
           [ test-iostreams execute_test.cpp ]
           [ test-iostreams file_test.cpp ]
