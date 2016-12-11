@@ -85,7 +85,13 @@ file_descriptor_impl::file_descriptor_impl()
 
 file_descriptor_impl::~file_descriptor_impl() 
 { 
+    try
+    {
     close_impl(flags_ & close_on_exit, false);
+    }
+    catch(...)
+    {
+    }
 }
 
 void file_descriptor_impl::open(file_handle fd, flags f)
@@ -115,7 +121,13 @@ void file_descriptor_impl::open(int fd, flags f)
 
 void file_descriptor_impl::open(const detail::path& p, BOOST_IOS::openmode mode)
 {
+    try
+    {
     close_impl(flags_ & close_on_exit, true);
+    }
+    catch(...)
+    {
+    }
 
 #ifdef BOOST_IOSTREAMS_WINDOWS //---------------------------------------------//
     DWORD dwDesiredAccess;
@@ -254,7 +266,13 @@ bool file_descriptor_impl::is_open() const
 
 void file_descriptor_impl::close()
 {
+    try
+    {
     close_impl((flags_ & close_on_close) != 0, true);
+    }
+    catch(...)
+    {
+    }
 }
 
 void file_descriptor_impl::close_impl(bool close_flag, bool throw_) {
