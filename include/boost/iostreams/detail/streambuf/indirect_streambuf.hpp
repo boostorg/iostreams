@@ -90,6 +90,8 @@ protected:
     pos_type seekoff( off_type off, BOOST_IOS::seekdir way,
                       BOOST_IOS::openmode which );
     pos_type seekpos(pos_type sp, BOOST_IOS::openmode which);
+    std::streamsize xsgetn(char_type* s, std::streamsize n);
+    std::streamsize xsputn(const char_type* s, std::streamsize n);
 
     // Declared in linked_streambuf.
     void set_next(streambuf_type* next);
@@ -436,6 +438,65 @@ void indirect_streambuf<T, Tr, Alloc, Mode>::init_put_area()
         setp(out().begin(), out().end());
     else
         setp(0, 0);
+}
+
+//----------Optimized xsgetn & xsputn-----------------------------------------//
+
+template<typename T, typename Tr, typename Alloc, typename Mode>
+std::streamsize indirect_streambuf<T, Tr, Alloc, Mode>::xsgetn
+    (char_type* s, std::streamsize n)
+{
+    if (n < (std::max)(in().size() - pback_size_ - 2, std::streamsize(2)))
+        return streambuf_type::xsgetn(s, n);
+    
+    std::streamsize ret = 0;
+    if (!gptr()) init_get_area();
+    const std::streamsize avail = egptr() - gptr();
+
+    // Copy the chars already present in the buffer.
+    if (avail != 0) {
+        traits_type::copy(s, gptr(), avail);
+        s += avail;
+        setg(eback(), gptr() + avail, egptr());
+        ret += avail;
+        n -= avail;
+    }
+
+    // Need to loop in case of short reads.
+    for (std::streamsize len; n != 0; n -= len) {
+        len = obj().read(s, n, next_);
+
+        if (len <= 0) {
+            this->set_true_eof(true);
+            break;
+        }
+
+        ret += len;
+        s += len;
+    }
+
+    if (n == 0)
+        setg(0, 0, 0);
+
+    return ret;
+}
+
+template<typename T, typename Tr, typename Alloc, typename Mode>
+std::streamsize indirect_streambuf<T, Tr, Alloc, Mode>::xsputn
+    (const char_type* s, std::streamsize n)
+{
+    using namespace std;
+
+    if (n < (std::max)(out().size() - pback_size_ - 2, std::streamsize(2)))
+        return streambuf_type::xsputn(s, n);
+
+    if (output_buffered()) {
+        if (!pptr() || (shared_buffer() && gptr()))
+            init_put_area();
+        sync_impl();
+    }
+
+    return obj().write(s, n, next_);
 }
 
 //----------------------------------------------------------------------------//
