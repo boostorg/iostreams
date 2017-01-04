@@ -72,7 +72,7 @@ bool compare_streams_in_chunks(BOOST_ISTREAM& first, BOOST_ISTREAM& second)
         std::streamsize amt = first.gcount();
         if ( amt != static_cast<std::streamsize>(second.gcount()) ||
              BOOST_IOSTREAMS_CHAR_TRAITS(BOOST_CHAR)::
-                compare(buf_one, buf_two, amt) != 0 )
+                compare(buf_one, buf_two, static_cast<std::size_t>(amt)) != 0 )
             return false;
         ++i;
     } while (!first.eof());
@@ -141,7 +141,7 @@ bool test_seekable_in_chars(std::iostream& io)
         for (j = 0; j < chunk_size; ++j)
             if (io.get() != narrow_data()[j])
                return false;
-        io.seekp(-chunk_size, BOOST_IOS::cur);
+        io.seekg(-chunk_size, BOOST_IOS::cur);
         for (j = 0; j < chunk_size; ++j)
             io.put(narrow_data()[j]);
     }
@@ -157,7 +157,7 @@ bool test_seekable_in_chars(std::iostream& io)
         for (j = 0; j < chunk_size; ++j)
             if (io.get() != narrow_data()[j])
                return false;
-        io.seekp(off, BOOST_IOS::beg);
+        io.seekg(off, BOOST_IOS::beg);
         for (j = 0; j < chunk_size; ++j)
             io.put(narrow_data()[j]);
     }
@@ -174,7 +174,7 @@ bool test_seekable_in_chars(std::iostream& io)
         for (j = 0; j < chunk_size; ++j)
             if (io.get() != narrow_data()[j])
                return false;
-        io.seekp(-off, BOOST_IOS::end);
+        io.seekg(-off, BOOST_IOS::end);
         for (j = 0; j < chunk_size; ++j)
             io.put(narrow_data()[j]);
     }
@@ -193,7 +193,7 @@ bool test_seekable_in_chunks(std::iostream& io)
         io.read(buf, chunk_size);
         if (strncmp(buf, narrow_data(), chunk_size) != 0)
             return false;
-        io.seekp(-chunk_size, BOOST_IOS::cur);
+        io.seekg(-chunk_size, BOOST_IOS::cur);
         io.write(narrow_data(), chunk_size);
     }
 
@@ -207,7 +207,7 @@ bool test_seekable_in_chunks(std::iostream& io)
         io.read(buf, chunk_size);
         if (strncmp(buf, narrow_data(), chunk_size) != 0)
             return false;
-        io.seekp(off, BOOST_IOS::beg);
+        io.seekg(off, BOOST_IOS::beg);
         io.write(narrow_data(), chunk_size);
     }
     
@@ -222,7 +222,7 @@ bool test_seekable_in_chunks(std::iostream& io)
         io.read(buf, chunk_size);
         if (strncmp(buf, narrow_data(), chunk_size) != 0)
             return false;
-        io.seekp(-off, BOOST_IOS::end);
+        io.seekg(-off, BOOST_IOS::end);
         io.write(narrow_data(), chunk_size);
     }
     return true;
@@ -306,6 +306,68 @@ bool test_output_seekable(std::ostream& io)
             io.put(narrow_data()[j]);
         io.seekp(-off, BOOST_IOS::end);
         io.write(narrow_data(), chunk_size);
+    }
+    return true;
+}
+
+bool test_dual_seekable(std::iostream& io)
+{
+    int i;  // old 'for' scope workaround.
+
+    // Test seeking with ios::cur
+    for (i = 0; i < data_reps; ++i) {
+        for (int j = 0; j < chunk_size; ++j)
+            io.put(narrow_data()[j]);
+        io.seekp(-chunk_size, BOOST_IOS::cur);
+        for (int j = 0; j < chunk_size; ++j)
+            if (io.get() != narrow_data()[j])
+               return false;
+        io.seekg(-chunk_size, BOOST_IOS::cur);
+        io.write(narrow_data(), chunk_size);
+        char buf[chunk_size];
+        io.read(buf, chunk_size);
+        if (strncmp(buf, narrow_data(), chunk_size) != 0)
+            return false;
+    }
+
+    // Test seeking with ios::beg
+    std::streamoff off = 0;
+    io.seekp(0, BOOST_IOS::beg);
+    io.seekg(0, BOOST_IOS::beg);
+    for (i = 0; i < data_reps; ++i, off += chunk_size) {
+        for (int j = 0; j < chunk_size; ++j)
+            io.put(narrow_data()[j]);
+        io.seekp(off, BOOST_IOS::beg);
+        for (int j = 0; j < chunk_size; ++j)
+            if (io.get() != narrow_data()[j])
+               return false;
+        io.seekg(off, BOOST_IOS::beg);
+        io.write(narrow_data(), chunk_size);
+        char buf[chunk_size];
+        io.read(buf, chunk_size);
+        if (strncmp(buf, narrow_data(), chunk_size) != 0)
+            return false;
+    }
+    
+    // Test seeking with ios::end
+    io.seekp(0, BOOST_IOS::end);
+    io.seekg(0, BOOST_IOS::end);
+    off = io.tellp();
+    io.seekp(-off, BOOST_IOS::end);
+    io.seekg(-off, BOOST_IOS::end);
+    for (i = 0; i < data_reps; ++i, off -= chunk_size) {
+        for (int j = 0; j < chunk_size; ++j)
+            io.put(narrow_data()[j]);
+        io.seekp(-off, BOOST_IOS::end);
+        for (int j = 0; j < chunk_size; ++j)
+            if (io.get() != narrow_data()[j])
+               return false;
+        io.seekg(-off, BOOST_IOS::end);
+        io.write(narrow_data(), chunk_size);
+        char buf[chunk_size];
+        io.read(buf, chunk_size);
+        if (strncmp(buf, narrow_data(), chunk_size) != 0)
+            return false;
     }
     return true;
 }
