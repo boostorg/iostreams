@@ -261,7 +261,7 @@ void mapped_file_impl::open_file(param_type p)
         flags |= O_LARGEFILE;
     #endif
     errno = 0;
-    handle_ = ::open(p.path.c_str(), flags, S_IRWXU);
+    handle_ = ::open(p.path.c_str(), flags, S_IRWXU | S_IRWXG | S_IRWXO);
     if (errno != 0)
         cleanup_and_throw("failed opening file");
 
