@@ -26,6 +26,7 @@ local debug = [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ] ;
 for local v in NO_COMPRESSION 
                NO_ZLIB
                NO_BZIP2
+               NO_LZMA
 {
     $(v) = [ modules.peek : $(v) ] ;
 }
@@ -60,6 +61,21 @@ else
     }
 }
 
+if $(NO_COMPRESSION) != 1 && $(NO_LZMA) != 1
+{
+    using lzma : : <build-name>boost_lzma <tag>@tag : : true ;
+    lzma-requirements =
+        [ ac.check-library /lzma//lzma : <library>/lzma//lzma
+          <source>lzma.cpp ] ;
+}
+else
+{
+    if $(debug)
+    {
+        ECHO "notice: iostreams: not using lzma compression " ;
+    }
+}
+
 local sources = file_descriptor.cpp mapped_file.cpp ;
 
 lib boost_iostreams 
@@ -68,6 +84,7 @@ lib boost_iostreams
       <define>BOOST_IOSTREAMS_USE_DEPRECATED
       $(zlib-requirements)
       $(bzip2-requirements)
+      $(lzma-requirements)
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
     ;
