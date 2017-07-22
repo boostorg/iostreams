@@ -142,6 +142,8 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
       {              
           all-tests += 
               [ test-iostreams 
+                    write_failure_test.cpp ../build//boost_iostreams ]
+              [ test-iostreams 
                     gzip_test.cpp ../build//boost_iostreams ]
               [ test-iostreams 
                     zlib_test.cpp ../build//boost_iostreams ] ;
