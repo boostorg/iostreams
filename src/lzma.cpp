@@ -11,6 +11,7 @@
 
 #include <lzma.h>
 
+#include <boost/throw_exception.hpp>
 #include <boost/iostreams/detail/config/dyn_link.hpp>
 #include <boost/iostreams/filter/lzma.hpp>
 
@@ -53,16 +54,16 @@ lzma_error::lzma_error(int error)
     : BOOST_IOSTREAMS_FAILURE("lzma error"), error_(error)
     { }
 
-void lzma_error::check(int error)
+void lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(int error)
 {
     switch (error) {
     case LZMA_OK:
     case LZMA_STREAM_END:
         return;
     case LZMA_MEM_ERROR:
-        throw std::bad_alloc();
+        boost::throw_exception(std::bad_alloc());
     default:
-        throw lzma_error(error);
+        boost::throw_exception(lzma_error(error));
     }
 }
 
@@ -111,7 +112,7 @@ void lzma_base::reset(bool compress, bool realloc)
     {
         memset(s, 0, sizeof(*s));
 
-        lzma_error::check(
+        lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
             compress ?
                 lzma_easy_encoder(s, level, LZMA_CHECK_CRC32) :
                 lzma_stream_decoder(s, 100 * 1024 * 1024, LZMA_CONCATENATED)
@@ -121,9 +122,7 @@ void lzma_base::reset(bool compress, bool realloc)
 
 void lzma_base::do_init
     ( const lzma_params& p, bool compress,
-      #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-          lzma::alloc_func, lzma::free_func,
-      #endif
+      lzma::alloc_func, lzma::free_func,
       void* )
 {
     lzma_stream* s = static_cast<lzma_stream*>(stream_);
@@ -131,7 +130,7 @@ void lzma_base::do_init
     memset(s, 0, sizeof(*s));
 
     level = p.level;
-    lzma_error::check(
+    lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
         compress ?
             lzma_easy_encoder(s, p.level, LZMA_CHECK_CRC32) :
             lzma_stream_decoder(s, 100 * 1024 * 1024, LZMA_CONCATENATED)

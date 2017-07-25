@@ -10,7 +10,7 @@
 #ifndef BOOST_IOSTREAMS_LZMA_HPP_INCLUDED
 #define BOOST_IOSTREAMS_LZMA_HPP_INCLUDED
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#if defined(_MSC_VER)
 # pragma once
 #endif
 
@@ -101,7 +101,7 @@ class BOOST_IOSTREAMS_DECL lzma_error : public BOOST_IOSTREAMS_FAILURE {
 public:
     explicit lzma_error(int error);
     int error() const { return error_; }
-    static void check(int error);
+    static void check BOOST_PREVENT_MACRO_SUBSTITUTION(int error);
 private:
     int error_;
 };
@@ -145,10 +145,8 @@ protected:
         {
             bool custom = lzma_allocator<Alloc>::custom;
             do_init( p, compress,
-                     #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-                         custom ? lzma_allocator<Alloc>::allocate : 0,
-                         custom ? lzma_allocator<Alloc>::deallocate : 0,
-                     #endif
+                     custom ? lzma_allocator<Alloc>::allocate : 0,
+                     custom ? lzma_allocator<Alloc>::deallocate : 0,
                      &zalloc );
         }
     void before( const char*& src_begin, const char* src_end,
@@ -160,10 +158,8 @@ protected:
     void reset(bool compress, bool realloc);
 private:
     void do_init( const lzma_params& p, bool compress,
-                  #if !BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-                      lzma::alloc_func,
-                      lzma::free_func,
-                  #endif
+                  lzma::alloc_func,
+                  lzma::free_func,
                   void* derived );
     void*         stream_;         // Actual type: lzmadec_stream*.
     uint32_t level;
@@ -218,7 +214,7 @@ public:
     typedef typename base_type::char_type               char_type;
     typedef typename base_type::category                category;
     basic_lzma_compressor( const lzma_params& = lzma::default_compression,
-                           int buffer_size = default_device_buffer_size );
+                           std::streamsize buffer_size = default_device_buffer_size );
 };
 BOOST_IOSTREAMS_PIPABLE(basic_lzma_compressor, 1)
 
@@ -239,9 +235,9 @@ private:
 public:
     typedef typename base_type::char_type               char_type;
     typedef typename base_type::category                category;
-    basic_lzma_decompressor( int buffer_size = default_device_buffer_size );
+    basic_lzma_decompressor( std::streamsize buffer_size = default_device_buffer_size );
     basic_lzma_decompressor( const lzma_params& p,
-                             int buffer_size = default_device_buffer_size );
+                             std::streamsize buffer_size = default_device_buffer_size );
 };
 BOOST_IOSTREAMS_PIPABLE(basic_lzma_decompressor, 1)
 
@@ -295,7 +291,7 @@ bool lzma_compressor_impl<Alloc>::filter
     before(src_begin, src_end, dest_begin, dest_end);
     int result = deflate(flush ? lzma::finish : lzma::run);
     after(src_begin, dest_begin, true);
-    lzma_error::check(result);
+    lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(result);
     return result != lzma::stream_end;
 }
 
@@ -327,7 +323,7 @@ bool lzma_decompressor_impl<Alloc>::filter
     before(src_begin, src_end, dest_begin, dest_end);
     int result = inflate(flush ? lzma::finish : lzma::run);
     after(src_begin, dest_begin, false);
-    lzma_error::check(result);
+    lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(result);
     return result != lzma::stream_end;
 }
 
@@ -340,19 +336,19 @@ void lzma_decompressor_impl<Alloc>::close() { reset(false, true); }
 
 template<typename Alloc>
 basic_lzma_compressor<Alloc>::basic_lzma_compressor
-    (const lzma_params& p, int buffer_size)
+    (const lzma_params& p, std::streamsize buffer_size)
     : base_type(buffer_size, p) { }
 
 //------------------Implementation of lzma_decompressor-----------------------//
 
 template<typename Alloc>
 basic_lzma_decompressor<Alloc>::basic_lzma_decompressor
-    (int buffer_size)
+    (std::streamsize buffer_size)
     : base_type(buffer_size) { }
 
 template<typename Alloc>
 basic_lzma_decompressor<Alloc>::basic_lzma_decompressor
-    (const lzma_params& p, int buffer_size)
+    (const lzma_params& p, std::streamsize buffer_size)
     : base_type(buffer_size, p) { }
 
 //----------------------------------------------------------------------------//
