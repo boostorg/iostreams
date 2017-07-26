@@ -1,4 +1,5 @@
 // (C) COPYRIGHT 2017 ARM Limited
+// Based on gzip_test.cpp by:
 // (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
 // (C) Copyright 2004-2007 Jonathan Turkanis
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
