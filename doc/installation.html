@@ -30,8 +30,11 @@
         href="classes/regex_filter.html">regular expression filters</a> depend
       on <a href="../../regex/index.html" target="_top">Boost.Regex</a>, and
       the compressions filters rely on the third-party libraries zlib (<a class="bib_ref"
-        name="gailly" href="bibliography.html#gailly" '="">[Gailly]</a>) and
-      libbz2 (<a class="bib_ref" name="seward" href="bibliography.html#seward" '="">[Seward]</a>).
+        name="gailly" href="bibliography.html#gailly">[Gailly]</a>),
+      libbz2 (<a class="bib_ref" name="seward" href="bibliography.html#seward">[Seward]</a>)
+      and liblzma (<a class="bib_ref" name="collin" href="bibliography.html#collin">[Collin]</a>).
+      Note that liblzma refers to the version from xz-utils which is the version available in
+      for example Linux distributions, not the liblzma from the LZMA SDK from 7zip.
       To obatin zlib and libbz2, see the instructions <a href="classes/zlib.html#installation">here</a>
       and <a href="classes/bzip2.html#installation">here</a>. </p>
     <p> The components which are implemented in <code>.cpp</code> or which rely
@@ -85,6 +88,11 @@
           <td><a href="../../../libs/iostreams/src/zlib.cpp"><code>zlib.cpp</code></a></td>
           <td style="padding-left:1.5em">zlib</td>
         </tr>
+        <tr>
+          <td><a href="../../../boost/iostreams/filter/lzma.hpp"><code>boost/iostreams/filter/lzma.hpp</code></a></td>
+          <td><a href="../../../libs/iostreams/src/lzma.cpp"><code>lzma.cpp</code></a></td>
+          <td style="padding-left:1.5em">liblzma</td>
+        </tr>
       </tbody>
     </table>
     <a name="bjam"></a>
@@ -93,18 +101,19 @@
       run <i>b2</i> from the directory <code>libs/iostreams/build</code>, or
       from the Boost root directory. </p>
     <p>If you want to use the compression filters when building iostreams, you
-      have two choices. You can setup the zlib and/or bzip2 toolsets in Boost
+      have two choices. You can setup the zlib, bzip2 and/or LZMA toolsets in Boost
       Build in a jamfile, preferably user-config.jam, as documented in <a target="_top"
         href="../../../tools/build/doc/html/bbv2/reference/tools.html#bbv2.reference.tools.libraries.zlib">Boost.Build</a>.
-      Alternatively you can let iostreams setup the zlib and/or bzip2 toolsets
+      Note that building from source is not supported for LZMA.
+      Alternatively you can let iostreams setup the zlib, bzip2 and/or LZMA toolsets
       for you using default values. The former is preferred, especially if your
       zlib and/or bzip2 installations cannot be found by the iostreams setup.</p>
-    <p> On most UNIX systems, it should not be necessary to setup the zlib
-      and/or bzip2 toolsets since the zlib and libbz2 headers and binaries are
-      already installed in locations where they will be found automatically. On
-      Windows the zlib and/or bzip2 binaries need to be in the PATH, else they
+    <p> On most UNIX systems, it should not be necessary to setup the zlib,
+      bzip2 and/or lzma toolsets since the zlib, libbz2 and liblzma headers and binaries are
+      already installed in locations where they will be found automatically.  On
+      Windows the zlib, bzip2 and/or LZMA binaries need to be in the PATH, else they
       will not ordinarily be found by default, so it is always a good idea under
-      Windows to setup the zlib and/or bzip2 toolsets in your own jamfile.</p>
+      Windows to setup the zlib, bzip2 and/or LZMA toolsets in your own jamfile.</p>
     <p>You can turn off compression filters when building iostreams by passing
       one of the <a target="_top" href="../../../tools/build/doc/html/bbv2/overview/invocation.html#bbv2.overview.invocation.options">Boost
         Build variables</a> in the table below, defined to 1, using the -s
@@ -126,6 +135,10 @@
         <tr>
           <td><code>NO_ZLIB</code></td>
           <td> Disable support for the zlib filters. </td>
+        </tr>
+        <tr>
+          <td><code>NO_LZMA</code></td>
+          <td> Disable support for the LZMA/xz filters. </td>
         </tr>
       </tbody>
     </table>

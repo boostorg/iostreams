@@ -9,9 +9,11 @@
 
 import stlport ;
 import modules ;
+import ac ;
 
 local NO_BZIP2 = [ modules.peek : NO_BZIP2 ] ;
 local NO_ZLIB = [ modules.peek : NO_ZLIB ] ;
+local NO_LZMA = [ modules.peek : NO_LZMA ] ;
 local LARGE_FILE_TEMP = [ modules.peek : LARGE_FILE_TEMP ] ;
 local LARGE_FILE_KEEP = [ modules.peek : LARGE_FILE_KEEP ] ;
 
@@ -147,6 +149,13 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
                     gzip_test.cpp ../build//boost_iostreams ]
               [ test-iostreams 
                     zlib_test.cpp ../build//boost_iostreams ] ;
+      }
+      if ! $(NO_LZMA)
+      {
+          using lzma : : <build-name>boost_lzma <tag>@tag : : true ;
+          all-tests += [ test-iostreams 
+                             lzma_test.cpp ../build//boost_iostreams :
+                             [ ac.check-library /lzma//lzma : : <build>no ] ] ;
       }
           
     test-suite "iostreams" : $(all-tests) ;
