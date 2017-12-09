@@ -39,7 +39,11 @@ template< typename Ch,
 class basic_buffer {
 private:
 #ifndef BOOST_NO_STD_ALLOCATOR
+#if defined(BOOST_NO_CXX11_ALLOCATOR)
     typedef typename Alloc::template rebind<Ch>::other allocator_type;
+#else
+    typedef typename std::allocator_traits<Alloc>::template rebind_alloc<Ch> allocator_type;
+#endif
 #else
     typedef std::allocator<Ch> allocator_type;
 #endif

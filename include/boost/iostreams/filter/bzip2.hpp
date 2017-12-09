@@ -123,7 +123,11 @@ namespace detail {
 template<typename Alloc>
 struct bzip2_allocator_traits {
 #ifndef BOOST_NO_STD_ALLOCATOR
+#if defined(BOOST_NO_CXX11_ALLOCATOR)
     typedef typename Alloc::template rebind<char>::other type;
+#else
+    typedef typename std::allocator_traits<Alloc>::template rebind_alloc<char> type;
+#endif
 #else
     typedef std::allocator<char> type;
 #endif
