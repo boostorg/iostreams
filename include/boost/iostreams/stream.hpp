@@ -56,7 +56,7 @@ struct stream_traits {
             >::type stream_tag;
 };
 
-#if defined(_MSC_VER) && (_MSC_VER == 1700)
+#if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
 # pragma warning(push)
 // https://connect.microsoft.com/VisualStudio/feedback/details/733720/
 # pragma warning(disable: 4250)
@@ -90,7 +90,7 @@ public:
     stream_base() : pbase_type(), stream_type(&member) { }
 };
 
-#if defined(_MSC_VER) && (_MSC_VER == 1700)
+#if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
 # pragma warning(pop)
 #endif
 
@@ -102,7 +102,7 @@ public:
 
 namespace boost { namespace iostreams {
 
-#if defined(_MSC_VER) && (_MSC_VER == 1700)
+#if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
 # pragma warning(push)
 // https://connect.microsoft.com/VisualStudio/feedback/details/733720/
 # pragma warning(disable: 4250)
@@ -160,7 +160,7 @@ private:
     }
 };
 
-#if defined(_MSC_VER) && (_MSC_VER == 1700)
+#if defined(BOOST_MSVC) && (BOOST_MSVC == 1700)
 # pragma warning(pop)
 #endif
 
