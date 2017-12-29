@@ -127,7 +127,11 @@ template< typename Alloc,
               BOOST_DEDUCED_TYPENAME lzma_allocator_traits<Alloc>::type >
 struct lzma_allocator : private Base {
 private:
+#if defined(BOOST_NO_CXX11_ALLOCATOR) || defined(BOOST_NO_STD_ALLOCATOR)
     typedef typename Base::size_type size_type;
+#else
+    typedef typename std::allocator_traits<Base>::size_type size_type;
+#endif
 public:
     BOOST_STATIC_CONSTANT(bool, custom =
         (!is_same<std::allocator<char>, Base>::value));
