@@ -33,7 +33,7 @@ for local v in NO_COMPRESSION
 
 if $(NO_COMPRESSION) != 1 && $(NO_ZLIB) != 1
 {
-    using zlib : : <build-name>boost_zlib <tag>@tag : : true ;
+    using zlib : : <build-name>boost_zlib <tag>@tag ;
     zlib-requirements =
         [ ac.check-library /zlib//zlib : <library>/zlib//zlib
           <source>zlib.cpp <source>gzip.cpp ] ;
@@ -48,7 +48,7 @@ else
 
 if $(NO_COMPRESSION) != 1 && $(NO_BZIP2) != 1
 {
-    using bzip2 : : <build-name>boost_bzip2 <tag>@tag : : true ;
+    using bzip2 : : <build-name>boost_bzip2 <tag>@tag ;
     bzip2-requirements =
         [ ac.check-library /bzip2//bzip2 : <library>/bzip2//bzip2
           <source>bzip2.cpp ] ;
@@ -63,7 +63,7 @@ else
 
 if $(NO_COMPRESSION) != 1 && $(NO_LZMA) != 1
 {
-    using lzma : : <build-name>boost_lzma <tag>@tag : : true ;
+    using lzma ;
     lzma-requirements =
         [ ac.check-library /lzma//lzma : <library>/lzma//lzma
           <source>lzma.cpp ] ;
