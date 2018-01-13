@@ -14,6 +14,7 @@ import ac ;
 local NO_BZIP2 = [ modules.peek : NO_BZIP2 ] ;
 local NO_ZLIB = [ modules.peek : NO_ZLIB ] ;
 local NO_LZMA = [ modules.peek : NO_LZMA ] ;
+local NO_ZSTD = [ modules.peek : NO_ZSTD ] ;
 local LARGE_FILE_TEMP = [ modules.peek : LARGE_FILE_TEMP ] ;
 local LARGE_FILE_KEEP = [ modules.peek : LARGE_FILE_KEEP ] ;
 
@@ -160,6 +161,13 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           all-tests += [ test-iostreams 
                              lzma_test.cpp ../build//boost_iostreams :
                              [ ac.check-library /lzma//lzma : : <build>no ] ] ;
+      }
+      if ! $(NO_ZSTD)
+      {
+          using zstd ;
+          all-tests += [ test-iostreams 
+                             zstd_test.cpp ../build//boost_iostreams :
+                             [ ac.check-library /zstd//zstd : : <build>no ] ] ;
       }
           
     test-suite "iostreams" : $(all-tests) ;
