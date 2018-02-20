@@ -138,17 +138,21 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
       if ! $(NO_BZIP2)
       {     
           all-tests += [ test-iostreams 
-                    bzip2_test.cpp ../build//boost_iostreams ] ;
+                    bzip2_test.cpp ../build//boost_iostreams :
+                    [ ac.check-library /bzip2//bzip2 : : <build>no ] ] ;
       }
       if ! $(NO_ZLIB)
       {              
           all-tests += 
               [ test-iostreams 
-                    write_failure_test.cpp ../build//boost_iostreams ]
+                    write_failure_test.cpp ../build//boost_iostreams :
+                    [ ac.check-library /zlib//zlib : : <build>no ] ]
               [ test-iostreams 
-                    gzip_test.cpp ../build//boost_iostreams ]
+                    gzip_test.cpp ../build//boost_iostreams :
+                    [ ac.check-library /zlib//zlib : : <build>no ] ]
               [ test-iostreams 
-                    zlib_test.cpp ../build//boost_iostreams ] ;
+                    zlib_test.cpp ../build//boost_iostreams :
+                    [ ac.check-library /zlib//zlib : : <build>no ] ] ;
       }
       if ! $(NO_LZMA)
       {
