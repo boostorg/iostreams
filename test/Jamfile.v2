@@ -95,6 +95,7 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           [ test-iostreams null_test.cpp ]
           [ test-iostreams operation_sequence_test.cpp ]
           [ test-iostreams pipeline_test.cpp ]
+          [ test-iostreams read_nonblocking_test.cpp ]
           [ test-iostreams 
                 regex_filter_test.cpp     
                 /boost/regex//boost_regex ]
