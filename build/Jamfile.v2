@@ -27,6 +27,7 @@ for local v in NO_COMPRESSION
                NO_ZLIB
                NO_BZIP2
                NO_LZMA
+               NO_ZSTD
 {
     $(v) = [ modules.peek : $(v) ] ;
 }
@@ -76,6 +77,21 @@ else
     }
 }
 
+if $(NO_COMPRESSION) != 1 && $(NO_ZSTD) != 1
+{
+    using zstd ;
+    zstd-requirements =
+        [ ac.check-library /zstd//zstd : <library>/zstd//zstd
+          <source>zstd.cpp ] ;
+}
+else
+{
+    if $(debug)
+    {
+        ECHO "notice: iostreams: not using zstd compression " ;
+    }
+}
+
 local sources = file_descriptor.cpp mapped_file.cpp ;
 
 lib boost_iostreams 
@@ -85,6 +101,7 @@ lib boost_iostreams
       $(zlib-requirements)
       $(bzip2-requirements)
       $(lzma-requirements)
+      $(zstd-requirements)
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
     ;
