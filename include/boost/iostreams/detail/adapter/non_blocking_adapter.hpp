@@ -46,7 +46,7 @@ public:
                 break;
             result += amt;
         }
-        return result;    
+        return result != 0 ? result : -1;
     }
     std::streampos seek( stream_offset off, BOOST_IOS::seekdir way,
                          BOOST_IOS::openmode which = 
