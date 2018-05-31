@@ -93,7 +93,7 @@ inline stream_offset fpos_t_to_offset(std::fpos_t pos)
 inline std::fpos_t streampos_to_fpos_t(std::streampos pos)
 {
 #  if defined (_CPPLIB_VER) || defined(__IBMCPP__)
-    return pos.seekpos();
+    return pos;
 #  else
     return pos.get_fpos_t();
 #  endif
