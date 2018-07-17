@@ -108,7 +108,7 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           [ test-iostreams stdio_filter_test.cpp ]
           [ test-iostreams stream_offset_32bit_test.cpp ]
           [ test-iostreams stream_offset_64bit_test.cpp ]
-          #[ test-iostreams stream_state_test.cpp ]
+          [ test-iostreams stream_state_test.cpp ]
           [ test-iostreams symmetric_filter_test.cpp ]
           [ test-iostreams tee_test.cpp ]
           [ test-iostreams wide_stream_test.cpp ]

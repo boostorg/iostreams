@@ -11,6 +11,7 @@
 #define BOOST_IOSTREAMS_SOURCE
 
 #include <cassert>
+#include <stdexcept>
 #include <boost/iostreams/detail/config/rtl.hpp>
 #include <boost/iostreams/detail/config/windows_posix.hpp>
 #include <boost/iostreams/detail/file_handle.hpp>
@@ -261,6 +262,7 @@ void mapped_file_impl::open_file(param_type p)
         flags |= O_LARGEFILE;
     #endif
     errno = 0;
+    if (p.path.is_wide()) { errno = EINVAL; cleanup_and_throw("wide path not supported here"); } // happens on CYGWIN
     handle_ = ::open(p.path.c_str(), flags, S_IRWXU);
     if (errno != 0)
         cleanup_and_throw("failed opening file");
