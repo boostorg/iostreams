@@ -18,6 +18,7 @@
 #include <boost/iostreams/detail/system_failure.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <boost/throw_exception.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #ifdef BOOST_IOSTREAMS_WINDOWS
 # define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
@@ -323,7 +324,7 @@ void mapped_file_impl::try_map_file(param_type p)
             access,
             (DWORD) (p.offset >> 32),
             (DWORD) (p.offset & 0xffffffff),
-            (SIZE_T) (size_ != max_length ? size_ : 0), 
+            (SIZE_T) (numeric_cast<size_type>(size_) != max_length ? size_ : 0),
             (LPVOID) p.hint );
     if (!data)
         cleanup_and_throw("failed mapping view");
