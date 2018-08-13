@@ -289,7 +289,7 @@ void mapped_file_test()
     {
         boost::iostreams::test::test_file orig;
         char name[50];
-        std::strcpy(name, orig.name().c_str());
+        std::strncpy(name, orig.name().c_str(), 50);
         
         mapped_file mf((char*) name);
 
