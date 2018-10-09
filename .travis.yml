@@ -110,6 +110,7 @@ jobs:
       env:
         - COMMENT=UBSAN
         - B2_VARIANT=variant=debug
+        - DEFINES=visibility=global
         - TOOLSET=gcc-7
         - CXXFLAGS="cxxflags=-fno-omit-frame-pointer cxxflags=-fsanitize=undefined cxxflags=-fno-sanitize-recover=undefined"
         - LINKFLAGS="linkflags=-fsanitize=undefined linkflags=-fno-sanitize-recover=undefined linkflags=-fuse-ld=gold"
