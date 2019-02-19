@@ -339,7 +339,7 @@ int main()
     <SPAN CLASS="keyword">using</SPAN> <SPAN CLASS="keyword">namespace</SPAN> std;
 
     ifstream file(<SPAN CLASS="literal">"hello.gz"</SPAN>, ios_base::in | ios_base::binary);
-    filtering_streambuf&lt;input&gt; in;
+    boost::iostreams::filtering_streambuf&lt;input&gt; in;
     in.push(gzip_decompressor());
     in.push(file);
     boost::iostreams::copy(in, cout);
