@@ -23,6 +23,8 @@ import path ;
 import ac ;
 local debug = [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ] ;
 
+local libraries-to-install = boost_iostreams ;
+
 for local v in NO_COMPRESSION 
                NO_ZLIB
                NO_BZIP2
@@ -38,6 +40,12 @@ if $(NO_COMPRESSION) != 1 && $(NO_ZLIB) != 1
     zlib-requirements =
         [ ac.check-library /zlib//zlib : <library>/zlib//zlib
           <source>zlib.cpp <source>gzip.cpp ] ;
+
+    if [ os.environ ZLIB_SOURCE ]
+    {
+        alias boost_zlib : /zlib//zlib ;
+        libraries-to-install += boost_zlib ;
+    }
 }
 else
 {
@@ -53,6 +61,12 @@ if $(NO_COMPRESSION) != 1 && $(NO_BZIP2) != 1
     bzip2-requirements =
         [ ac.check-library /bzip2//bzip2 : <library>/bzip2//bzip2
           <source>bzip2.cpp ] ;
+
+    if [ os.environ BZIP2_SOURCE ]
+    {
+        alias boost_bzip2 : /bzip2//bzip2 ;
+        libraries-to-install += boost_bzip2 ;
+    }
 }
 else
 {
@@ -106,11 +120,4 @@ lib boost_iostreams
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
     ;
 
-boost-install boost_iostreams ;
-
-
-
-  
-
-
-
+boost-install $(libraries-to-install) ;
