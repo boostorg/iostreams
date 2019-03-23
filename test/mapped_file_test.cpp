@@ -126,7 +126,7 @@ void mapped_file_test()
         );
 
         BOOST_TEST_MESSAGE(
-            "done writing to stream<mapped_file_source> in chars"
+            "done writing to stream<mapped_file_sink> in chars"
         );
 
         // Test writing to a stream based on a mapped_file_sink, in 
@@ -140,7 +140,7 @@ void mapped_file_test()
         );
 
         BOOST_TEST_MESSAGE(
-            "done writing to stream<mapped_file_source> in chunks"
+            "done writing to stream<mapped_file_sink> in chunks"
         );
     }
 
