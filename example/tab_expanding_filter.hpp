@@ -6,7 +6,7 @@
 // See http://www.boost.org/libs/iostreams for documentation.
 
 // Adapted from an example of James Kanze, with suggestions from Rob Stewart.
-// See http://www.gabi-soft.fr/codebase-en.html.
+// See https://web.archive.org/web/20041222094942/http://www.gabi-soft.fr/codebase-en.html.
 
 #ifndef BOOST_IOSTREAMS_TAB_EXPANDING_FILTER_HPP_INCLUDED
 #define BOOST_IOSTREAMS_TAB_EXPANDING_FILTER_HPP_INCLUDED
