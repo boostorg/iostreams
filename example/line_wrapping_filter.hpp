@@ -4,7 +4,7 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
 // Adapted from an example of James Kanze. See
-// http://www.gabi-soft.fr/codebase-en.html.
+// https://web.archive.org/web/20041222094942/http://www.gabi-soft.fr/codebase-en.html.
 
 // See http://www.boost.org/libs/iostreams for documentation.
 
