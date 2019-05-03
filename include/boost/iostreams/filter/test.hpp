@@ -227,9 +227,9 @@ bool test_output_filter( Filter filter,
 //--------------Definition of test_filter_pair--------------------------------//
 
 template<typename OutputFilter, typename InputFilter>
-bool test_filter_pair( OutputFilter out, 
-                       InputFilter in, 
-                       const std::string& data, 
+bool test_filter_pair( OutputFilter& out,
+                       InputFilter& in,
+                       const std::string& data,
                        mpl::true_ )
 {
     for ( int inc = default_increment; 
@@ -295,9 +295,9 @@ bool test_filter_pair( OutputFilter out,
 }
 
 template<typename OutputFilter, typename InputFilter, typename Source>
-bool test_filter_pair( OutputFilter out, 
-                       InputFilter in, 
-                       const Source& data, 
+bool test_filter_pair( OutputFilter& out,
+                       InputFilter& in,
+                       const Source& data,
                        mpl::false_ )
 {
     std::string str;
@@ -306,8 +306,8 @@ bool test_filter_pair( OutputFilter out,
 }
 
 template<typename OutputFilter, typename InputFilter, typename Source>
-bool test_filter_pair( OutputFilter out, 
-                       InputFilter in, 
+bool test_filter_pair( OutputFilter& out,
+                       InputFilter& in,
                        const Source& data )
 {
     // Use tag dispatch to compensate for bad overload resolution.

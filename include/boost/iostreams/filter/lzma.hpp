@@ -152,7 +152,7 @@ protected:
                bool compress,
                lzma_allocator<Alloc>& zalloc )
         {
-            bool custom = lzma_allocator<Alloc>::custom;
+            const bool custom = lzma_allocator<Alloc>::custom;
             do_init( p, compress,
                      custom ? lzma_allocator<Alloc>::allocate : 0,
                      custom ? lzma_allocator<Alloc>::deallocate : 0,

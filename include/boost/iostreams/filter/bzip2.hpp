@@ -163,7 +163,7 @@ protected:
     void init( bool compress,
                bzip2_allocator<Alloc>& alloc )
         {
-            bool custom = bzip2_allocator<Alloc>::custom;
+            const bool custom = bzip2_allocator<Alloc>::custom;
             do_init( compress,
                      custom ? bzip2_allocator<Alloc>::allocate : 0,
                      custom ? bzip2_allocator<Alloc>::deallocate : 0,

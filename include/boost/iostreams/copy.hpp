@@ -170,7 +170,7 @@ private:
 // devices, if any, models Direct (see 
 // http://www.boost.org/libs/iostreams/doc/index.html?path=4.1.1.4)
 template<typename Source, typename Sink>
-std::streamsize copy_impl(Source src, Sink snk, std::streamsize buffer_size)
+std::streamsize copy_impl(Source& src, Sink& snk, std::streamsize buffer_size)
 {
     using namespace std;
     typedef typename char_type_of<Source>::type  src_char;
