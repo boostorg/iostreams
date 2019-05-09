@@ -58,7 +58,7 @@ void multiple_member_test()
     text_sequence      data;
     std::vector<char>  temp, dest;
 
-    // Write compressed data to temp, twice in succession
+    // Write compressed data to temp, several times in succession
     filtering_ostream out;
     out.push(bzip2_compressor());
     for(int i = 0; i < num_sequences; ++i)
@@ -73,7 +73,7 @@ void multiple_member_test()
     in.push(array_source(&temp[0], temp.size()));
     io::copy(in, io::back_inserter(dest));
 
-    // Check that dest consists of two copies of data
+    // Check that dest consists of as many copies of data as were provided
     BOOST_REQUIRE_EQUAL(data.size() * num_sequences, dest.size());
     for(int i = 0; i < num_sequences; ++i)
         BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin() + i * dest.size() / num_sequences));
@@ -83,7 +83,7 @@ void multiple_member_test()
         array_source(&temp[0], temp.size()),
         io::compose(bzip2_decompressor(), io::back_inserter(dest)));
 
-    // Check that dest consists of two copies of data
+    // Check that dest consists of as many copies of data as were provided
     BOOST_REQUIRE_EQUAL(data.size() * num_sequences, dest.size());
     for(int i = 0; i < num_sequences; ++i)
         BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin() + i * dest.size() / num_sequences));
