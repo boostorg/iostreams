@@ -87,10 +87,12 @@ const int null                               = 0;
 struct lzma_params {
 
     // Non-explicit constructor.
-    lzma_params( uint32_t level = lzma::default_compression )
+    lzma_params( uint32_t level = lzma::default_compression, uint32_t threads = 1 )
         : level(level)
+        , threads(threads)
         { }
     uint32_t level;
+    uint32_t threads;
 };
 
 //
