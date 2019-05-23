@@ -175,6 +175,7 @@ private:
     void init_stream(bool compress);
     void*    stream_;         // Actual type: lzma_stream*.
     uint32_t level_;
+    uint32_t threads_;
 };
 
 //
