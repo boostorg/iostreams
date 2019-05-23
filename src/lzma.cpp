@@ -113,13 +113,7 @@ void lzma_base::reset(bool compress, bool realloc)
     lzma_end(s);
     if (realloc)
     {
-        memset(s, 0, sizeof(*s));
-
-        lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
-            compress ?
-                lzma_easy_encoder(s, level_, LZMA_CHECK_CRC32) :
-                lzma_stream_decoder(s, 100 * 1024 * 1024, LZMA_CONCATENATED)
-        );
+        init_stream(compress);
     }
 }
 
@@ -128,14 +122,21 @@ void lzma_base::do_init
       lzma::alloc_func, lzma::free_func,
       void* )
 {
+
+    level_ = p.level;
+
+    init_stream(compress);
+}
+
+void lzma_base::init_stream(bool compress)
+{
     lzma_stream* s = static_cast<lzma_stream*>(stream_);
 
     memset(s, 0, sizeof(*s));
 
-    level_ = p.level;
     lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
         compress ?
-            lzma_easy_encoder(s, p.level, LZMA_CHECK_CRC32) :
+            lzma_easy_encoder(s, level_, LZMA_CHECK_CRC32) :
             lzma_stream_decoder(s, 100 * 1024 * 1024, LZMA_CONCATENATED)
     );
 }

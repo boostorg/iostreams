@@ -170,6 +170,7 @@ private:
                   lzma::alloc_func,
                   lzma::free_func,
                   void* derived );
+    void init_stream(bool compress);
     void*    stream_;         // Actual type: lzma_stream*.
     uint32_t level_;
 };
