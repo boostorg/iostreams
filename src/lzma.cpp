@@ -75,7 +75,7 @@ void lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(int error)
 namespace detail {
 
 lzma_base::lzma_base()
-    : stream_(new lzma_stream), level(lzma::default_compression)
+    : stream_(new lzma_stream), level_(lzma::default_compression)
     { }
 
 lzma_base::~lzma_base() { delete static_cast<lzma_stream*>(stream_); }
@@ -117,7 +117,7 @@ void lzma_base::reset(bool compress, bool realloc)
 
         lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
             compress ?
-                lzma_easy_encoder(s, level, LZMA_CHECK_CRC32) :
+                lzma_easy_encoder(s, level_, LZMA_CHECK_CRC32) :
                 lzma_stream_decoder(s, 100 * 1024 * 1024, LZMA_CONCATENATED)
         );
     }
@@ -132,7 +132,7 @@ void lzma_base::do_init
 
     memset(s, 0, sizeof(*s));
 
-    level = p.level;
+    level_ = p.level;
     lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
         compress ?
             lzma_easy_encoder(s, p.level, LZMA_CHECK_CRC32) :

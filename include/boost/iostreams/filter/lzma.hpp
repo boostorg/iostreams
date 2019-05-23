@@ -171,7 +171,7 @@ private:
                   lzma::free_func,
                   void* derived );
     void*    stream_;         // Actual type: lzma_stream*.
-    uint32_t level;
+    uint32_t level_;
 };
 
 //
