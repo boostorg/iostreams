@@ -54,16 +54,18 @@ void bzip2_test()
 
 void multiple_member_test()
 {
+    const int num_sequences = 10;
     text_sequence      data;
     std::vector<char>  temp, dest;
 
-    // Write compressed data to temp, twice in succession
+    // Write compressed data to temp, several times in succession
     filtering_ostream out;
     out.push(bzip2_compressor());
-    out.push(io::back_inserter(temp));
-    io::copy(make_iterator_range(data), out);
-    out.push(io::back_inserter(temp));
-    io::copy(make_iterator_range(data), out);
+    for(int i = 0; i < num_sequences; ++i)
+    {
+        out.push(io::back_inserter(temp));
+        io::copy(make_iterator_range(data), out);
+    }
 
     // Read compressed data from temp into dest
     filtering_istream in;
@@ -71,20 +73,20 @@ void multiple_member_test()
     in.push(array_source(&temp[0], temp.size()));
     io::copy(in, io::back_inserter(dest));
 
-    // Check that dest consists of two copies of data
-    BOOST_REQUIRE_EQUAL(data.size() * 2, dest.size());
-    BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin()));
-    BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin() + dest.size() / 2));
+    // Check that dest consists of as many copies of data as were provided
+    BOOST_REQUIRE_EQUAL(data.size() * num_sequences, dest.size());
+    for(int i = 0; i < num_sequences; ++i)
+        BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin() + i * dest.size() / num_sequences));
 
     dest.clear();
     io::copy(
         array_source(&temp[0], temp.size()),
         io::compose(bzip2_decompressor(), io::back_inserter(dest)));
 
-    // Check that dest consists of two copies of data
-    BOOST_REQUIRE_EQUAL(data.size() * 2, dest.size());
-    BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin()));
-    BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin() + dest.size() / 2));
+    // Check that dest consists of as many copies of data as were provided
+    BOOST_REQUIRE_EQUAL(data.size() * num_sequences, dest.size());
+    for(int i = 0; i < num_sequences; ++i)
+        BOOST_CHECK(std::equal(data.begin(), data.end(), dest.begin() + i * dest.size() / num_sequences));
 }
 
 test_suite* init_unit_test_suite(int, char* []) 
