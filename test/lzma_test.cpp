@@ -178,6 +178,73 @@ void multipart_test()
     BOOST_CHECK(!in.bad());
 }
 
+void multithreaded_test()
+{
+    text_sequence      data;
+
+    // Get correct compressed string at level 2.
+    // Tests legacy capability of providing a single integer to the
+    // lzma_compressor constructor to be used as the "level" to initialize
+    // lzma_params.
+    std::string  correct_level_2;
+    {
+        filtering_ostream out;
+        out.push(lzma_compressor(2));
+        out.push(io::back_inserter(correct_level_2));
+        io::copy(make_iterator_range(data), out);
+    }
+
+    // Tests omitting the threads parameters and arriving at same compressed data.
+    BOOST_CHECK(
+        test_output_filter( lzma_compressor(lzma_params(2)),
+                            std::string(data.begin(), data.end()),
+                            correct_level_2 )
+    );
+
+    // Test specifying a single thread and arriving at same compressed data.
+    BOOST_CHECK(
+        test_output_filter( lzma_compressor(lzma_params(2, 1)),
+                            std::string(data.begin(), data.end()),
+                            correct_level_2 )
+    );
+
+    // Test specifying multiple threads and arriving at same compressed data.
+    BOOST_CHECK(
+        test_output_filter( lzma_compressor(lzma_params(2, 4)),
+                            std::string(data.begin(), data.end()),
+                            correct_level_2 )
+    );
+
+    // Test specifying "0" threads, which is interpreted as
+    // using all cores, or 1 thread if such capability is missing.
+    BOOST_CHECK(
+        test_output_filter( lzma_compressor(lzma_params(2, 0)),
+                            std::string(data.begin(), data.end()),
+                            correct_level_2 )
+    );
+
+    // Test that decompressor works to decompress the output with various thread values.
+    // Threading shouldn't affect the decompression and, in fact, isn't
+    // threaded in current implementation of liblzma. Both the level and
+    // threads options are ignored by the decompressor.
+    BOOST_CHECK(
+        test_input_filter( lzma_decompressor(lzma_params(2, 1)),
+                            correct_level_2,
+                            std::string(data.begin(), data.end()) )
+    );
+    BOOST_CHECK(
+        test_input_filter( lzma_decompressor(lzma_params(2, 4)),
+                            correct_level_2,
+                            std::string(data.begin(), data.end()) )
+    );
+    BOOST_CHECK(
+        test_input_filter( lzma_decompressor(lzma_params(2, 0)),
+                            correct_level_2,
+                            std::string(data.begin(), data.end()) )
+    );
+
+}
+
 test_suite* init_unit_test_suite(int, char* []) 
 {
     test_suite* test = BOOST_TEST_SUITE("lzma test");
@@ -186,5 +253,6 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&array_source_test));
     test->add(BOOST_TEST_CASE(&empty_file_test));
     test->add(BOOST_TEST_CASE(&multipart_test));
+    test->add(BOOST_TEST_CASE(&multithreaded_test));
     return test;
 }
