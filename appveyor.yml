@@ -25,8 +25,12 @@ shallow_clone: true
 
 branches:
   only:
-    - develop
     - master
+    - develop
+    - /bugfix\/.*/
+    - /feature\/.*/
+    - /fix\/.*/
+    - /pr\/.*/
 
 matrix:
   # Adding MAYFAIL to any matrix job allows it to fail but the build stays green:
@@ -42,9 +46,16 @@ environment:
     # B2_ADDRESS_MODEL: address-model=64,32
     # B2_LINK: link=shared,static
     # B2_THREADING: threading=multi,single
-    B2_VARIANT: variant=release,debug
+    B2_VARIANT: variant=release
 
   matrix:
+    - FLAVOR: Visual Studio 2019
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      B2_ADDRESS_MODEL: address-model=64
+      B2_CXXFLAGS: cxxflags=-permissive-
+      B2_CXXSTD: latest # 2a
+      B2_TOOLSET: msvc-14.2
+
     - FLAVOR: Visual Studio 2017 C++2a Strict
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       B2_ADDRESS_MODEL: address-model=64
@@ -57,16 +68,24 @@ environment:
       B2_ADDRESS_MODEL: address-model=64
       B2_CXXSTD: 17
       B2_TOOLSET: msvc-14.1
+      B2_VARIANT: variant=debug
 
     - FLAVOR: Visual Studio 2017 C++14 (Default)
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       B2_ADDRESS_MODEL: address-model=64,32
       B2_TOOLSET: msvc-14.1
 
+    - FLAVOR: clang-cl
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      B2_ADDRESS_MODEL: address-model=64
+      B2_CXXSTD: 11
+      B2_TOOLSET: clang-win
+
     - FLAVOR: Visual Studio 2015 C++14 (Default)
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       B2_ADDRESS_MODEL: address-model=64,32
       B2_TOOLSET: msvc-14.0
+      B2_VARIANT: variant=debug
 
     - FLAVOR: Visual Studio 2010, 2012, 2013
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
@@ -81,6 +100,7 @@ environment:
       B2_DEFINES: define=_POSIX_C_SOURCE=200112L
       B2_THREADING: threadapi=pthread
       B2_TOOLSET: gcc
+      B2_VARIANT: variant=debug
 
     - FLAVOR: cygwin (64-bit)
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -98,6 +118,7 @@ environment:
       B2_ADDRESS_MODEL: address-model=32
       B2_CXXSTD: 03,11
       SCRIPT: ci\appveyor\mingw.bat
+      B2_VARIANT: variant=debug
 
     - FLAVOR: mingw64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
