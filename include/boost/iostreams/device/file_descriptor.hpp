@@ -222,7 +222,8 @@ public:
 
     // open overload taking a Boost.Filesystem path
     template<typename Path>
-    void open(const Path& path, BOOST_IOS::openmode mode = BOOST_IOS::in);
+    void open(const Path& path, BOOST_IOS::openmode mode = BOOST_IOS::in)
+    { open(detail::path(path), mode); }
 private:
 
     // open overload taking a detail::path
