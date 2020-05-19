@@ -10,7 +10,6 @@
 import stlport ;
 import modules ;
 import ac ;
-import ../../config/checks/config : requires ;
 
 local NO_BZIP2 = [ modules.peek : NO_BZIP2 ] ;
 local NO_ZLIB = [ modules.peek : NO_ZLIB ] ;
@@ -55,6 +54,14 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
         ] ;
 }
 
+lib stdc++fs ;
+lib c++fs ;
+
+exe can_use_stdcxxfs : checks/std_filesystem_libstdcxx.cpp stdc++fs ;
+exe can_use_cxxfs : checks/std_filesystem_libcxx.cpp c++fs ;
+
+explicit can_use_stdcxxfs ;
+explicit can_use_cxxfs ;
 
     local all-tests = 
           [ test-iostreams array_test.cpp ]
@@ -92,8 +99,11 @@ rule compile-fail-iostreams ( sources * : requirements * : target-name ? ) {
           [ test-iostreams line_filter_test.cpp ]
           [ test-iostreams mapped_file_test.cpp 
                 ../build//boost_iostreams ]
-          [ test-iostreams path_test.cpp ]
-          [ test-iostreams path_test_std_filesystem.cpp : <toolset>gcc:<linkflags>-lstdc++fs <toolset>clang:<linkflags>-lstdc++fs [ requires cpp_lib_filesystem ] ]
+          [ test-iostreams
+                path_test.cpp
+                    : [ check-target-builds ../../config/checks//cpp_lib_filesystem
+                        : [ check-target-builds can_use_stdcxxfs : <source>stdc++fs : [ check-target-builds can_use_cxxfs : <source>c++fs ] ]
+                          <define>BOOST_IOSTREAMS_TEST_PATH_WITH_STD_FILESYSTEM ] ]
           [ test-iostreams newline_test.cpp ]
           [ test-iostreams null_test.cpp ]
           [ test-iostreams operation_sequence_test.cpp ]
