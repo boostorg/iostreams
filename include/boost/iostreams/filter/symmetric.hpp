@@ -185,6 +185,28 @@ public:
             close_impl();
         }
     }
+
+    template<typename Sink>
+    void force_flush(Sink &snk) {
+      if (!(state() & f_write))
+              begin_write();
+      try {
+          buffer_type&     buf = pimpl_->buf_;
+          char_type        dummy;
+          const char_type* end = &dummy;
+          // Repeatedly invoke filter() with no input.
+          bool again = true;
+          while(again) {
+            if(buf.ptr() != buf.eptr()) {
+              again = filter().force_flush(end, end, buf.ptr(), buf.eptr());
+            }
+            flush(snk);
+          }
+      } catch (...) {
+        throw;
+      }
+    }
+
     SymmetricFilter& filter() { return *pimpl_; }
     string_type unconsumed_input() const;
 

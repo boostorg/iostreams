@@ -193,6 +193,7 @@ public:
     struct category
         : dual_use,
           filter_tag,
+          flushable_tag,
           multichar_tag,
           closable_tag
         { };
@@ -270,6 +271,12 @@ public:
             throw;
         }
         close_impl();
+    }
+
+    template<typename Sink>
+    bool flush(Sink& snk) {
+      base_type::force_flush(snk);
+      return true;
     }
 private:
     static gzip_params normalize_params(gzip_params p);
