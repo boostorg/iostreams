@@ -190,20 +190,18 @@ public:
     void force_flush(Sink &snk) {
       if (!(state() & f_write))
               begin_write();
-      try {
-          buffer_type&     buf = pimpl_->buf_;
-          char_type        dummy;
-          const char_type* end = &dummy;
-          // Repeatedly invoke filter() with no input.
-          bool again = true;
-          while(again) {
-            if(buf.ptr() != buf.eptr()) {
-              again = filter().force_flush(end, end, buf.ptr(), buf.eptr());
-            }
-            flush(snk);
-          }
-      } catch (...) {
-        throw;
+
+      buffer_type&     buf = pimpl_->buf_;
+      char_type        dummy;
+      const char_type* end = &dummy;
+      // Repeatedly invokes force_flush(), till the time zlib::deflate returns zlib::Z_BUF_ERROR.
+      // zlib::Z_BUF_ERROR ensures that no more futher progress is possible.
+      bool again = true;
+      while(again) {
+        if(buf.ptr() != buf.eptr()) {
+          again = filter().force_flush(end, end, buf.ptr(), buf.eptr());
+        }
+        flush(snk);
       }
     }
 

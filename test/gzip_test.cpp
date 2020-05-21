@@ -120,7 +120,6 @@ void array_source_test()
 
 void flush_test()
 {
-    std::string data = "simple test string.";
     std::string encoded;
     std::vector<int> result;
 
