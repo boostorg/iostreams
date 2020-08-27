@@ -4,6 +4,7 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
 // See http://www.boost.org/libs/iostreams for documentation.
+#include <boost/config/workaround.hpp>
 
 #if defined(BOOST_MSVC)
 # pragma warning(pop)
