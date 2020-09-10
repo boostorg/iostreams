@@ -13,6 +13,7 @@
 #endif              
 
 #include <boost/config.hpp>                // BOOST_NO_SFINAE.
+#include <boost/config/workaround.hpp>
 #include <boost/utility/enable_if.hpp>                  
 #include <boost/iostreams/traits_fwd.hpp>  // is_std_io.
 
