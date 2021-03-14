@@ -188,21 +188,18 @@ int utf8_codecvt_facet_wchar_t::do_length(
     // and test cases.
 
     // Invariants:
-    // 1) last_octet_count has the size of the last measured character
-    // 2) char_count holds the number of characters shown to fit
-    // within the bounds so far (no greater than max_limit)
-    // 3) from_next points to the octet 'last_octet_count' before the
-    // last measured character.  
-    int last_octet_count=0;
-    std::size_t char_count = 0;
-    const char* from_next = from;
-    // Use "<" because the buffer may represent incomplete characters
-    while (from_next+last_octet_count <= from_end && char_count <= max_limit) {
-        from_next += last_octet_count;
-        last_octet_count = (get_octet_count(*from_next));
-        ++char_count;
+    // 1) total_octet_count has the size of the valid character string
+    //    measured so far.
+    int total_octet_count = 0;
+
+    for (; max_limit && from < from_end; --max_limit) {
+        int next_octet_count = get_octet_count(*from);
+        if ((from += next_octet_count) <= from_end) {
+            total_octet_count += next_octet_count;
+        }
     }
-    return boost::numeric_cast<int>(from_next - from_end);
+
+    return total_octet_count;
 }
 
 unsigned int utf8_codecvt_facet_wchar_t::get_octet_count(
