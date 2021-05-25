@@ -1,0 +1,93 @@
+# Copyright 2020, 2021 Peter Dimov
+# Distributed under the Boost Software License, Version 1.0.
+# https://www.boost.org/LICENSE_1_0.txt
+
+cmake_minimum_required(VERSION 3.5...3.16)
+
+project(boost_iostreams VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
+
+add_library(boost_iostreams
+  src/file_descriptor.cpp
+  src/mapped_file.cpp
+)
+
+function(boost_iostreams_option name description package found target source)
+
+  find_package(${package} QUIET)
+
+  if(${found} AND TARGET ${target})
+
+    option(${name} ${description} ON)
+
+  else()
+
+    option(${name} ${description} OFF)
+
+  endif()
+
+  if(${name})
+
+    find_package(${package} REQUIRED)
+    target_sources(boost_iostreams PRIVATE ${source})
+    target_link_libraries(boost_iostreams PRIVATE ${target})
+
+  endif()
+
+endfunction()
+
+boost_iostreams_option(BOOST_IOSTREAMS_WITH_ZLIB "Boost.Iostreams: Enable ZLIB support" ZLIB ZLIB_FOUND ZLIB::ZLIB src/zlib.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_WITH_BZIP2 "Boost.Iostreams: Enable BZip2 support" BZip2 BZIP2_FOUND BZip2::BZip2 src/bzip2.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_WITH_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
+#boost_iostreams_option(BOOST_IOSTREAMS_WITH_ZSTD "Boost.Iostreams: Enable ZSTD support" ZSTD ZSTD_FOUND ZSTD::ZSTD src/zstd.cpp)
+
+if(BOOST_IOSTREAMS_WITH_LZMA)
+
+  target_compile_definitions(boost_iostreams BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED=1)
+
+endif()
+
+message(STATUS "Boost::Iostreams: ZLIB ${BOOST_IOSTREAMS_WITH_ZLIB}, BZIP2 ${BOOST_IOSTREAMS_WITH_BZIP2}, LZMA ${BOOST_IOSTREAMS_WITH_LZMA}")
+
+add_library(Boost::iostreams ALIAS boost_iostreams)
+
+target_include_directories(boost_iostreams PUBLIC include)
+
+target_link_libraries(boost_iostreams
+  PUBLIC
+    Boost::assert
+    Boost::config
+    Boost::core
+    Boost::detail
+    Boost::function
+    Boost::integer
+    Boost::iterator
+    Boost::mpl
+    Boost::preprocessor
+    Boost::random
+    Boost::range
+    Boost::regex
+    Boost::smart_ptr
+    Boost::static_assert
+    Boost::throw_exception
+    Boost::type_traits
+    Boost::utility
+  PRIVATE
+    Boost::numeric_conversion
+)
+
+target_compile_definitions(boost_iostreams
+  PUBLIC BOOST_IOSTREAMS_NO_LIB
+  PRIVATE BOOST_IOSTREAMS_SOURCE
+)
+
+if(BUILD_SHARED_LIBS)
+  target_compile_definitions(boost_iostreams PUBLIC BOOST_IOSTREAMS_DYN_LINK)
+else()
+  target_compile_definitions(boost_iostreams PUBLIC BOOST_IOSTREAMS_STATIC_LINK)
+endif()
+
+if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
+
+  add_subdirectory(test)
+
+endif()
