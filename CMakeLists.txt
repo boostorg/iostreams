@@ -42,7 +42,7 @@ boost_iostreams_option(BOOST_IOSTREAMS_WITH_LZMA "Boost.Iostreams: Enable LZMA s
 
 if(BOOST_IOSTREAMS_WITH_LZMA)
 
-  target_compile_definitions(boost_iostreams BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED=1)
+  target_compile_definitions(boost_iostreams PRIVATE BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED=1)
 
 endif()
 
