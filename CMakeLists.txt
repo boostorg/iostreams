@@ -40,7 +40,7 @@ boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZi
 boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
 #boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable ZSTD support" ZSTD ZSTD_FOUND ZSTD::ZSTD src/zstd.cpp)
 
-if(BOOST_IOSTREAMS_WITH_LZMA)
+if(BOOST_IOSTREAMS_ENABLE_LZMA)
 
   target_compile_definitions(boost_iostreams PRIVATE BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED=1)
 
