@@ -11,9 +11,9 @@ add_library(boost_iostreams
   src/mapped_file.cpp
 )
 
-function(boost_iostreams_option name description package found target source)
+function(boost_iostreams_option name description package version found target source)
 
-  find_package(${package} QUIET)
+  find_package(${package} ${version} QUIET)
 
   if(${found} AND TARGET ${target})
 
@@ -27,7 +27,7 @@ function(boost_iostreams_option name description package found target source)
 
   if(${name})
 
-    find_package(${package} REQUIRED)
+    find_package(${package} ${version} REQUIRED)
     target_sources(boost_iostreams PRIVATE ${source})
     target_link_libraries(boost_iostreams PRIVATE ${target})
 
@@ -35,10 +35,10 @@ function(boost_iostreams_option name description package found target source)
 
 endfunction()
 
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZLIB "Boost.Iostreams: Enable ZLIB support" ZLIB ZLIB_FOUND ZLIB::ZLIB src/zlib.cpp)
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZip2 support" BZip2 BZIP2_FOUND BZip2::BZip2 src/bzip2.cpp)
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable Zstd support" Zstd ZSTD_FOUND Zstd::Zstd src/zstd.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZLIB "Boost.Iostreams: Enable ZLIB support" ZLIB "" ZLIB_FOUND ZLIB::ZLIB src/zlib.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZip2 support" BZip2 "" BZIP2_FOUND BZip2::BZip2 src/bzip2.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA "" LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable Zstd support" Zstd "1.0" ZSTD_FOUND Zstd::Zstd src/zstd.cpp)
 
 if(BOOST_IOSTREAMS_ENABLE_LZMA)
 
