@@ -40,13 +40,36 @@ boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZi
 boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA "" LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
 boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable Zstd support" Zstd "1.0" ZSTD_FOUND Zstd::Zstd src/zstd.cpp)
 
+include(CheckCXXSourceCompiles)
+
+function(iostreams_check var source incs libs defs)
+
+  set(CMAKE_REQUIRED_INCLUDES "${incs}")
+  list(APPEND CMAKE_REQUIRED_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/build")
+  set(CMAKE_REQUIRED_LIBRARIES "${libs}")
+  set(CMAKE_REQUIRED_DEFINITIONS "${defs}")
+  check_cxx_source_compiles("#include \"${source}\"" ${var})
+  set(${var} ${${var}} PARENT_SCOPE)
+
+endfunction()
+
+set(_lzma_mt "")
+
 if(BOOST_IOSTREAMS_ENABLE_LZMA)
 
-  target_compile_definitions(boost_iostreams PRIVATE BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED=1)
+  iostreams_check(BOOST_IOSTREAMS_HAS_LZMA_CPUTHREADS has_lzma_cputhreads.cpp "" "LibLZMA::LibLZMA" "")
+
+  if(BOOST_IOSTREAMS_HAS_LZMA_CPUTHREADS)
+    set(_lzma_mt " (multithreaded)")
+  else()
+    target_compile_definitions(boost_iostreams PRIVATE BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED=1)
+  endif()
 
 endif()
 
-message(STATUS "Boost.Iostreams: ZLIB ${BOOST_IOSTREAMS_ENABLE_ZLIB}, BZip2 ${BOOST_IOSTREAMS_ENABLE_BZIP2}, LZMA ${BOOST_IOSTREAMS_ENABLE_LZMA}, Zstd ${BOOST_IOSTREAMS_ENABLE_ZSTD}")
+message(STATUS "Boost.Iostreams: ZLIB ${BOOST_IOSTREAMS_ENABLE_ZLIB}, BZip2 ${BOOST_IOSTREAMS_ENABLE_BZIP2}, LZMA ${BOOST_IOSTREAMS_ENABLE_LZMA}${_lzma_mt}, Zstd ${BOOST_IOSTREAMS_ENABLE_ZSTD}")
+
+unset(_lzma_mt)
 
 add_library(Boost::iostreams ALIAS boost_iostreams)
 
