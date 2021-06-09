@@ -100,7 +100,8 @@ target_link_libraries(boost_iostreams
 
 target_compile_definitions(boost_iostreams
   PUBLIC BOOST_IOSTREAMS_NO_LIB
-  PRIVATE BOOST_IOSTREAMS_SOURCE
+  # Source files already define BOOST_IOSTREAMS_SOURCE
+  # PRIVATE BOOST_IOSTREAMS_SOURCE
 )
 
 if(BUILD_SHARED_LIBS)
