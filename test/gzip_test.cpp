@@ -26,12 +26,28 @@ using namespace boost::iostreams::test;
 namespace io = boost::iostreams;
 using boost::unit_test::test_suite;     
 
-struct gzip_alloc : std::allocator<char> {
-    gzip_alloc() { }
-    gzip_alloc(const gzip_alloc& other) { }
-    template<typename T>
-    gzip_alloc(const std::allocator<T>& other) { }
+template<class T> struct basic_test_alloc: std::allocator<T>
+{
+    basic_test_alloc()
+    {
+    }
+
+    basic_test_alloc( basic_test_alloc const& /*other*/ )
+    {
+    }
+
+    template<class T>
+    basic_test_alloc( basic_test_alloc<T> const & /*other*/ )
+    {
+    }
+
+    template<class U> struct rebind
+    {
+        typedef basic_test_alloc<U> other;
+    };
 };
+
+typedef basic_test_alloc<char> gzip_alloc;
 
 void compression_test()
 {
