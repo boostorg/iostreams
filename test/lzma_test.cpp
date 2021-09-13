@@ -40,8 +40,8 @@ template<class T> struct basic_test_alloc: std::allocator<T>
     {
     }
 
-    template<class T>
-    basic_test_alloc( basic_test_alloc<T> const & /*other*/ )
+    template<class U>
+    basic_test_alloc( basic_test_alloc<U> const & /*other*/ )
     {
     }
 
