@@ -245,11 +245,16 @@ jobs:
           git submodule update --init tools/boostdep
           python tools/boostdep/depinst/depinst.py --git_args "--jobs 3" $LIBRARY
 
-      - name: Install Boost.Iostreams with CMake
+      - name: Build Boost.Iostreams with CMake
         run: |
           cd ../boost-root
           mkdir __build__ && cd __build__
           cmake -DBOOST_INCLUDE_LIBRARIES=iostreams -DCMAKE_INSTALL_PREFIX=~/.local -DBUILD_SHARED_LIBS=${{matrix.shared}} ..
+          cmake --build .
+
+      - name: Install Boost.Iostreams with CMake
+        run: |
+          cd ../boost-root/__build__
           cmake --build . --target install
 
       - name: Use the installed Boost.Iostreams with CMake
