@@ -93,7 +93,7 @@ protected:
                  typename Chain::char_type, 
                  typename Chain::traits_type
             >::stream_type                                stream_type;
-    ~filtering_stream_base() noexcept override = default;
+    ~filtering_stream_base() BOOST_NOEXCEPT = default;
     filtering_stream_base() : stream_type(0) { this->set_chain(&chain_); }
 private:
     void notify() { this->rdbuf(chain_.empty() ? 0 : &chain_.front()); }
