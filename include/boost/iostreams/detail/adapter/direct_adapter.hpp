@@ -126,7 +126,9 @@ public:
         // Direct device access.
 
     Direct& operator*() { return d_; }
+    const Direct& operator*() const { return d_; }
     Direct* operator->() { return &d_; }
+    const Direct* operator->() const { return &d_; }
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1310)
 private:
     template<typename U>

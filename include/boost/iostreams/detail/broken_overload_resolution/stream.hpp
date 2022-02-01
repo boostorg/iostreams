@@ -107,7 +107,9 @@ public:
     void set_auto_close(bool close) { this->member.set_auto_close(close); }
     bool strict_sync() { return this->member.strict_sync(); }
     Device& operator*() { return *this->member; }
+    const Device& operator*() const { return *this->member; }
     Device* operator->() { return &*this->member; }
+    const Device* operator->() const { return &*this->member; }
 private:
     template<typename U0>
     void open_impl(mpl::false_, const U0& u0)
