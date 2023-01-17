@@ -45,20 +45,36 @@ jobs:
             install: g++-10
           - toolset: gcc-11
             cxxstd: "03,11,14,17,2a"
-            os: ubuntu-20.04
-            install: g++-11
+            os: ubuntu-22.04
+          - toolset: gcc-12
+            cxxstd: "03,11,14,17,20,2b"
+            os: ubuntu-22.04
+            install: g++-12
           - toolset: clang
             compiler: clang++-12
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-20.04
           - toolset: clang
-            cxxstd: "03,11,14,17,2a"
+            compiler: clang++-13
+            cxxstd: "03,11,14,17,20,2b"
+            os: ubuntu-22.04
+            install: clang-13
+          - toolset: clang
+            compiler: clang++-14
+            cxxstd: "03,11,14,17,20,2b"
+            os: ubuntu-22.04
+            install: clang-14
+          - toolset: clang
+            cxxstd: "03,11,14,17,20,2b"
             os: macos-11
+          - toolset: clang
+            cxxstd: "03,11,14,17,20,2b"
+            os: macos-12
 
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install packages
         if: matrix.install
@@ -101,19 +117,31 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - toolset: msvc-14.1
-            cxxstd: "14,17,latest"
+          - toolset: msvc-14.0
+            cxxstd: 14,latest
             addrmd: 32,64
-            os: windows-2016
+            os: windows-2019
           - toolset: msvc-14.2
+            cxxstd: "14,17,20,latest"
+            addrmd: 32,64
+            os: windows-2019
+          - toolset: msvc-14.3
+            cxxstd: "14,17,20,latest"
+            addrmd: 32,64
+            os: windows-2022
+          - toolset: clang-win
             cxxstd: "14,17,latest"
             addrmd: 32,64
+            os: windows-2022
+          - toolset: gcc
+            cxxstd: "03,11,14,17,2a"
+            addrmd: 64
             os: windows-2019
 
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Boost
         shell: cmd
@@ -141,30 +169,34 @@ jobs:
         shell: cmd
         run: |
           cd ../boost-root
-          b2 -j3 libs/%LIBRARY%/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} address-model=${{matrix.addrmd}} variant=debug,release
+          b2 -j3 libs/%LIBRARY%/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} address-model=${{matrix.addrmd}} variant=debug,release embed-manifest-via=linker
 
   posix-cmake-subdir:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-18.04
-            shared: OFF
-          - os: ubuntu-18.04
-            shared: ON
           - os: ubuntu-20.04
             shared: OFF
           - os: ubuntu-20.04
             shared: ON
+          - os: ubuntu-22.04
+            shared: OFF
+          - os: ubuntu-22.04
+            shared: ON
           - os: macos-11
             shared: OFF
           - os: macos-11
+            shared: ON
+          - os: macos-12
+            shared: OFF
+          - os: macos-12
             shared: ON
 
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install packages
         if: matrix.install
@@ -203,23 +235,27 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-18.04
-            shared: OFF
-          - os: ubuntu-18.04
-            shared: ON
           - os: ubuntu-20.04
             shared: OFF
           - os: ubuntu-20.04
             shared: ON
+          - os: ubuntu-22.04
+            shared: OFF
+          - os: ubuntu-22.04
+            shared: ON
           - os: macos-11
             shared: OFF
           - os: macos-11
+            shared: ON
+          - os: macos-12
+            shared: OFF
+          - os: macos-12
             shared: ON
 
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install packages
         if: matrix.install
