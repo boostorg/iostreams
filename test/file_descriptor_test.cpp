@@ -173,6 +173,24 @@ void file_descriptor_test()
         file.close();
         BOOST_CHECK(!file.is_open());
     }
+
+#ifdef _WIN64
+    {
+        temp_file             temp;
+        file_descriptor_sink  file(temp.name(), BOOST_IOS::trunc);
+        std::streamsize len = static_cast<std::streamsize>(4ULL * 1024 * 1024 * 1024 + 1);
+        std::unique_ptr<char[]> buf(new char[len]);
+        memset(&buf[0], 0, len);
+        std::streamsize written = file.write(&buf[0], len);
+        std::streamsize pos = file.seek(0, BOOST_IOS::cur);
+        BOOST_CHECK_MESSAGE(
+            pos == written,
+            "silent short write"
+        );
+        file.close();
+        BOOST_CHECK(!file.is_open());
+    }
+#endif
                                                     
     {
         temp_file             temp;
