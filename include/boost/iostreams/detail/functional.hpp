@@ -36,7 +36,7 @@ public:
     device_close_operation(T& t, BOOST_IOS::openmode which) 
         : t_(t), which_(which) 
         { }
-    BOOST_DEFAULTED_FUNCTION(device_close_operation(const device_close_operation& rhs), : t_(rhs.t_) { which_ = rhs.which_; });
+    BOOST_DEFAULTED_FUNCTION(device_close_operation(const device_close_operation& rhs), : t_(rhs.t_) { which_ = rhs.which_; })
     void operator()() const { boost::iostreams::close(t_, which_); }
 private:
     BOOST_DELETED_FUNCTION(device_close_operation& operator=(const device_close_operation&))
@@ -78,7 +78,7 @@ class device_close_all_operation {
 public:
     typedef void result_type;
     device_close_all_operation(T& t) : t_(t) { }
-    BOOST_DEFAULTED_FUNCTION(device_close_all_operation(const device_close_all_operation& rhs), : t_(rhs.t_) {});
+    BOOST_DEFAULTED_FUNCTION(device_close_all_operation(const device_close_all_operation& rhs), : t_(rhs.t_) {})
     void operator()() const { detail::close_all(t_); }
 private:
     BOOST_DELETED_FUNCTION(device_close_all_operation& operator=(const device_close_all_operation&))
@@ -117,7 +117,7 @@ public:
     member_close_operation(T& t, BOOST_IOS::openmode which) 
         : t_(t), which_(which) 
         { }
-    BOOST_DEFAULTED_FUNCTION(member_close_operation(const member_close_operation& rhs), : t_(rhs.t_) { which_ = rhs.which_; });
+    BOOST_DEFAULTED_FUNCTION(member_close_operation(const member_close_operation& rhs), : t_(rhs.t_) { which_ = rhs.which_; })
     void operator()() const { t_.close(which_); }
 private:
     BOOST_DELETED_FUNCTION(member_close_operation& operator=(const member_close_operation&))
@@ -136,7 +136,7 @@ template<typename T>
 class reset_operation {
 public:
     reset_operation(T& t) : t_(t) { }
-    BOOST_DEFAULTED_FUNCTION(reset_operation(const reset_operation& rhs), : t_(rhs.t_) {});
+    BOOST_DEFAULTED_FUNCTION(reset_operation(const reset_operation& rhs), : t_(rhs.t_) {})
     void operator()() const { t_.reset(); }
 private:
     BOOST_DELETED_FUNCTION(reset_operation& operator=(const reset_operation&))
@@ -153,7 +153,7 @@ class clear_flags_operation {
 public:
     typedef void result_type;
     clear_flags_operation(T& t) : t_(t) { }
-    BOOST_DEFAULTED_FUNCTION(clear_flags_operation(const clear_flags_operation& rhs), : t_(rhs.t_) {});
+    BOOST_DEFAULTED_FUNCTION(clear_flags_operation(const clear_flags_operation& rhs), : t_(rhs.t_) {})
     void operator()() const { t_ = 0; }
 private:
     BOOST_DELETED_FUNCTION(clear_flags_operation& operator=(const clear_flags_operation&))
