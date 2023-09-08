@@ -19,22 +19,26 @@ jobs:
         include:
           - toolset: gcc-4.8
             cxxstd: "11"
-            os: ubuntu-18.04
+            os: ubuntu-latest
+            container: ubuntu:18.04
             install: g++-4.8
           - toolset: gcc-5
             cxxstd: "11,14,1z"
-            os: ubuntu-18.04
+            os: ubuntu-latest
+            container: ubuntu:18.04
             install: g++-5
           - toolset: gcc-6
             cxxstd: "11,14,1z"
-            os: ubuntu-18.04
+            os: ubuntu-latest
+            container: ubuntu:18.04
             install: g++-6
           - toolset: gcc-7
             cxxstd: "11,14,17"
-            os: ubuntu-18.04
+            os: ubuntu-20.04
+            install: g++-7
           - toolset: gcc-8
             cxxstd: "11,14,17,2a"
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             install: g++-8
           - toolset: gcc-9
             cxxstd: "11,14,17,2a"
@@ -50,6 +54,11 @@ jobs:
             cxxstd: "11,14,17,20,2b"
             os: ubuntu-22.04
             install: g++-12
+          - toolset: gcc-13
+            cxxstd: "11,14,17,20,2b"
+            os: ubuntu-latest
+            container: ubuntu:23.04
+            install: g++-13
           - toolset: clang
             compiler: clang++-12
             cxxstd: "11,14,17,2a"
@@ -65,20 +74,47 @@ jobs:
             os: ubuntu-22.04
             install: clang-14
           - toolset: clang
+            compiler: clang++-15
+            cxxstd: "11,14,17,20,2b"
+            os: ubuntu-22.04
+            install: clang-15
+          - toolset: clang
+            compiler: clang++-16
+            cxxstd: "11,14,17,20,2b"
+            os: ubuntu-latest
+            container: ubuntu:23.04
+            install: clang-16
+          - toolset: clang
             cxxstd: "11,14,17,20,2b"
             os: macos-11
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
             os: macos-12
+          - toolset: clang
+            cxxstd: "11,14,17,20,2b"
+            os: macos-13
 
     runs-on: ${{matrix.os}}
+    container: ${{matrix.container}}
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v3
 
+      - name: Setup container environment
+        if: matrix.container
+        run: |
+          apt-get update
+          apt-get -y install sudo python3 git g++
+
       - name: Install packages
         if: matrix.install
-        run: sudo apt install ${{matrix.install}}
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install ${{matrix.install}}
 
       - name: Setup Boost
         run: |
@@ -98,7 +134,7 @@ jobs:
           cd boost-root
           cp -r $GITHUB_WORKSPACE/* libs/$LIBRARY
           git submodule update --init tools/boostdep
-          python tools/boostdep/depinst/depinst.py --git_args "--jobs 3" $LIBRARY
+          python3 tools/boostdep/depinst/depinst.py --git_args "--jobs 3" $LIBRARY
           ./bootstrap.sh
           ./b2 -d0 headers
 
@@ -192,6 +228,10 @@ jobs:
             shared: OFF
           - os: macos-12
             shared: ON
+          - os: macos-13
+            shared: OFF
+          - os: macos-13
+            shared: ON
 
     runs-on: ${{matrix.os}}
 
@@ -250,6 +290,10 @@ jobs:
           - os: macos-12
             shared: OFF
           - os: macos-12
+            shared: ON
+          - os: macos-13
+            shared: OFF
+          - os: macos-13
             shared: ON
 
     runs-on: ${{matrix.os}}
