@@ -59,9 +59,9 @@ public:
         init(p.external_file_string());
     }
 
-    // Constructor taking a boost::filesystem3::path (boost filesystem v3)
+    // Constructor taking a boost::filesystem3::path or a std::filesystem::path
     template<typename Path>
-    explicit path(const Path& p, typename Path::codecvt_type* = 0)
+    explicit path(const Path& p, typename Path::string_type* = 0)
     {
         init(p.native());
     }
@@ -113,9 +113,9 @@ public:
     }
 #endif
 
-    // Assignment operator taking a boost::filesystem3::path
+    // Assignment operator taking a boost::filesystem3::path or a std::filesystem::path
     template<typename Path>
-    typename sfinae<typename Path::codecvt_type, path&>::type
+    typename sfinae<typename Path::string_type, path&>::type
         operator=(const Path& p)
     {
         init(p.native());
