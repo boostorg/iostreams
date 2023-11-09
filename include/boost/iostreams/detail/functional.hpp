@@ -113,6 +113,9 @@ public:
     member_close_operation(T& t, BOOST_IOS::openmode which) 
         : t_(t), which_(which) 
         { }
+    member_close_operation(const member_close_operation& other)
+        : t_(other.t_), which_(other.which_)
+        { }
     void operator()() const { t_.close(which_); }
 private:
     BOOST_DELETED_FUNCTION(member_close_operation& operator=(const member_close_operation&))
@@ -131,6 +134,7 @@ template<typename T>
 class reset_operation {
 public:
     reset_operation(T& t) : t_(t) { }
+    reset_operation(const reset_operation& other) : t_(other.t_) { }
     void operator()() const { t_.reset(); }
 private:
     BOOST_DELETED_FUNCTION(reset_operation& operator=(const reset_operation&))
