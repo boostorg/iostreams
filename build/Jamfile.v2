@@ -7,7 +7,7 @@
 
 # See http://www.boost.org/libs/iostreams for documentation.
 
-project /boost/iostreams : source-location ../src ;
+project : source-location ../src ;
 
 # The biggest trick in this Jamfile is to link to zlib and bzip2 when
 # needed. To configure that, a number of variables are used, which must
@@ -22,8 +22,6 @@ import os ;
 import path ;
 import ac ;
 local debug = [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ] ;
-
-local libraries-to-install = boost_iostreams ;
 
 for local v in NO_COMPRESSION 
                NO_ZLIB
@@ -125,5 +123,3 @@ lib boost_iostreams
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
     ;
-
-boost-install $(libraries-to-install) ;
