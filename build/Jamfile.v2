@@ -2,7 +2,7 @@
 
 # (C) Copyright 2008 CodeRage, LLC (turkanis at coderage dot com)
 # (C) Copyright 2004-2007 Jonathan Turkanis
-# Distributed under the Boost Software License, Version 1.0. (See accompanying 
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
 
 # See http://www.boost.org/libs/iostreams for documentation.
@@ -23,7 +23,7 @@ import path ;
 import ac ;
 local debug = [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ] ;
 
-for local v in NO_COMPRESSION 
+for local v in NO_COMPRESSION
                NO_ZLIB
                NO_BZIP2
                NO_LZMA
@@ -112,9 +112,9 @@ else
 
 local sources = file_descriptor.cpp mapped_file.cpp ;
 
-lib boost_iostreams 
-    : $(sources) 
-    : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1 
+lib boost_iostreams
+    : $(sources)
+    : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
       <define>BOOST_IOSTREAMS_USE_DEPRECATED
       $(zlib-requirements)
       $(bzip2-requirements)
@@ -122,4 +122,5 @@ lib boost_iostreams
       $(zstd-requirements)
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
+        <define>BOOST_IOSTREAMS_NO_LIB=1
     ;
