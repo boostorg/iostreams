@@ -59,6 +59,11 @@ jobs:
             os: ubuntu-latest
             container: ubuntu:23.04
             install: g++-13
+          - toolset: gcc-14
+            cxxstd: "11,14,17,20,2b"
+            os: ubuntu-latest
+            container: ubuntu:24.04
+            install: g++-14
           - toolset: clang
             compiler: clang++-12
             cxxstd: "11,14,17,2a"
@@ -81,18 +86,30 @@ jobs:
           - toolset: clang
             compiler: clang++-16
             cxxstd: "11,14,17,20,2b"
-            os: ubuntu-latest
             container: ubuntu:23.04
+            os: ubuntu-latest
             install: clang-16
           - toolset: clang
+            compiler: clang++-17
             cxxstd: "11,14,17,20,2b"
-            os: macos-11
+            container: ubuntu:23.10
+            os: ubuntu-latest
+            install: clang-17
+          - toolset: clang
+            compiler: clang++-18
+            cxxstd: "11,14,17,20,2b"
+            container: ubuntu:24.04
+            os: ubuntu-latest
+            install: clang-18
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
             os: macos-12
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
             os: macos-13
+          - toolset: clang
+            cxxstd: "11,14,17,20,2b"
+            os: macos-14
 
     runs-on: ${{matrix.os}}
     container: ${{matrix.container}}
@@ -102,6 +119,10 @@ jobs:
         shell: bash
 
     steps:
+      - name: Enable Node 16
+        run: |
+          echo "ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
 
       - name: Setup container environment
@@ -177,7 +198,7 @@ jobs:
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Boost
         shell: cmd
@@ -211,32 +232,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-20.04
-            shared: OFF
-          - os: ubuntu-20.04
-            shared: ON
-          - os: ubuntu-22.04
-            shared: OFF
-          - os: ubuntu-22.04
-            shared: ON
-          - os: macos-11
-            shared: OFF
-          - os: macos-11
-            shared: ON
-          - os: macos-12
-            shared: OFF
-          - os: macos-12
-            shared: ON
-          - os: macos-13
-            shared: OFF
-          - os: macos-13
-            shared: ON
+        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14 ]
+        shared: [ OFF, ON ]
 
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install packages
         if: matrix.install
@@ -274,32 +276,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-20.04
-            shared: OFF
-          - os: ubuntu-20.04
-            shared: ON
-          - os: ubuntu-22.04
-            shared: OFF
-          - os: ubuntu-22.04
-            shared: ON
-          - os: macos-11
-            shared: OFF
-          - os: macos-11
-            shared: ON
-          - os: macos-12
-            shared: OFF
-          - os: macos-12
-            shared: ON
-          - os: macos-13
-            shared: OFF
-          - os: macos-13
-            shared: ON
+        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14 ]
+        shared: [ OFF, ON ]
 
     runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install packages
         if: matrix.install
