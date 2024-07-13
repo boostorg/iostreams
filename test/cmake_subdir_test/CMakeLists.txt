@@ -10,6 +10,9 @@ if(BOOST_RUNTIME_LINK STREQUAL "static")
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
+# Put .dll in the same directory as .exe
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 set(BOOST_INCLUDE_LIBRARIES iostreams)
 
 add_subdirectory(../../../../ deps/boost)
