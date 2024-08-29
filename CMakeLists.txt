@@ -35,10 +35,15 @@ function(boost_iostreams_option name description package version found target) #
 
 endfunction()
 
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZLIB "Boost.Iostreams: Enable ZLIB support" ZLIB "" ZLIB_FOUND ZLIB::ZLIB src/zlib.cpp src/gzip.cpp)
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZip2 support" BZip2 "" BZIP2_FOUND BZip2::BZip2 src/bzip2.cpp)
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA "" LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
-boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable Zstd support" zstd "1.0" zstd_FOUND zstd::libzstd_shared src/zstd.cpp)
+set(BOOST_IOSTREAMS_TARGET_ZLIB "ZLIB::ZLIB" CACHE STRING "Target name for ZLIB")
+set(BOOST_IOSTREAMS_TARGET_BZIP2 "BZip2::BZip2" CACHE STRING "Target name for BZip2")
+set(BOOST_IOSTREAMS_TARGET_LZMA "LibLZMA::LibLZMA" CACHE STRING "Target name for LibLZMA")
+set(BOOST_IOSTREAMS_TARGET_ZSTD "zstd::libzstd_shared" CACHE STRING "Target name for Zstd")
+
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZLIB "Boost.Iostreams: Enable ZLIB support" ZLIB "" ZLIB_FOUND ${BOOST_IOSTREAMS_TARGET_ZLIB} src/zlib.cpp src/gzip.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZip2 support" BZip2 "" BZIP2_FOUND ${BOOST_IOSTREAMS_TARGET_BZIP2} src/bzip2.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA "" LIBLZMA_FOUND ${BOOST_IOSTREAMS_TARGET_LZMA} src/lzma.cpp)
+boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable Zstd support" zstd "1.0" zstd_FOUND ${BOOST_IOSTREAMS_TARGET_ZSTD} src/zstd.cpp)
 
 include(CheckCXXSourceCompiles)
 
