@@ -32,8 +32,6 @@ project /boost/iostreams
 
 explicit
     [ alias boost_iostreams : build//boost_iostreams ]
-    [ alias iostreams_deps : build//iostreams_deps ]
-    [ alias iostreams_sources : build//iostreams_sources ]
     [ alias all : boost_iostreams example test ]
     ;
 
