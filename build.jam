@@ -1,0 +1,43 @@
+# Copyright René Ferdinand Rivera Morell 2023-2024
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+require-b2 5.2 ;
+
+constant boost_dependencies :
+    /boost/assert//boost_assert
+    /boost/config//boost_config
+    /boost/core//boost_core
+    /boost/detail//boost_detail
+    /boost/function//boost_function
+    /boost/integer//boost_integer
+    /boost/iterator//boost_iterator
+    /boost/mpl//boost_mpl
+    /boost/numeric_conversion//boost_numeric_conversion
+    /boost/preprocessor//boost_preprocessor
+    /boost/random//boost_random
+    /boost/range//boost_range
+    /boost/regex//boost_regex
+    /boost/smart_ptr//boost_smart_ptr
+    /boost/static_assert//boost_static_assert
+    /boost/throw_exception//boost_throw_exception
+    /boost/type_traits//boost_type_traits
+    /boost/utility//boost_utility ;
+
+project /boost/iostreams
+    : common-requirements
+        <include>include
+    ;
+
+explicit
+    [ alias boost_iostreams : build//boost_iostreams ]
+    [ alias iostreams_deps : build//iostreams_deps ]
+    [ alias iostreams_sources : build//iostreams_sources ]
+    [ alias all : boost_iostreams example test ]
+    ;
+
+call-if : boost-library iostreams
+    : install boost_iostreams
+    ;
+
