@@ -322,7 +322,7 @@ jobs:
       - name: Use the installed library
         run: |
           cd ../boost-root/libs/$LIBRARY/test/cmake_install_test && mkdir __build__ && cd __build__
-          cmake -DCMAKE_INSTALL_PREFIX=~/.local -DBoost_VERBOSE=ON ..
+          cmake -DCMAKE_PREFIX_PATH=~/.local -DBoost_VERBOSE=ON ..
           cmake --build .
           ctest --output-on-failure --no-tests=error
 
