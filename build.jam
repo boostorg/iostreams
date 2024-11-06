@@ -5,6 +5,8 @@
 
 require-b2 5.2 ;
 
+import os ;
+
 constant boost_dependencies :
     /boost/assert//boost_assert
     /boost/config//boost_config
@@ -30,12 +32,38 @@ project /boost/iostreams
         <include>include
     ;
 
+local compression-libs-to-install ;
+for local v in NO_COMPRESSION NO_ZLIB NO_BZIP2
+{
+    $(v) = [ modules.peek : $(v) ] ;
+}
+if $(NO_COMPRESSION) != 1 && $(NO_ZLIB) != 1
+{
+    constant has_zlib : true ;
+    if [ os.environ ZLIB_SOURCE ]
+    {
+        constant install_zlib : true ;
+        explicit [ alias boost_zlib : build//boost_zlib ] ;
+        compression-libs-to-install += boost_zlib ;
+    }
+}
+if $(NO_COMPRESSION) != 1 && $(NO_BZIP2) != 1
+{
+    constant has_bzip2 : true ;
+    if [ os.environ BZIP2_SOURCE ]
+    {
+        constant install_bzip2 : true ;
+        explicit [ alias boost_bzip2 : build//boost_bzip2 ] ;
+        compression-libs-to-install += boost_bzip2 ;
+    }
+}
+
 explicit
     [ alias boost_iostreams : build//boost_iostreams ]
     [ alias all : boost_iostreams example test ]
     ;
 
 call-if : boost-library iostreams
-    : install boost_iostreams
+    : install boost_iostreams $(compression-libs-to-install)
     ;
 
