@@ -446,7 +446,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest ]
+        include:
+
+          - os: windows-latest
+            bopts: install
+
+          - os: windows-latest
+            bopts: stage
+            copts: -DUSE_STAGED_BOOST=ON
 
     runs-on: ${{matrix.os}}
 
@@ -482,11 +489,11 @@ jobs:
           cd ../boost-root
           set ZLIB_SOURCE=%CD%\libs\iostreams\test\zlib-1.2.11
           set BZIP2_SOURCE=%CD%\libs\iostreams\test\bzip2-1.0.8
-          b2 -d0 -j3 --prefix=%GITHUB_WORKSPACE%\..\.local --with-headers install
-          b2 -j3 --prefix=%GITHUB_WORKSPACE%\..\.local --with-iostreams install
+          b2 -d0 -j3 --prefix=%GITHUB_WORKSPACE%\..\.local --with-headers ${{matrix.bopts}}
+          b2 -j3 --prefix=%GITHUB_WORKSPACE%\..\.local --with-iostreams ${{matrix.bopts}}
           cd libs\iostreams\test\b2_install_test
           mkdir __build__ && cd __build__
-          cmake -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\..\.local -DBoost_VERBOSE=ON ..
+          cmake -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\..\.local -DBoost_VERBOSE=ON ${{matrix.copts}} ..
           PATH %PATH%;%GITHUB_WORKSPACE%\..\.local\lib;%GITHUB_WORKSPACE%\..\boost-root\stage\lib
           cmake --build . --config Debug && cmake --build . --config Debug --target check
           cmake --build . --config Release && cmake --build . --config Release --target check

@@ -10,7 +10,13 @@ if(BOOST_RUNTIME_LINK STREQUAL "static")
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-find_package(boost_iostreams REQUIRED)
+set(BOOST_HINTS)
+
+if(USE_STAGED_BOOST)
+  set(BOOST_HINTS HINTS ../../../../stage)
+endif()
+
+find_package(boost_iostreams CONFIG REQUIRED ${BOOST_HINTS})
 
 add_executable(test_gzip test_gzip.cpp)
 target_link_libraries(test_gzip Boost::iostreams)
