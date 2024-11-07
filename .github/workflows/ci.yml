@@ -103,13 +103,13 @@ jobs:
             install: clang-18
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
-            os: macos-12
-          - toolset: clang
-            cxxstd: "11,14,17,20,2b"
             os: macos-13
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
             os: macos-14
+          - toolset: clang
+            cxxstd: "11,14,17,20,2b"
+            os: macos-15
 
     runs-on: ${{matrix.os}}
     container: ${{matrix.container}}
@@ -232,7 +232,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14 ]
+        os: [ ubuntu-latest, macos-latest ]
         shared: [ OFF, ON ]
 
     runs-on: ${{matrix.os}}
@@ -276,7 +276,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14 ]
+        os: [ ubuntu-latest, macos-latest ]
         shared: [ OFF, ON ]
 
     runs-on: ${{matrix.os}}
@@ -330,7 +330,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019, windows-2022 ]
+        os: [ windows-latest ]
         shared: [ OFF, ON ]
 
     runs-on: ${{matrix.os}}
@@ -378,7 +378,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019, windows-2022 ]
+        os: [ windows-latest ]
         shared: [ OFF, ON ]
 
     runs-on: ${{matrix.os}}
