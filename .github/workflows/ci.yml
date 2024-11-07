@@ -441,3 +441,54 @@ jobs:
           cmake --build . --config Release
           PATH C:\cmake-prefix\bin;%PATH%
           ctest --output-on-failure --no-tests=error -C Release
+
+  windows-b2-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest ]
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Boost
+        shell: cmd
+        run: |
+          echo GITHUB_REPOSITORY: %GITHUB_REPOSITORY%
+          for /f %%i in ("%GITHUB_REPOSITORY%") do set LIBRARY=%%~nxi
+          echo LIBRARY: %LIBRARY%
+          echo LIBRARY=%LIBRARY%>>%GITHUB_ENV%
+          echo GITHUB_BASE_REF: %GITHUB_BASE_REF%
+          echo GITHUB_REF: %GITHUB_REF%
+          if "%GITHUB_BASE_REF%" == "" set GITHUB_BASE_REF=%GITHUB_REF%
+          set BOOST_BRANCH=develop
+          for /f %%i in ("%GITHUB_BASE_REF%") do if "%%~nxi" == "master" set BOOST_BRANCH=master
+          echo BOOST_BRANCH: %BOOST_BRANCH%
+          cd ..
+          git clone -b %BOOST_BRANCH% --depth 1 https://github.com/boostorg/boost.git boost-root
+          cd boost-root
+          xcopy /s /e /q %GITHUB_WORKSPACE% libs\%LIBRARY%\
+          git submodule update --init tools/boostdep
+          python tools/boostdep/depinst/depinst.py --git_args "--jobs 3" %LIBRARY%
+          cmd /c bootstrap
+          b2 -d0 headers
+
+      - name: Run tests
+        shell: cmd
+        run: |
+          echo on
+          cd ../boost-root
+          set ZLIB_SOURCE=%CD%\libs\iostreams\test\zlib-1.2.11
+          set BZIP2_SOURCE=%CD%\libs\iostreams\test\bzip2-1.0.8
+          b2 -d0 -j3 --prefix=%GITHUB_WORKSPACE%\..\.local --with-headers install
+          b2 -j3 --prefix=%GITHUB_WORKSPACE%\..\.local --with-iostreams install
+          cd libs\iostreams\test\b2_install_test
+          mkdir __build__ && cd __build__
+          cmake -DCMAKE_INSTALL_PREFIX=%GITHUB_WORKSPACE%\..\.local -DBoost_VERBOSE=ON ..
+          PATH %PATH%;%GITHUB_WORKSPACE%\..\.local\lib;%GITHUB_WORKSPACE%\..\boost-root\stage\lib
+          cmake --build . --config Debug && cmake --build . --config Debug --target check
+          cmake --build . --config Release && cmake --build . --config Release --target check
+          cmake --build . --config MinSizeRel && cmake --build . --config MinSizeRel --target check
+          cmake --build . --config RelWithDebInfo && cmake --build . --config RelWithDebInfo --target check
