@@ -442,6 +442,85 @@ jobs:
           PATH C:\cmake-prefix\bin;%PATH%
           ctest --output-on-failure --no-tests=error -C Release
 
+  posix-b2-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+
+          - os: ubuntu-latest
+            bopts: install
+
+          - os: ubuntu-latest
+            bopts: install
+            copts: -DBoost_USE_STATIC_LIBS=ON
+
+          - os: ubuntu-latest
+            bopts: stage
+            copts: -DUSE_STAGED_BOOST=ON
+
+          - os: ubuntu-latest
+            bopts: stage
+            copts: -DUSE_STAGED_BOOST=ON -DBoost_USE_STATIC_LIBS=ON
+
+          - os: macos-latest
+            bopts: install
+
+          - os: macos-latest
+            bopts: install
+            copts: -DBoost_USE_STATIC_LIBS=ON
+
+          - os: macos-latest
+            bopts: stage
+            copts: -DUSE_STAGED_BOOST=ON
+
+          - os: macos-latest
+            bopts: stage
+            copts: -DUSE_STAGED_BOOST=ON -DBoost_USE_STATIC_LIBS=ON
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install packages
+        if: matrix.install
+        run: sudo apt install ${{matrix.install}}
+
+      - name: Setup Boost
+        run: |
+          echo GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          LIBRARY=${GITHUB_REPOSITORY#*/}
+          echo LIBRARY: $LIBRARY
+          echo "LIBRARY=$LIBRARY" >> $GITHUB_ENV
+          echo GITHUB_BASE_REF: $GITHUB_BASE_REF
+          echo GITHUB_REF: $GITHUB_REF
+          REF=${GITHUB_BASE_REF:-$GITHUB_REF}
+          REF=${REF#refs/heads/}
+          echo REF: $REF
+          BOOST_BRANCH=develop && [ "$REF" == "master" ] && BOOST_BRANCH=master || true
+          echo BOOST_BRANCH: $BOOST_BRANCH
+          cd ..
+          git clone -b $BOOST_BRANCH --depth 1 https://github.com/boostorg/boost.git boost-root
+          cd boost-root
+          cp -r $GITHUB_WORKSPACE/* libs/$LIBRARY
+          git submodule update --init tools/boostdep
+          python3 tools/boostdep/depinst/depinst.py --git_args "--jobs 3" $LIBRARY
+          ./bootstrap.sh
+          ./b2 -d0 headers
+
+      - name: Run tests
+        run: |
+          cd ../boost-root
+          ./b2 -d0 -j3 --prefix=$HOME/.local --with-headers ${{matrix.bopts}}
+          ./b2 -j3 --prefix=$HOME/.local --with-iostreams ${{matrix.bopts}}
+          cd libs/iostreams/test/b2_install_test
+          mkdir __build__ && cd __build__
+          cmake -DCMAKE_PREFIX_PATH=~/.local -DBoost_VERBOSE=ON ${{matrix.copts}} ..
+          VERBOSE=1 cmake --build .
+          export LD_LIBRARY_PATH=$HOME/.local/lib:$GITHUB_WORKSPACE/../boost-root/stage/lib:$LD_LIBRARY_PATH
+          cmake --build . --target check
+
   windows-b2-install:
     strategy:
       fail-fast: false
