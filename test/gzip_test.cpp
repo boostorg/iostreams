@@ -133,6 +133,35 @@ void array_source_test()
     BOOST_CHECK_EQUAL(data, res);
 }
 
+
+void flush_test()
+{
+    std::string encoded;
+    std::vector<int> result;
+
+    static const int flush_marker_bytes[] = {'\x00', '\x00', '\xff', '\xff', '\x00', '\x00', '\xff', '\xff'};
+    std::vector<int> target(flush_marker_bytes, flush_marker_bytes + sizeof(flush_marker_bytes) / sizeof(flush_marker_bytes[0]) );
+
+    filtering_ostream out;
+    out.push(gzip_compressor());
+    out.push(io::back_inserter(encoded));
+    write_data_in_chunks(out);
+    out.flush();
+
+    for(int i = 0; i < 4; i++) {
+      result.push_back(encoded[encoded.length() - 4 + i]);
+    }
+
+    write_data_in_chunks(out);
+    out.flush();
+
+    for(int i = 0; i < 4; i++) {
+      result.push_back(encoded[encoded.length() - 4 + i]);
+    }
+
+    BOOST_CHECK(std::equal(result.begin(), result.end(), target.begin()));
+}
+
 #if defined(BOOST_MSVC)
 # pragma warning(push)
 # pragma warning(disable:4309)  // Truncation of constant value
@@ -262,6 +291,7 @@ test_suite* init_unit_test_suite(int, char* [])
 
     test->add(BOOST_TEST_CASE(&multiple_member_test));
     test->add(BOOST_TEST_CASE(&array_source_test));
+    test->add(BOOST_TEST_CASE(&flush_test));
     test->add(BOOST_TEST_CASE(&header_test));
     test->add(BOOST_TEST_CASE(&empty_file_test));
     test->add(BOOST_TEST_CASE(&multipart_test));
