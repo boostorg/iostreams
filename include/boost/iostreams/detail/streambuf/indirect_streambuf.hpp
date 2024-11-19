@@ -72,6 +72,7 @@ public:
 
     // Declared in linked_streambuf.
     T* component() { return &*obj(); }
+    const T* component() const { return &*obj(); }
 protected:
     BOOST_IOSTREAMS_USING_PROTECTED_STREAMBUF_MEMBERS(base_type)
 
@@ -101,6 +102,7 @@ private:
     //----------Accessor functions--------------------------------------------//
 
     wrapper& obj() { return *storage_; }
+    const wrapper& obj() const { return *storage_; }
     streambuf_type* next() const { return next_; }
     buffer_type& in() { return buffer_.first(); }
     buffer_type& out() { return buffer_.second(); }
