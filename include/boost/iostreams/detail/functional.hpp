@@ -36,6 +36,7 @@ public:
     device_close_operation(T& t, BOOST_IOS::openmode which) 
         : t_(t), which_(which) 
         { }
+    BOOST_DEFAULTED_FUNCTION(device_close_operation(const device_close_operation& rhs), : t_(rhs.t_) { which_ = rhs.which_; })
     void operator()() const { boost::iostreams::close(t_, which_); }
 private:
     BOOST_DELETED_FUNCTION(device_close_operation& operator=(const device_close_operation&))
@@ -50,6 +51,7 @@ public:
     filter_close_operation(T& t, Sink& snk, BOOST_IOS::openmode which)
         : t_(t), snk_(snk), which_(which)
         { }
+    filter_close_operation(const filter_close_operation& rhs) : t_(rhs.t_), snk_(rhs.snk_), which_(rhs.which_) {}; // BOOST_DEFAULTED_FUNCTION can not handle more than one reference
     void operator()() const { boost::iostreams::close(t_, snk_, which_); }
 private:
     BOOST_DELETED_FUNCTION(filter_close_operation& operator=(const filter_close_operation&))
@@ -76,6 +78,7 @@ class device_close_all_operation {
 public:
     typedef void result_type;
     device_close_all_operation(T& t) : t_(t) { }
+    BOOST_DEFAULTED_FUNCTION(device_close_all_operation(const device_close_all_operation& rhs), : t_(rhs.t_) {})
     void operator()() const { detail::close_all(t_); }
 private:
     BOOST_DELETED_FUNCTION(device_close_all_operation& operator=(const device_close_all_operation&))
@@ -87,6 +90,7 @@ class filter_close_all_operation {
 public:
     typedef void result_type;
     filter_close_all_operation(T& t, Sink& snk) : t_(t), snk_(snk) { }
+    filter_close_all_operation(const filter_close_all_operation& rhs) : t_(rhs.t_), snk_(rhs.snk_) {}; // BOOST_DEFAULTED_FUNCTION can not handle more than one reference
     void operator()() const { detail::close_all(t_, snk_); }
 private:
     BOOST_DELETED_FUNCTION(filter_close_all_operation& operator=(const filter_close_all_operation&))
@@ -113,6 +117,7 @@ public:
     member_close_operation(T& t, BOOST_IOS::openmode which) 
         : t_(t), which_(which) 
         { }
+    BOOST_DEFAULTED_FUNCTION(member_close_operation(const member_close_operation& rhs), : t_(rhs.t_) { which_ = rhs.which_; })
     void operator()() const { t_.close(which_); }
 private:
     BOOST_DELETED_FUNCTION(member_close_operation& operator=(const member_close_operation&))
@@ -131,6 +136,7 @@ template<typename T>
 class reset_operation {
 public:
     reset_operation(T& t) : t_(t) { }
+    BOOST_DEFAULTED_FUNCTION(reset_operation(const reset_operation& rhs), : t_(rhs.t_) {})
     void operator()() const { t_.reset(); }
 private:
     BOOST_DELETED_FUNCTION(reset_operation& operator=(const reset_operation&))
@@ -147,6 +153,7 @@ class clear_flags_operation {
 public:
     typedef void result_type;
     clear_flags_operation(T& t) : t_(t) { }
+    BOOST_DEFAULTED_FUNCTION(clear_flags_operation(const clear_flags_operation& rhs), : t_(rhs.t_) {})
     void operator()() const { t_ = 0; }
 private:
     BOOST_DELETED_FUNCTION(clear_flags_operation& operator=(const clear_flags_operation&))
@@ -167,6 +174,7 @@ public:
     flush_buffer_operation(Buffer& buf, Device& dev, bool flush)
         : buf_(buf), dev_(dev), flush_(flush)
         { }
+    flush_buffer_operation(const flush_buffer_operation& rhs) : buf_(rhs.buf_), dev_(rhs.dev_), flush_(rhs.flush_) {}; // BOOST_DEFAULTED_FUNCTION can not handle more than one reference
     void operator()() const
     {
         if (flush_) 
