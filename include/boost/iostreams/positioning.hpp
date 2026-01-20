@@ -92,6 +92,16 @@ inline stream_offset fpos_t_to_offset(std::fpos_t pos)
 // Extracts the member _Fpos from a std::fpos
 inline std::fpos_t streampos_to_fpos_t(std::streampos pos)
 {
+#  if defined(_MSVC_STL_VERSION) && _MSVC_STL_VERSION >= 143
+    // Visual Studio 2022+ removed seekpos(), use state() instead
+    return pos.state();
+#  elif defined(_CPPLIB_VER)
+    // Older Dinkumware (VS 2015-2019) has seekpos()
+    #if _CPPLIB_VER >= 650  // VS 2017 15.5+
+        return pos.state();
+    #else
+        return pos.seekpos();
+    #endif
 #  if defined (_CPPLIB_VER) || defined(__IBMCPP__)
     return pos.seekpos();
 #  else
