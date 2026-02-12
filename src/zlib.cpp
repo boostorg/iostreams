@@ -58,6 +58,7 @@ const int buf_error            = Z_BUF_ERROR;
 const int finish               = Z_FINISH;
 const int no_flush             = Z_NO_FLUSH;
 const int sync_flush           = Z_SYNC_FLUSH;
+const int full_flush           = Z_FULL_FLUSH;
 
                     // Code for current OS
 

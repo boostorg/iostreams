@@ -185,6 +185,26 @@ public:
             close_impl();
         }
     }
+
+    template<typename Sink>
+    void force_flush(Sink &snk) {
+      if (!(state() & f_write))
+              begin_write();
+
+      buffer_type&     buf = pimpl_->buf_;
+      char_type        dummy;
+      const char_type* end = &dummy;
+      // Repeatedly invokes force_flush(), till the time zlib::deflate returns zlib::Z_BUF_ERROR.
+      // zlib::Z_BUF_ERROR ensures that no more futher progress is possible.
+      bool again = true;
+      while(again) {
+        if(buf.ptr() != buf.eptr()) {
+          again = filter().force_flush(end, end, buf.ptr(), buf.eptr());
+        }
+        flush(snk);
+      }
+    }
+
     SymmetricFilter& filter() { return *pimpl_; }
     string_type unconsumed_input() const;
 
