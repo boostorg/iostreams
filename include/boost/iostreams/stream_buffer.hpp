@@ -95,7 +95,9 @@ public:
                              BOOST_IOSTREAMS_PUSH_PARAMS,
                              BOOST_IOSTREAMS_PUSH_ARGS )
     T& operator*() { return *this->component(); }
+    const T& operator*() const { return *this->component(); }
     T* operator->() { return this->component(); }
+    const T* operator->() const { return this->component(); }
 private:
     void open_impl(const T& t BOOST_IOSTREAMS_PUSH_PARAMS())
         {   // Used for forwarding.
