@@ -8,7 +8,7 @@
 # As the yaml syntax for Drone CI is rather limited.
 #
 #
-globalenv={'B2_VARIANT': 'variant=release'}
+globalenv={'B2_CI_VERSION': '0', 'B2_VARIANT': 'variant=release'}
 linuxglobalimage="cppalliance/droneubuntu1604:1"
 windowsglobalimage="cppalliance/dronevs2019"
 
