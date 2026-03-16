@@ -131,11 +131,6 @@ struct basic_mapped_file_params
     template<typename PathT>
     explicit basic_mapped_file_params(const PathT& p) : path(p) { }
 
-    // Copy constructor
-    basic_mapped_file_params(const basic_mapped_file_params& other)
-        : base_type(other), path(other.path)
-        { }
-
     // Templated copy constructor
     template<typename PathT>
     basic_mapped_file_params(const basic_mapped_file_params<PathT>& other)
