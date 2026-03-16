@@ -81,6 +81,14 @@ struct seek_impl_basic_ios {
                                 BOOST_IOS::seekdir way,
                                 BOOST_IOS::openmode which )
     {
+#if defined(BOOST_CLANG)
+#   pragma clang diagnostic push
+#   if defined(__has_warning)
+#       if __has_warning("-Wtautological-type-limit-compare")
+#           pragma clang diagnostic ignored "-Wtautological-type-limit-compare"
+#       endif
+#   endif
+#endif
         if ( way == BOOST_IOS::beg &&
              ( off < integer_traits<std::streamoff>::const_min ||
                off > integer_traits<std::streamoff>::const_max ) )
@@ -90,6 +98,9 @@ struct seek_impl_basic_ios {
             return t.rdbuf()->pubseekoff(off, way, which);
         }
     }
+#if defined(BOOST_CLANG)
+#   pragma clang diagnostic pop
+#endif
 };
 
 template<>
@@ -108,6 +119,14 @@ struct seek_device_impl<streambuf_tag> {
                                 BOOST_IOS::seekdir way,
                                 BOOST_IOS::openmode which )
     {
+#if defined(BOOST_CLANG)
+#   pragma clang diagnostic push
+#   if defined(__has_warning)
+#       if __has_warning("-Wtautological-type-limit-compare")
+#           pragma clang diagnostic ignored "-Wtautological-type-limit-compare"
+#       endif
+#   endif
+#endif
         if ( way == BOOST_IOS::beg &&
              ( off < integer_traits<std::streamoff>::const_min ||
                off > integer_traits<std::streamoff>::const_max ) )
@@ -117,6 +136,9 @@ struct seek_device_impl<streambuf_tag> {
             return t.BOOST_IOSTREAMS_PUBSEEKOFF(off, way, which);
         }
     }
+#if defined(BOOST_CLANG)
+#   pragma clang diagnostic pop
+#endif
 };
 
 template<>
