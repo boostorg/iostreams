@@ -66,6 +66,8 @@ public:
     { BOOST_STATIC_ASSERT(is_std_io<T>::value); }
     explicit concept_adapter(const T& t) : t_(t)
     { BOOST_STATIC_ASSERT(!is_std_io<T>::value); }
+    concept_adapter(const concept_adapter& other) : t_(other.t_)
+    { BOOST_STATIC_ASSERT(!is_std_io<T>::value); }
 
     T& operator*() { return t_; }
     T* operator->() { return &t_; }
