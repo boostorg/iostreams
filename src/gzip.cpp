@@ -48,7 +48,7 @@ void gzip_header::process(char c)
         state_ = s_mtime;
         break;
     case s_mtime:
-        mtime_ += value << (offset_ * 8);
+        mtime_ += (unsigned int)value << (offset_ * 8);
         if (offset_ == 3) {
             state_ = s_xfl;
             offset_ = 0;
