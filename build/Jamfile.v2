@@ -27,6 +27,7 @@ local debug = [ MATCH (--debug-configuration) : [ modules.peek : ARGV ] ] ;
 for local v in NO_COMPRESSION
                NO_LZMA
                NO_ZSTD
+               NO_BROTLI
 {
     $(v) = [ modules.peek : $(v) ] ;
 }
@@ -107,6 +108,24 @@ else
     }
 }
 
+if $(NO_COMPRESSION) != 1 && $(NO_BROTLI) != 1
+{
+    using brotli ;
+    brotli-requirements =
+        [ ac.check-library /brotli//brotlidec : <library>/brotli//brotlidec
+          <source>brotli.cpp ] ;
+              brotli-requirements +=
+        [ ac.check-library /brotli//brotlienc : <library>/brotli//brotlienc
+          <source>brotli.cpp ] ;
+}
+else
+{
+    if $(debug)
+    {
+        ECHO "notice: iostreams: not using brotli compression " ;
+    }
+}
+
 local sources = file_descriptor.cpp mapped_file.cpp ;
 
 lib boost_iostreams
@@ -117,6 +136,7 @@ lib boost_iostreams
       $(bzip2-requirements)
       $(lzma-requirements)
       $(zstd-requirements)
+      $(brotli-requirements)
     :
     : <link>shared:<define>BOOST_IOSTREAMS_DYN_LINK=1
         <define>BOOST_IOSTREAMS_NO_LIB=1
