@@ -10,7 +10,7 @@
         "String"
     ],
     "maintainers": [
-        "Jonathan Turkanis <turkanis -at- coderage.com>"
+        "Tobias Stensbeck <tobias.stensbeck -at- threedy.io>"
     ],
     "cxxstd": "03"
 }
