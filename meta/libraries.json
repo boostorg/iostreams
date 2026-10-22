@@ -12,5 +12,5 @@
     "maintainers": [
         "Tobias Stensbeck <tobias.stensbeck -at- threedy.io>"
     ],
-    "cxxstd": "03"
+    "cxxstd": "11"
 }

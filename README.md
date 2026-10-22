@@ -11,7 +11,7 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 
 ### Properties
 
-* C++03
+* C++11
 * Requires a Link Library
 
 ### Build Status
