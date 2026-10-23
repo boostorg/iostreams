@@ -14,6 +14,7 @@
 //
 
 #include <fstream>
+#include <string>
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/test/unit_test.hpp>
@@ -288,10 +289,10 @@ void mapped_file_test()
     
     {
         boost::iostreams::test::test_file orig;
-        char name[50];
-        std::strncpy(name, orig.name().c_str(), 50);
+        std::string name = orig.name();
+        char* path = &name[0];
         
-        mapped_file mf((char*) name);
+        mapped_file mf(path);
 
         BOOST_CHECK_MESSAGE(
             boost::iostreams::test::test_writeable(mf),
