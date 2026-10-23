@@ -9,6 +9,9 @@ on:
       - feature/**
       - fix/**
 
+permissions:
+  contents: read
+
 env:
   UBSAN_OPTIONS: print_stacktrace=1
 
