@@ -163,10 +163,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install packages
-        if: matrix.install
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get -y install ${{matrix.install}}
+          sudo apt-get -y install ${{matrix.install}} zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
 
       - name: Setup Boost
         run: |
@@ -272,8 +272,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install packages
-        if: matrix.install
-        run: sudo apt-get -y install ${{matrix.install}}
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
 
       - name: Setup Boost
         run: |
@@ -316,8 +318,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install packages
-        if: matrix.install
-        run: sudo apt-get -y install ${{matrix.install}}
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
 
       - name: Setup Boost
         run: |
@@ -515,8 +519,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install packages
-        if: matrix.install
-        run: sudo apt install ${{matrix.install}}
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install zlib1g-dev libbz2-dev liblzma-dev libzstd-dev
 
       - name: Setup Boost
         run: |
