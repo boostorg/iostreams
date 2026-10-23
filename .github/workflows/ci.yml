@@ -76,6 +76,16 @@ jobs:
             container: ubuntu:24.04
             os: ubuntu-latest
             install: g++-14
+          - toolset: gcc-15
+            cxxstd: "11,14,17,20,23"
+            container: ubuntu:26.04
+            os: ubuntu-latest
+            install: g++-15
+          - toolset: gcc-16
+            cxxstd: "11,14,17,20,23"
+            container: ubuntu:26.04
+            os: ubuntu-latest
+            install: g++-16
           - toolset: clang
             compiler: clang++-12
             cxxstd: "11,14,17,2a"
@@ -124,6 +134,24 @@ jobs:
             container: ubuntu:24.04
             os: ubuntu-latest
             install: clang-19
+          - toolset: clang
+            compiler: clang++-20
+            cxxstd: "11,14,17,20,23"
+            container: ubuntu:26.04
+            os: ubuntu-latest
+            install: clang-20
+          - toolset: clang
+            compiler: clang++-21
+            cxxstd: "11,14,17,20,23"
+            container: ubuntu:26.04
+            os: ubuntu-latest
+            install: clang-21
+          - toolset: clang
+            compiler: clang++-22
+            cxxstd: "11,14,17,20,23"
+            container: ubuntu:26.04
+            os: ubuntu-latest
+            install: clang-22
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
             os: macos-15-intel
@@ -211,6 +239,10 @@ jobs:
             cxxstd: "14,17,20,latest"
             addrmd: 32,64
             os: windows-2022
+          - toolset: msvc-14.5
+            cxxstd: "14,17,20,latest"
+            addrmd: 32,64
+            os: windows-2025-vs2026
           - toolset: clang-win
             cxxstd: "14,17,latest"
             addrmd: 32,64
