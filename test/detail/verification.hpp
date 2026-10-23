@@ -63,7 +63,6 @@ bool compare_streams_in_chars(BOOST_ISTREAM& first, BOOST_ISTREAM& second)
 BOOST_TEMPLATE_DECL
 bool compare_streams_in_chunks(BOOST_ISTREAM& first, BOOST_ISTREAM& second)
 {
-    int i = 0;
     do {
         BOOST_CHAR buf_one[chunk_size];
         BOOST_CHAR buf_two[chunk_size];
@@ -74,7 +73,6 @@ bool compare_streams_in_chunks(BOOST_ISTREAM& first, BOOST_ISTREAM& second)
              BOOST_IOSTREAMS_CHAR_TRAITS(BOOST_CHAR)::
                 compare(buf_one, buf_two, static_cast<std::size_t>(amt)) != 0 )
             return false;
-        ++i;
     } while (!first.eof());
     return true;
 }
