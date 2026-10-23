@@ -126,7 +126,13 @@ jobs:
             install: clang-19
           - toolset: clang
             cxxstd: "11,14,17,20,2b"
+            os: macos-15-intel
+          - toolset: clang
+            cxxstd: "11,14,17,20,2b"
             os: macos-15
+          - toolset: clang
+            cxxstd: "11,14,17,20,2b"
+            os: macos-26
 
     runs-on: ${{matrix.os}}
 
