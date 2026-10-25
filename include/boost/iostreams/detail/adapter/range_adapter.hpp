@@ -104,19 +104,26 @@ template<>
 struct range_adapter_impl<std::forward_iterator_tag> {
     template<typename Iter, typename Ch>
     static std::streamsize read
-        (Iter& cur, Iter& last, Ch* s,std::streamsize n)
+        (Iter& cur, Iter& last, Ch* s, std::streamsize n)
     {
-        std::streamsize rem = n; // No. of chars remaining.
-        while (cur != last && rem-- > 0) *s++ = *cur++;
-        return n - rem != 0 ? n - rem : -1;
+        std::streamsize count = 0;
+        while (cur != last && count < n) {
+            *s++ = *cur++;
+            ++count;
+        }
+        return count != 0 ? count : -1;
     }
 
     template<typename Iter, typename Ch>
     static std::streamsize write
         (Iter& cur, Iter& last, const Ch* s, std::streamsize n)
     {
-        while (cur != last && n-- > 0) *cur++ = *s++;
-        if (cur == last && n > 0)
+        std::streamsize count = 0;
+        while (cur != last && count < n) {
+            *cur++ = *s++;
+            ++count;
+        }
+        if (count < n)
             boost::throw_exception(write_area_exhausted());
         return n;
     }
