@@ -104,16 +104,37 @@ local windows_pipeline(name, image, environment, arch = "amd64") =
     ),
 
     linux_pipeline(
-        "Linux 24.04 GCC 16 32 ASAN",
+        "Linux 24.04 GCC 16 32/64 ASAN C++11",
         "cppalliance/droneubuntu2404:1",
-        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '11,14,17,20,23', ADDRMD: '32' } + asan,
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '11', ADDRMD: '32,64' } + asan,
         "g++-16-multilib",
     ),
 
     linux_pipeline(
-        "Linux 24.04 GCC 16 64 ASAN",
+        "Linux 24.04 GCC 16 32/64 ASAN C++14",
         "cppalliance/droneubuntu2404:1",
-        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '11,14,17,20,23', ADDRMD: '64' } + asan,
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '14', ADDRMD: '32,64' } + asan,
+        "g++-16-multilib",
+    ),
+
+    linux_pipeline(
+        "Linux 24.04 GCC 16 32/64 ASAN C++17",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '17', ADDRMD: '32,64' } + asan,
+        "g++-16-multilib",
+    ),
+
+    linux_pipeline(
+        "Linux 24.04 GCC 16 32/64 ASAN C++20",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '20', ADDRMD: '32,64' } + asan,
+        "g++-16-multilib",
+    ),
+
+    linux_pipeline(
+        "Linux 24.04 GCC 16 32/64 ASAN C++23",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '23', ADDRMD: '32,64' } + asan,
         "g++-16-multilib",
     ),
 
