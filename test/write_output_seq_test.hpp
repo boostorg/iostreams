@@ -9,6 +9,7 @@
 #define BOOST_IOSTREAMS_TEST_WRITE_OUTPUT_SEQUENCE_HPP_INCLUDED
 
 #include <fstream>
+#include <list>
 #include <vector>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -70,6 +71,54 @@ void write_output_sequence_test()
         BOOST_CHECK_MESSAGE(
             compare_container_and_stream(first, second),
             "failed writing to filtering_ostream based on a sequence "
+            "in chunks with large buffer"
+        );
+    }
+
+    {
+        list<char>         first(data_reps * data_length(), '?');
+        filtering_ostream  out(make_iterator_range(first), 0);
+        write_data_in_chars(out);
+        ifstream second(test.name().c_str());
+        BOOST_CHECK_MESSAGE(
+            compare_container_and_stream(first, second),
+            "failed writing to filtering_ostream based on forward_iterator sequence "
+            "in chars with no buffer"
+        );
+    }
+
+    {
+        list<char>         first(data_reps * data_length(), '?');
+        filtering_ostream  out(make_iterator_range(first), 0);
+        write_data_in_chunks(out);
+        ifstream second(test.name().c_str());
+        BOOST_CHECK_MESSAGE(
+            compare_container_and_stream(first, second),
+            "failed writing to filtering_ostream based on forward_iterator sequence "
+            "in chunks with no buffer"
+        );
+    }
+
+    {
+        list<char>         first(data_reps * data_length(), '?');
+        filtering_ostream  out(make_iterator_range(first));
+        write_data_in_chars(out);
+        ifstream second(test.name().c_str());
+        BOOST_CHECK_MESSAGE(
+            compare_container_and_stream(first, second),
+            "failed writing to filtering_ostream based on forward_iterator sequence "
+            "in chars with large buffer"
+        );
+    }
+
+    {
+        list<char>         first(data_reps * data_length(), '?');
+        filtering_ostream  out(make_iterator_range(first));
+        write_data_in_chunks(out);
+        ifstream second(test.name().c_str());
+        BOOST_CHECK_MESSAGE(
+            compare_container_and_stream(first, second),
+            "failed writing to filtering_ostream based on forward_iterator sequence "
             "in chunks with large buffer"
         );
     }

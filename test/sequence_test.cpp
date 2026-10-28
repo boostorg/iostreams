@@ -6,6 +6,7 @@
 // See http://www.boost.org/libs/iostreams for documentation.
 
 #include <boost/test/unit_test.hpp>
+#include "forward_range_test.hpp"
 #include "read_input_seq_test.hpp"
 #include "read_seekable_seq_test.hpp"
 #include "write_output_seq_test.hpp"
@@ -20,5 +21,6 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&read_seekable_sequence_test));
     test->add(BOOST_TEST_CASE(&write_output_sequence_test));
     test->add(BOOST_TEST_CASE(&write_seekable_sequence_test));
+    test->add(BOOST_TEST_CASE(&forward_range_test));
     return test;
 }
