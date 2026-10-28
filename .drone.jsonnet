@@ -82,17 +82,32 @@ local windows_pipeline(name, image, environment, arch = "amd64") =
 };
 
 [
+    // Keep GCC sanitizer jobs within the timeout on slower runners.
     linux_pipeline(
-        "Linux 24.04 GCC 16 32/64 UBSAN C++11-14",
+        "Linux 24.04 GCC 16 32/64 UBSAN C++11",
         "cppalliance/droneubuntu2404:1",
-        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '11,14', ADDRMD: '32,64' } + ubsan,
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '11', ADDRMD: '32,64' } + ubsan,
         "g++-16-multilib",
     ),
 
     linux_pipeline(
-        "Linux 24.04 GCC 16 32/64 UBSAN C++17-20",
+        "Linux 24.04 GCC 16 32/64 UBSAN C++14",
         "cppalliance/droneubuntu2404:1",
-        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '17,20', ADDRMD: '32,64' } + ubsan,
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '14', ADDRMD: '32,64' } + ubsan,
+        "g++-16-multilib",
+    ),
+
+    linux_pipeline(
+        "Linux 24.04 GCC 16 32/64 UBSAN C++17",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '17', ADDRMD: '32,64' } + ubsan,
+        "g++-16-multilib",
+    ),
+
+    linux_pipeline(
+        "Linux 24.04 GCC 16 32/64 UBSAN C++20",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '20', ADDRMD: '32,64' } + ubsan,
         "g++-16-multilib",
     ),
 
