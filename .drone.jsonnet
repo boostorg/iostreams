@@ -97,9 +97,18 @@ local windows_pipeline(name, image, environment, arch = "amd64") =
     ),
 
     linux_pipeline(
-        "Linux 24.04 Clang 23 32/64 UBSAN",
+        "Linux 24.04 Clang 23 32 UBSAN",
         "cppalliance/droneubuntu2404:1",
-        { TOOLSET: 'clang', COMPILER: 'clang++-23', CXXSTD: '11,14,17,20,23', ADDRMD: '32,64' } + ubsan,
+        { TOOLSET: 'clang', COMPILER: 'clang++-23', CXXSTD: '11,14,17,20,23', ADDRMD: '32' } + ubsan,
+        "clang-23 libclang-rt-23-dev g++-16-multilib",
+        [ "ppa:ubuntu-toolchain-r/test", "deb [arch=amd64] https://apt.llvm.org/noble/ llvm-toolchain-noble-23 main" ],
+    ),
+
+    // Keep each UBSan architecture within Drone's per-job timeout.
+    linux_pipeline(
+        "Linux 24.04 Clang 23 64 UBSAN",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'clang', COMPILER: 'clang++-23', CXXSTD: '11,14,17,20,23', ADDRMD: '64' } + ubsan,
         "clang-23 libclang-rt-23-dev g++-16-multilib",
         [ "ppa:ubuntu-toolchain-r/test", "deb [arch=amd64] https://apt.llvm.org/noble/ llvm-toolchain-noble-23 main" ],
     ),

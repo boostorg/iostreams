@@ -8,7 +8,7 @@ set -euo pipefail
 case "${1:-build}" in
 build)
     source "$(dirname "${BASH_SOURCE[0]}")/setup.sh"
-    ./b2 -j3 --user-config="$B2_USER_CONFIG" "libs/$LIBRARY/test" \
+    ./b2 -q -j3 --user-config="$B2_USER_CONFIG" "libs/$LIBRARY/test" \
         toolset="$TOOLSET" cxxstd="$CXXSTD" address-model=64 link=static \
         variant=debug optimization=off debug-symbols=on coverage=on
 

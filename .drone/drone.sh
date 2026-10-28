@@ -7,4 +7,4 @@
 
 set -ex
 source "$(dirname "${BASH_SOURCE[0]}")/setup.sh"
-./b2 -j3 --user-config="$B2_USER_CONFIG" "libs/$LIBRARY/test" toolset="$TOOLSET" cxxstd="$CXXSTD" variant=debug,release ${ADDRMD:+address-model=$ADDRMD} ${UBSAN:+undefined-sanitizer=norecover debug-symbols=on} ${ASAN:+address-sanitizer=norecover debug-symbols=on} ${LINKFLAGS:+linkflags=$LINKFLAGS} ${LINK:+link=$LINK} ${NO_ZSTD:+-sNO_ZSTD=$NO_ZSTD}
+./b2 -q -j3 --user-config="$B2_USER_CONFIG" "libs/$LIBRARY/test" toolset="$TOOLSET" cxxstd="$CXXSTD" variant=debug,release ${ADDRMD:+address-model=$ADDRMD} ${UBSAN:+undefined-sanitizer=norecover debug-symbols=on} ${ASAN:+address-sanitizer=norecover debug-symbols=on} ${LINKFLAGS:+linkflags=$LINKFLAGS} ${LINK:+link=$LINK} ${NO_ZSTD:+-sNO_ZSTD=$NO_ZSTD}
