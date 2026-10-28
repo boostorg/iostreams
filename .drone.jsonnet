@@ -217,7 +217,7 @@ local windows_pipeline(name, image, environment, arch = "amd64") =
         "g++",
         sources = [],
         script = "coverity",
-        trigger = { branch: [ "master", "develop" ], event: [ "push" ] },
+        trigger = { branch: [ "master", "develop", "fix/drone-ci" ], event: [ "push" ] },
     ),
 
     windows_pipeline(
