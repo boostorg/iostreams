@@ -6,7 +6,10 @@
 // See http://www.boost.org/libs/iostreams for documentation.
 
 #include <cstddef>
+#include <ctime>
+#include <limits>
 #include <string>
+#include <boost/cstdint.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/device/back_inserter.hpp>
@@ -181,6 +184,36 @@ void header_test()
 # pragma warning(pop)
 #endif
 
+void mtime_test()
+{
+    const boost::uint32_t timestamps[] = {
+        0, 0x4ef39c22, 0x7fffffff, 0x80000000u, 0x80000001u, 0xffffffffu
+    };
+    for (size_t i = 0; i < sizeof(timestamps) / sizeof(timestamps[0]); ++i) {
+        // A narrow time_t cannot represent all gzip timestamps.
+        if (timestamps[i] > static_cast<boost::uintmax_t>(
+                (std::numeric_limits<std::time_t>::max)()))
+            continue;
+
+        const char header_bytes[] = {
+            static_cast<char>(gzip::magic::id1),
+            static_cast<char>(gzip::magic::id2),
+            gzip::method::deflate, 0,
+            static_cast<char>(timestamps[i]),
+            static_cast<char>(timestamps[i] >> 8),
+            static_cast<char>(timestamps[i] >> 16),
+            static_cast<char>(timestamps[i] >> 24),
+            0, gzip::os_unix
+        };
+        boost::iostreams::detail::gzip_header hdr;
+        for (size_t j = 0; j < sizeof(header_bytes); ++j)
+            hdr.process(header_bytes[j]);
+
+        BOOST_REQUIRE(hdr.done());
+        BOOST_CHECK_EQUAL(static_cast<std::time_t>(timestamps[i]), hdr.mtime());
+    }
+}
+
 void empty_file_test()
 {
     // This test is in response to https://svn.boost.org/trac/boost/ticket/5237
@@ -263,6 +296,7 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&multiple_member_test));
     test->add(BOOST_TEST_CASE(&array_source_test));
     test->add(BOOST_TEST_CASE(&header_test));
+    test->add(BOOST_TEST_CASE(&mtime_test));
     test->add(BOOST_TEST_CASE(&empty_file_test));
     test->add(BOOST_TEST_CASE(&multipart_test));
     return test;
