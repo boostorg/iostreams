@@ -13,14 +13,14 @@ local ubsan = { UBSAN: '1', UBSAN_OPTIONS: 'print_stacktrace=1' };
 local asan = { ASAN: '1' };
 
 // General Linux and macOS compiler coverage is provided by GitHub Actions.
-local linux_pipeline(name, image, environment, packages, sources = [ "ppa:ubuntu-toolchain-r/test" ]) =
+local linux_pipeline(name, image, environment, packages, sources = [ "ppa:ubuntu-toolchain-r/test" ], script = "drone", trigger = triggers) =
 local compression_packages = [ "liblzma-dev", "libzstd-dev" ];
 local multilib = std.objectHas(environment, "ADDRMD") && std.member(std.split(environment.ADDRMD, ","), "32");
 {
     name: name,
     kind: "pipeline",
     type: "docker",
-    trigger: triggers,
+    trigger: trigger,
     platform:
     {
         os: "linux",
@@ -48,7 +48,7 @@ local multilib = std.objectHas(environment, "ADDRMD") && std.member(std.split(en
             ] +
             [
                 'export LIBRARY=' + library,
-                './.drone/drone.sh',
+                'bash ./.drone/' + script + '.sh',
             ]
         }
     ]
@@ -109,6 +109,40 @@ local windows_pipeline(name, image, environment, arch = "amd64") =
         { TOOLSET: 'clang', COMPILER: 'clang++-23', CXXSTD: '11,14,17,20,23', ADDRMD: '32,64' } + asan,
         "clang-23 libclang-rt-23-dev g++-16-multilib",
         [ "ppa:ubuntu-toolchain-r/test", "deb [arch=amd64] https://apt.llvm.org/noble/ llvm-toolchain-noble-23 main" ],
+    ),
+
+    linux_pipeline(
+        "Linux Codecov coverage",
+        "cppalliance/droneubuntu2404:1",
+        { TOOLSET: 'gcc', COMPILER: 'g++-16', CXXSTD: '23', GCOV: 'gcov-16' },
+        "g++-16 python3-venv",
+        script = "codecov",
+    ) + {
+        steps+: [
+            {
+                name: "upload coverage",
+                image: "cppalliance/droneubuntu2404:1",
+                environment: {
+                    CODECOV_TOKEN: { from_secret: "codecov_token" },
+                },
+                commands: [ 'bash ./.drone/codecov.sh upload' ],
+            },
+        ],
+    },
+
+    linux_pipeline(
+        "Linux Coverity Scan",
+        "cppalliance/droneubuntu2404:1",
+        {
+            TOOLSET: 'gcc', COMPILER: 'g++', CXXSTD: '17',
+            COVERITY_SCAN_TOKEN: { from_secret: "coverity_scan_token" },
+            COVERITY_SCAN_NOTIFICATION_EMAIL: { from_secret: "coverity_scan_email" },
+        },
+        // Use the distribution compiler for Coverity capture compatibility.
+        "g++",
+        sources = [],
+        script = "coverity",
+        trigger = { branch: [ "master", "develop" ], event: [ "push" ] },
     ),
 
     windows_pipeline(
