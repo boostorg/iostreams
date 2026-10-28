@@ -1,106 +1,30 @@
 #!/bin/bash
 
 # Copyright 2020 Rene Rivera, Sam Darwin
+# Copyright 2022 Peter Dimov
 # Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE.txt or copy at http://boost.org/LICENSE_1_0.txt)
+# https://www.boost.org/LICENSE_1_0.txt
 
-set -e
-export TRAVIS_BUILD_DIR=$(pwd)
-export DRONE_BUILD_DIR=$(pwd)
-export TRAVIS_BRANCH=$DRONE_BRANCH
-export VCS_COMMIT_ID=$DRONE_COMMIT
-export GIT_COMMIT=$DRONE_COMMIT
-export REPO_NAME=$DRONE_REPO
+set -ex
 export PATH=~/.local/bin:/usr/local/bin:$PATH
 
-if [ "$DRONE_JOB_BUILDTYPE" == "boost" ]; then
+DRONE_BUILD_DIR=$(pwd)
 
-echo '==================================> INSTALL'
+BOOST_BRANCH=develop
+if [ "$DRONE_BRANCH" = "master" ]; then BOOST_BRANCH=master; fi
 
-git clone https://github.com/boostorg/boost-ci.git boost-ci
-cp -pr boost-ci/ci boost-ci/.codecov.yml .
+cd ..
+git clone -b "$BOOST_BRANCH" --depth 1 https://github.com/boostorg/boost.git boost-root
+cd boost-root
+git submodule update --init tools/boostdep
+cp -R "$DRONE_BUILD_DIR/"* "libs/$LIBRARY/"
+python tools/boostdep/depinst/depinst.py "$LIBRARY"
+./bootstrap.sh
+./b2 -d0 headers
 
-if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    unset -f cd
-fi
+# Build these from the bundled sources for every target architecture.
+export ZLIB_SOURCE="$PWD/libs/$LIBRARY/test/zlib-1.2.11"
+export BZIP2_SOURCE="$PWD/libs/$LIBRARY/test/bzip2-1.0.8"
 
-export SELF=`basename $REPO_NAME`
-export BOOST_CI_TARGET_BRANCH="$TRAVIS_BRANCH"
-export BOOST_CI_SRC_FOLDER=$(pwd)
-
-. ./ci/common_install.sh
-
-echo '==================================> SCRIPT'
-
-cd $BOOST_ROOT/libs/$SELF
-ci/travis/build.sh
-
-elif [ "$DRONE_JOB_BUILDTYPE" == "b5847f804b-0fcaf592f9" ]; then
-
-echo '==================================> INSTALL'
-
-git clone https://github.com/boostorg/boost-ci.git boost-ci
-cp -pr boost-ci/ci boost-ci/.codecov.yml .
-
-if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    unset -f cd
-fi
-
-export SELF=`basename $REPO_NAME`
-export BOOST_CI_TARGET_BRANCH="$TRAVIS_BRANCH"
-export BOOST_CI_SRC_FOLDER=$(pwd)
-
-. ./ci/common_install.sh
-
-echo '==================================> SCRIPT'
-
-cd $BOOST_ROOT/libs/$SELF
-ci/travis/codecov.sh
-
-elif [ "$DRONE_JOB_BUILDTYPE" == "b5847f804b-db180b7bd2" ]; then
-
-echo '==================================> INSTALL'
-
-git clone https://github.com/boostorg/boost-ci.git boost-ci
-cp -pr boost-ci/ci boost-ci/.codecov.yml .
-
-if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    unset -f cd
-fi
-
-export SELF=`basename $REPO_NAME`
-export BOOST_CI_TARGET_BRANCH="$TRAVIS_BRANCH"
-export BOOST_CI_SRC_FOLDER=$(pwd)
-
-. ./ci/common_install.sh
-
-echo '==================================> SCRIPT'
-
-cd $BOOST_ROOT/libs/$SELF
-ci/travis/valgrind.sh
-
-elif [ "$DRONE_JOB_BUILDTYPE" == "b5847f804b-cce9827eb5" ]; then
-
-echo '==================================> INSTALL'
-
-git clone https://github.com/boostorg/boost-ci.git boost-ci
-cp -pr boost-ci/ci boost-ci/.codecov.yml .
-
-if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    unset -f cd
-fi
-
-export SELF=`basename $REPO_NAME`
-export BOOST_CI_TARGET_BRANCH="$TRAVIS_BRANCH"
-export BOOST_CI_SRC_FOLDER=$(pwd)
-
-. ./ci/common_install.sh
-
-echo '==================================> SCRIPT'
-
-if  [ -n "${COVERITY_SCAN_NOTIFICATION_EMAIL}" -a \( "$DRONE_BRANCH" = "develop" -o "$DRONE_BRANCH" = "master" \) -a "$DRONE_BUILD_EVENT" = "push" ] ; then
-cd $BOOST_ROOT/libs/$SELF
-ci/travis/coverity.sh
-fi
-
-fi
+echo "using $TOOLSET : : $COMPILER ;" > ~/user-config.jam
+./b2 -j3 "libs/$LIBRARY/test" toolset="$TOOLSET" cxxstd="$CXXSTD" variant=debug,release ${ADDRMD:+address-model=$ADDRMD} ${UBSAN:+undefined-sanitizer=norecover debug-symbols=on} ${ASAN:+address-sanitizer=norecover debug-symbols=on} ${LINKFLAGS:+linkflags=$LINKFLAGS} ${LINK:+link=$LINK} ${NO_ZSTD:+-sNO_ZSTD=$NO_ZSTD}
