@@ -14,7 +14,7 @@ local asan = { ASAN: '1' };
 
 // General Linux and macOS compiler coverage is provided by GitHub Actions.
 local linux_pipeline(name, image, environment, packages, sources = [ "ppa:ubuntu-toolchain-r/test" ], script = "drone", trigger = triggers) =
-local compression_packages = [ "liblzma-dev", "libzstd-dev" ];
+local compression_packages = [ "zlib1g-dev", "libbz2-dev", "liblzma-dev", "libzstd-dev" ];
 local multilib = std.objectHas(environment, "ADDRMD") && std.member(std.split(environment.ADDRMD, ","), "32");
 {
     name: name,

@@ -21,9 +21,8 @@ python3 tools/boostdep/depinst/depinst.py "$LIBRARY"
 ./bootstrap.sh
 ./b2 -d0 headers
 
-# Build these from the bundled sources for every target architecture.
-export ZLIB_SOURCE="$BOOST_ROOT/libs/$LIBRARY/test/zlib-1.2.11"
-export BZIP2_SOURCE="$BOOST_ROOT/libs/$LIBRARY/test/bzip2-1.0.8"
+# Linux jobs use the compression development packages installed by the pipeline.
+unset ZLIB_SOURCE BZIP2_SOURCE
 
 export B2_USER_CONFIG="$DRONE_BUILD_DIR/user-config.jam"
 echo "using $TOOLSET : : $COMPILER ;" > "$B2_USER_CONFIG"
