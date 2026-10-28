@@ -74,7 +74,8 @@ local windows_pipeline(name, image, environment, arch = "amd64") =
             commands:
             [
                 'echo $env:DRONE_STAGE_MACHINE',
-                'cmd /C .drone\\drone.bat ' + library,
+                // Preserve the path separator through Jsonnet and Drone substitution.
+                'cmd /C .drone\\\\drone.bat ' + library,
             ]
         }
     ]
