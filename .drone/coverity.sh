@@ -7,9 +7,8 @@ set -euo pipefail
 
 # Keep the script safe to call directly as well as through the pipeline trigger.
 if [ "${DRONE_BUILD_EVENT:-}" != "push" ] || \
-    { [ "${DRONE_BRANCH:-}" != "develop" ] && [ "${DRONE_BRANCH:-}" != "master" ] && \
-      [ "${DRONE_BRANCH:-}" != "fix/drone-ci" ]; }; then
-    echo "Coverity submissions run only on pushes to develop, master or fix/drone-ci."
+    { [ "${DRONE_BRANCH:-}" != "develop" ] && [ "${DRONE_BRANCH:-}" != "master" ]; }; then
+    echo "Coverity submissions run only on pushes to develop or master."
     exit 0
 fi
 if [ -z "${COVERITY_SCAN_TOKEN:-}" ] || [ -z "${COVERITY_SCAN_NOTIFICATION_EMAIL:-}" ]; then
