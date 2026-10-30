@@ -168,7 +168,7 @@
 </P>
 
 <P>
-    The second member constructs a <CODE>file_descriptor_source</CODE> to access the file with the given pathname. <CODE>Path</CODE> should be either a string or a Boost.Filesystem path. The parameter <CODE>mode</CODE> has the same interpretation as <CODE>(mode | std::ios_base::in)</CODE> in <CODE>std::basic_filebuf::open</CODE>.<A CLASS="footnote_ref" NAME="note_1_ref" HREF="#note_1"><SUP>[1]</SUP></A>
+    The second member constructs a <CODE>file_descriptor_source</CODE> to access the file with the given pathname. <CODE>Path</CODE> should be either a string, a Boost.Filesystem path or a std::filesystem::path. The parameter <CODE>mode</CODE> has the same interpretation as <CODE>(mode | std::ios_base::in)</CODE> in <CODE>std::basic_filebuf::open</CODE>.<A CLASS="footnote_ref" NAME="note_1_ref" HREF="#note_1"><SUP>[1]</SUP></A>
 </P>
 
 <P>
@@ -308,7 +308,7 @@
 </P>
 
 <P>
-    The second member constructs a <CODE>file_descriptor_sink</CODE> to access the file with the given pathname. <CODE>Path</CODE> should be either a string or a Boost.Filesystem path. The parameter <CODE>mode</CODE> has the same interpretation as <CODE>(mode | std::ios_base::out)</CODE> in <CODE>std::basic_filebuf::open</CODE>.<A CLASS="footnote_ref" NAME="note_1_ref2" HREF="#note_1"><SUP>[1]</SUP></A>
+    The second member constructs a <CODE>file_descriptor_sink</CODE> to access the file with the given pathname. <CODE>Path</CODE> should be either a string, a Boost.Filesystem path or a std::filesystem::path. The parameter <CODE>mode</CODE> has the same interpretation as <CODE>(mode | std::ios_base::out)</CODE> in <CODE>std::basic_filebuf::open</CODE>.<A CLASS="footnote_ref" NAME="note_1_ref2" HREF="#note_1"><SUP>[1]</SUP></A>
 </P>
 
 <P>
@@ -448,7 +448,7 @@
 </P>
 
 <P>
-    The second member constructs a <CODE>file_descriptor</CODE> to access the file with the given pathname. <CODE>Path</CODE> should be either a string or a Boost.Filesystem path. The parameter <CODE>mode</CODE> has the same interpretation as in <CODE>std::basic_filebuf::open</CODE>.<A CLASS="footnote_ref" NAME="note_1_ref3" HREF="#note_1"><SUP>[1]</SUP></A>
+    The second member constructs a <CODE>file_descriptor</CODE> to access the file with the given pathname. <CODE>Path</CODE> should be either a string, a Boost.Filesystem path or a std::filesystem::path. The parameter <CODE>mode</CODE> has the same interpretation as in <CODE>std::basic_filebuf::open</CODE>.<A CLASS="footnote_ref" NAME="note_1_ref3" HREF="#note_1"><SUP>[1]</SUP></A>
 </P>
 
 <P>
