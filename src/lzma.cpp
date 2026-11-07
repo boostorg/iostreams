@@ -106,7 +106,14 @@ void lzma_base::after(const char*& src_begin, char*& dest_begin, bool)
 
 int lzma_base::deflate(int action)
 {
-    return lzma_code(static_cast<lzma_stream*>(stream_), static_cast<lzma_action>(action));
+    lzma_stream* s = static_cast<lzma_stream*>(stream_);
+    lzma_ret result;
+    // MT timeouts may leave both input and output space available. Complete
+    // the SymmetricFilter contract before its caller refills the input buffer.
+    do {
+        result = lzma_code(s, static_cast<lzma_action>(action));
+    } while (result == LZMA_OK && s->avail_in != 0 && s->avail_out != 0);
+    return result;
 }
 
 int lzma_base::inflate(int action)
