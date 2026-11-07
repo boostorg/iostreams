@@ -153,6 +153,8 @@ void input_consumption_test()
     BOOST_CHECK(compressor.filter(src, src_end, dest, dest_end, false));
     // Even after an MT timeout, filter() must consume its input or fill its
     // output before symmetric_filter::read() refills the input buffer.
+    // The old implementation's timeout depends on worker speed; assert the
+    // contract rather than an elapsed-time threshold.
     BOOST_CHECK(src == src_end || dest == dest_end);
 }
 

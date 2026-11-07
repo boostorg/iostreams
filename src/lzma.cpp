@@ -106,14 +106,7 @@ void lzma_base::after(const char*& src_begin, char*& dest_begin, bool)
 
 int lzma_base::deflate(int action)
 {
-    lzma_stream* s = static_cast<lzma_stream*>(stream_);
-    lzma_ret result;
-    // MT timeouts may leave both input and output space available. Complete
-    // the SymmetricFilter contract before its caller refills the input buffer.
-    do {
-        result = lzma_code(s, static_cast<lzma_action>(action));
-    } while (result == LZMA_OK && s->avail_in != 0 && s->avail_out != 0);
-    return result;
+    return lzma_code(static_cast<lzma_stream*>(stream_), static_cast<lzma_action>(action));
 }
 
 int lzma_base::inflate(int action)
@@ -156,7 +149,9 @@ void lzma_base::init_stream(bool compress)
     memset(s, 0, sizeof(*s));
 
 #ifndef BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED
-    const lzma_mt opt = { 0, threads_, 0, 1000, level_, NULL, LZMA_CHECK_CRC32 };
+    // A timeout can return before input is consumed or output fills, violating
+    // the SymmetricFilter contract. Zero disables this early return.
+    const lzma_mt opt = { 0, threads_, 0, 0, level_, NULL, LZMA_CHECK_CRC32 };
 #endif
 
     lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
