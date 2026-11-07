@@ -146,9 +146,9 @@ void input_consumption_test()
     boost::iostreams::detail::lzma_compressor_impl<> compressor;
     const char* src = data.data();
     const char* src_end = src + data.size();
-    char buffer[1024];
-    char* dest = buffer;
-    char* dest_end = buffer + sizeof(buffer);
+    std::string buffer(data.size(), '\0');
+    char* dest = &buffer[0];
+    char* dest_end = dest + buffer.size();
 
     BOOST_CHECK(compressor.filter(src, src_end, dest, dest_end, false));
     // Even after an MT timeout, filter() must consume its input or fill its
