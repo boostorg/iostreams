@@ -11,6 +11,7 @@
 
 #include <cstddef>
 #include <string>
+#include <boost/cstdint.hpp>
 #include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/device/back_inserter.hpp>
@@ -128,6 +129,33 @@ void empty_file_test()
                           lzma_decompressor(),
                           std::string() )
     );
+}
+
+void input_consumption_test()
+{
+    // Use enough incompressible input to fill the MT encoder's block buffer.
+    std::string data(16 * 1024 * 1024, '\0');
+    boost::uint32_t state = 0x12345678;
+    for (std::size_t i = 0; i < data.size(); ++i) {
+        state ^= state << 13;
+        state ^= state >> 17;
+        state ^= state << 5;
+        data[i] = static_cast<char>(state);
+    }
+
+    boost::iostreams::detail::lzma_compressor_impl<> compressor;
+    const char* src = data.data();
+    const char* src_end = src + data.size();
+    std::string buffer(data.size(), '\0');
+    char* dest = &buffer[0];
+    char* dest_end = dest + buffer.size();
+
+    BOOST_CHECK(compressor.filter(src, src_end, dest, dest_end, false));
+    // Even after an MT timeout, filter() must consume its input or fill its
+    // output before symmetric_filter::read() refills the input buffer.
+    // The old implementation's timeout depends on worker speed; assert the
+    // contract rather than an elapsed-time threshold.
+    BOOST_CHECK(src == src_end || dest == dest_end);
 }
 
 void multipart_test()
@@ -268,6 +296,7 @@ test_suite* init_unit_test_suite(int, char* [])
     test->add(BOOST_TEST_CASE(&multiple_member_test));
     test->add(BOOST_TEST_CASE(&array_source_test));
     test->add(BOOST_TEST_CASE(&empty_file_test));
+    test->add(BOOST_TEST_CASE(&input_consumption_test));
     test->add(BOOST_TEST_CASE(&multipart_test));
     test->add(BOOST_TEST_CASE(&multithreaded_test));
     return test;
