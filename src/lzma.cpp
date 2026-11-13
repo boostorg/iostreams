@@ -149,7 +149,10 @@ void lzma_base::init_stream(bool compress)
     memset(s, 0, sizeof(*s));
 
 #ifndef BOOST_IOSTREAMS_LZMA_NO_MULTITHREADED
-    const lzma_mt opt = { 0, threads_, 0, 1000, level_, NULL, LZMA_CHECK_CRC32 };
+    // Disable timeouts so lzma_code() consumes all input or fills the output
+    // buffer, as required by the SymmetricFilter contract.
+    const uint32_t timeout = 0;
+    const lzma_mt opt = { 0, threads_, 0, timeout, level_, NULL, LZMA_CHECK_CRC32 };
 #endif
 
     lzma_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(
