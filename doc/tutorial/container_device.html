@@ -152,13 +152,13 @@
         } <SPAN CLASS="keyword">else</SPAN> <SPAN CLASS="keyword">if</SPAN> (way == ios_base::cur) {
             next = pos_ + off;
         } <SPAN CLASS="keyword">else</SPAN> <SPAN CLASS="keyword">if</SPAN> (way == ios_base::end) {
-            next = container_.size() + off - <SPAN CLASS='numeric_literal'>1</SPAN>;
+            next = container_.size() + off;
         } <SPAN CLASS="keyword">else</SPAN> {
             <SPAN CLASS="keyword">throw</SPAN> ios_base::failure(<SPAN CLASS='numeric_literal'>"bad seek direction"</SPAN>);
         }
 
         <SPAN CLASS='comment'>// Check for errors</SPAN>
-        <SPAN CLASS="keyword">if</SPAN> (next < <SPAN CLASS='numeric_literal'>0</SPAN> || next >= static_cast&lt;stream_offset>(container_.size()))
+        <SPAN CLASS="keyword">if</SPAN> (next < <SPAN CLASS='numeric_literal'>0</SPAN> || next > static_cast&lt;stream_offset>(container_.size()))
             <SPAN CLASS="keyword">throw</SPAN> ios_base::failure(<SPAN CLASS='numeric_literal'>"bad seek offset"</SPAN>);
 
         pos_ = next;
@@ -184,7 +184,7 @@
 
 <P>The implementation of <CODE>write</CODE> is a bit different from the implementation in <A HREF="container_sink.html"><CODE>container_sink</CODE></A>. Rather than simply appending characters to the container, you first check whether the current character position is somewhere in the middle of the container. If it is, you attempt to satisfy the write request by overwriting existing characters in the container, starting at the current character position. If you reach the end of the container before the write request is satisfied, you insert the remaining characters at the end.</P>
 
-<P>The implementation of <CODE>seek</CODE> is straightforward. First, you calculate the new character position based on <CODE>off</CODE> and <CODE>way</CODE>: if <CODE>way</CODE> is <CODE>ios_base::beg</CODE>, the new character position is simply <CODE>off</CODE>; if <CODE>way</CODE> is <CODE>ios_base::cur</CODE>, the new character position is <CODE>pos_ + off</CODE>; if <CODE>way</CODE> is <CODE>ios_base::end</CODE>, the new character position is <CODE>container_.size() + off - 1</CODE>. Next, you check whether the new character position is a valid offset, and throw an exception if it isn't. Instances of <CODE>std::basic_streambuf</CODE> are allowed to return <CODE>-1</CODE> to indicate failure, but the policy of the Boost Iostreams library is that errors should be indicated by throwing an exception (<I>see</I> <A HREF="../guide/exceptions.html">Exceptions</A>). Finally, you set the new position and return it.</P>
+<P>The implementation of <CODE>seek</CODE> is straightforward. First, you calculate the new character position based on <CODE>off</CODE> and <CODE>way</CODE>: if <CODE>way</CODE> is <CODE>ios_base::beg</CODE>, the new character position is simply <CODE>off</CODE>; if <CODE>way</CODE> is <CODE>ios_base::cur</CODE>, the new character position is <CODE>pos_ + off</CODE>; if <CODE>way</CODE> is <CODE>ios_base::end</CODE>, the new character position is <CODE>container_.size() + off</CODE>. The end position is one past the last character and is a valid seek position. Next, you check whether the new character position is a valid offset, and throw an exception if it isn't. Instances of <CODE>std::basic_streambuf</CODE> are allowed to return <CODE>-1</CODE> to indicate failure, but the policy of the Boost Iostreams library is that errors should be indicated by throwing an exception (<I>see</I> <A HREF="../guide/exceptions.html">Exceptions</A>). Finally, you set the new position and return it.</P>
 
 <P>You can use a container_device as follows</P>
 

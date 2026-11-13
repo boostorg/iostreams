@@ -132,7 +132,7 @@ public:
         } else if (way == BOOST_IOS::cur) {
             next = pos_ + off;
         } else if (way == BOOST_IOS::end) {
-            next = container_.size() + off - 1;
+            next = container_.size() + off;
         } else {
             throw BOOST_IOSTREAMS_FAILURE("bad seek direction");
         }

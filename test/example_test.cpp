@@ -6,6 +6,7 @@
 // See http://www.boost.org/libs/iostreams for documentation.
 
 #include <map>
+#include <string>
 #include <boost/iostreams/detail/ios.hpp>  // failure.
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/test.hpp>
@@ -59,6 +60,42 @@ void container_device_test()
         vector<char>              v;
         io::stream<vector_device> io(v);
         BOOST_CHECK(test_seekable_in_chunks(io));
+    }
+}
+
+void container_device_seek_end_test()
+{
+    using namespace std;
+
+    typedef ex::container_device<string> string_device;
+
+    {
+        string        str("abc");
+        string_device device(str);
+        BOOST_CHECK_EQUAL(device.seek(0, BOOST_IOS::end), 3);
+        BOOST_CHECK_EQUAL(device.seek(-1, BOOST_IOS::end), 2);
+        char c = '\0';
+        BOOST_CHECK_EQUAL(device.read(&c, 1), 1);
+        BOOST_CHECK_EQUAL(c, 'c');
+        BOOST_CHECK_EQUAL(device.seek(-3, BOOST_IOS::end), 0);
+        BOOST_CHECK_THROW(device.seek(-4, BOOST_IOS::end), BOOST_IOSTREAMS_FAILURE);
+        BOOST_CHECK_THROW(device.seek(1, BOOST_IOS::end), BOOST_IOSTREAMS_FAILURE);
+    }
+
+    {
+        string                    str("abc");
+        io::stream<string_device> out(str);
+        out.seekp(0, BOOST_IOS::end);
+        BOOST_CHECK_EQUAL(out.tellp(), streampos(3));
+        out << '!';
+        out.flush();
+        BOOST_CHECK_EQUAL(str, "abc!");
+    }
+
+    {
+        string        str;
+        string_device device(str);
+        BOOST_CHECK_EQUAL(device.seek(0, BOOST_IOS::end), 0);
     }
 }
 
@@ -452,6 +489,7 @@ test_suite* init_unit_test_suite(int, char* [])
 {
     test_suite* test = BOOST_TEST_SUITE("example test");
     test->add(BOOST_TEST_CASE(&container_device_test));
+    test->add(BOOST_TEST_CASE(&container_device_seek_end_test));
     test->add(BOOST_TEST_CASE(&dictionary_filter_test));
     test->add(BOOST_TEST_CASE(&tab_expanding_filter_test));
     test->add(BOOST_TEST_CASE(&line_wrapping_filter_test));
