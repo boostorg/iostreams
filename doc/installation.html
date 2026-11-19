@@ -15,6 +15,7 @@
       <dt><a href="#overview">Overview</a> </dt>
       <dt><a href="#ide">Building with an IDE or Makefile</a> </dt>
       <dt><a href="#boost-build">Building with Boost.Build</a> </dt>
+      <dt><a href="#msvc-linking">Linking explicitly on MSVC</a> </dt>
     </dl>
     <a name="overview"></a>
     <h2>Overview</h2>
@@ -152,6 +153,15 @@
         </tr>
       </tbody>
     </table>
+    <h2 id="msvc-linking">Linking explicitly on MSVC</h2>
+    <p> To specify the libraries yourself, define <code>BOOST_IOSTREAMS_NO_LIB</code>
+      when compiling your application (for example, <code>/DBOOST_IOSTREAMS_NO_LIB</code>).
+      This disables automatic selection of the Boost.Iostreams library and
+      the default <code>boost_zlib</code> and <code>boost_bzip2</code> libraries. </p>
+    <p> For example, if you built Boost.Iostreams as a static library against a
+      prebuilt zlib and the linker reports a missing <code>libboost_zlib</code>
+      library, define this macro and link explicitly to both Boost.Iostreams
+      and the same prebuilt zlib used to build it. </p>
     <!-- End Footnotes -->
     <!-- Begin Footer -->
     <hr>
