@@ -18,7 +18,6 @@ constant boost_dependencies :
     /boost/mpl//boost_mpl
     /boost/numeric_conversion//boost_numeric_conversion
     /boost/preprocessor//boost_preprocessor
-    /boost/random//boost_random
     /boost/range//boost_range
     /boost/regex//boost_regex
     /boost/smart_ptr//boost_smart_ptr

@@ -24,12 +24,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
-#if !BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x564)) && \
-    !BOOST_WORKAROUND(__MWERKS__, <= 0x3003) \
-    /**/
-# include <boost/random/linear_congruential.hpp>
-# include <boost/random/uniform_smallint.hpp>
-#endif
+#include <random>
 #include <boost/iostreams/categories.hpp>
 #include <boost/iostreams/compose.hpp>
 #include <boost/iostreams/copy.hpp>
@@ -64,21 +59,12 @@ BOOST_IOSTREAMS_BOOL_TRAIT_DEF(is_string, std::basic_string, 3)
 
 const std::streamsize default_increment = 5;
 
-#if !BOOST_WORKAROUND(BOOST_BORLANDC, BOOST_TESTED_AT(0x564)) && \
-    !BOOST_WORKAROUND(__MWERKS__, <= 0x3003) \
-    /**/
-    std::streamsize rand(std::streamsize inc)
-    {
-        static rand48                random_gen;
-        static uniform_smallint<int> random_dist(0, static_cast<int>(inc));
-        return random_dist(random_gen);
-    }
-#else
-    std::streamsize rand(std::streamsize inc) 
-    { 
-        return (std::rand() * inc + 1) / RAND_MAX; 
-    }
-#endif
+std::streamsize rand(std::streamsize inc)
+{
+    static std::mt19937                       random_gen;
+    static std::uniform_int_distribution<int> random_dist(0, static_cast<int>(inc));
+    return random_dist(random_gen);
+}
 
 class non_blocking_source {
 public:

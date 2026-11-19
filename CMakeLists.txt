@@ -92,7 +92,6 @@ target_link_libraries(boost_iostreams
     Boost::iterator
     Boost::mpl
     Boost::preprocessor
-    Boost::random
     Boost::range
     Boost::regex
     Boost::smart_ptr
