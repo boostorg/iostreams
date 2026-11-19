@@ -289,16 +289,15 @@ The following code decompresses data from a file and writes it to standard outpu
 <SPAN CLASS="preprocessor">#include</SPAN> <A CLASS="header" HREF="../../../../boost/iostreams/copy.hpp"><SPAN CLASS="literal">&lt;boost/iostreams/copy.hpp&gt;</SPAN></A>
 <SPAN CLASS="preprocessor">#include</SPAN> <A CLASS="header" HREF="../../../../boost/iostreams/filter/bzip2.hpp"><SPAN CLASS="literal">&lt;boost/iostreams/filter/bzip2.hpp&gt;</SPAN></A>
 
-int main() 
-{
-    <SPAN CLASS="keyword">using</SPAN> <SPAN CLASS="keyword">namespace</SPAN> std;
-    <SPAN CLASS="keyword">using</SPAN> <SPAN CLASS="keyword">namespace</SPAN> boost::iostreams;
+<SPAN CLASS="keyword">namespace</SPAN> io = boost::iostreams;
 
-    ifstream file(<SPAN CLASS="literal">"hello.bz2"</SPAN>, ios_base::in | ios_base::binary);
-    filtering_streambuf&lt;input&gt; in;
-    in.push(bzip2_decompressor());
+int main()
+{
+    std::ifstream file(<SPAN CLASS="literal">"hello.bz2"</SPAN>, std::ios_base::in | std::ios_base::binary);
+    io::filtering_streambuf&lt;io::input&gt; in;
+    in.push(io::bzip2_decompressor());
     in.push(file);
-    boost::iostreams::copy(in, cout);
+    io::copy(in, std::cout);
 }</PRE>
 
 <A NAME="installation"></A>
