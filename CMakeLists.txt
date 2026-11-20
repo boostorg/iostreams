@@ -44,6 +44,56 @@ boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_BZIP2 "Boost.Iostreams: Enable BZi
 boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_LZMA "Boost.Iostreams: Enable LZMA support" LibLZMA "" LIBLZMA_FOUND LibLZMA::LibLZMA src/lzma.cpp)
 boost_iostreams_option(BOOST_IOSTREAMS_ENABLE_ZSTD "Boost.Iostreams: Enable Zstd support" zstd "1.0" zstd_FOUND ${BOOST_IOSTREAMS_ZSTD_TARGET} src/zstd.cpp)
 
+# Brotli installs no CMake package configuration file upstream -- only
+# pkg-config .pc files -- so BOOST_IOSTREAMS_ENABLE_BROTLI cannot go through
+# boost_iostreams_option().  The block below mirrors its semantics: the option
+# defaults to ON only when both libraries are found, forcing it ON without them
+# is a hard error, and src/brotli.cpp is compiled only when the option is set.
+
+set(BOOST_IOSTREAMS_BROTLI_ENC_TARGET "unofficial::brotli::brotlienc" CACHE STRING
+  "Target name for the Brotli encoder")
+set(BOOST_IOSTREAMS_BROTLI_DEC_TARGET "unofficial::brotli::brotlidec" CACHE STRING
+  "Target name for the Brotli decoder")
+
+find_package(unofficial-brotli QUIET)
+
+if(NOT (TARGET ${BOOST_IOSTREAMS_BROTLI_ENC_TARGET} AND
+        TARGET ${BOOST_IOSTREAMS_BROTLI_DEC_TARGET}))
+
+  find_package(PkgConfig QUIET)
+
+  if(PkgConfig_FOUND)
+    pkg_check_modules(BROTLIENC QUIET IMPORTED_TARGET libbrotlienc)
+    pkg_check_modules(BROTLIDEC QUIET IMPORTED_TARGET libbrotlidec)
+    if(TARGET PkgConfig::BROTLIENC AND TARGET PkgConfig::BROTLIDEC)
+      set(BOOST_IOSTREAMS_BROTLI_ENC_TARGET PkgConfig::BROTLIENC)
+      set(BOOST_IOSTREAMS_BROTLI_DEC_TARGET PkgConfig::BROTLIDEC)
+    endif()
+  endif()
+
+endif()
+
+if(TARGET ${BOOST_IOSTREAMS_BROTLI_ENC_TARGET} AND
+   TARGET ${BOOST_IOSTREAMS_BROTLI_DEC_TARGET})
+  option(BOOST_IOSTREAMS_ENABLE_BROTLI "Boost.Iostreams: Enable Brotli support" ON)
+else()
+  option(BOOST_IOSTREAMS_ENABLE_BROTLI "Boost.Iostreams: Enable Brotli support" OFF)
+endif()
+
+if(BOOST_IOSTREAMS_ENABLE_BROTLI)
+
+  if(NOT (TARGET ${BOOST_IOSTREAMS_BROTLI_ENC_TARGET} AND
+          TARGET ${BOOST_IOSTREAMS_BROTLI_DEC_TARGET}))
+    message(FATAL_ERROR "Boost.Iostreams: BOOST_IOSTREAMS_ENABLE_BROTLI is ON, but Brotli was not found")
+  endif()
+
+  target_sources(boost_iostreams PRIVATE src/brotli.cpp)
+  target_link_libraries(boost_iostreams PRIVATE
+    ${BOOST_IOSTREAMS_BROTLI_ENC_TARGET}
+    ${BOOST_IOSTREAMS_BROTLI_DEC_TARGET})
+
+endif()
+
 include(CheckCXXSourceCompiles)
 
 function(iostreams_check var source incs libs defs)
@@ -71,7 +121,7 @@ if(BOOST_IOSTREAMS_ENABLE_LZMA)
 
 endif()
 
-message(STATUS "Boost.Iostreams: ZLIB ${BOOST_IOSTREAMS_ENABLE_ZLIB}, BZip2 ${BOOST_IOSTREAMS_ENABLE_BZIP2}, LZMA ${BOOST_IOSTREAMS_ENABLE_LZMA}${_lzma_mt}, Zstd ${BOOST_IOSTREAMS_ENABLE_ZSTD}")
+message(STATUS "Boost.Iostreams: ZLIB ${BOOST_IOSTREAMS_ENABLE_ZLIB}, BZip2 ${BOOST_IOSTREAMS_ENABLE_BZIP2}, LZMA ${BOOST_IOSTREAMS_ENABLE_LZMA}${_lzma_mt}, Zstd ${BOOST_IOSTREAMS_ENABLE_ZSTD}, Brotli ${BOOST_IOSTREAMS_ENABLE_BROTLI}")
 
 unset(_lzma_mt)
 
