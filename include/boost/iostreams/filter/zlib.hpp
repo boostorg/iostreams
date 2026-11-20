@@ -84,6 +84,7 @@ BOOST_IOSTREAMS_DECL extern const int buf_error;
 BOOST_IOSTREAMS_DECL extern const int finish;
 BOOST_IOSTREAMS_DECL extern const int no_flush;
 BOOST_IOSTREAMS_DECL extern const int sync_flush;
+BOOST_IOSTREAMS_DECL extern const int full_flush;
 
                     // Code for current OS
 
@@ -232,6 +233,8 @@ public:
     bool filter( const char*& src_begin, const char* src_end,
                  char*& dest_begin, char* dest_end, bool flush );
     void close();
+    bool force_flush( const char*& src_begin, const char* src_end,
+                 char*& dest_begin, char* dest_end);
 };
 
 //
@@ -360,6 +363,17 @@ bool zlib_compressor_impl<Alloc>::filter
 
 template<typename Alloc>
 void zlib_compressor_impl<Alloc>::close() { reset(true, true); }
+
+template<typename Alloc>
+bool zlib_compressor_impl<Alloc>::force_flush
+    ( const char*& src_begin, const char* src_end,
+      char*& dest_begin, char* dest_end)
+{
+  before(src_begin, src_end, dest_begin, dest_end);
+  int result = xdeflate(zlib::full_flush);
+  after(src_begin, dest_begin, true);
+  return result == zlib::okay;
+}
 
 //------------------Implementation of zlib_decompressor_impl------------------//
 
