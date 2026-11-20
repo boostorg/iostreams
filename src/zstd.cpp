@@ -24,8 +24,8 @@ namespace zstd {
                     // Compression levels
 
 const uint32_t best_speed           = 1;
-const uint32_t best_compression     = 19;
-const uint32_t default_compression  = 3;
+const uint32_t best_compression     = ZSTD_MAX_CLEVEL;
+const uint32_t default_compression  = ZSTD_CLEVEL_DEFAULT;
 
                     // Status codes
 
