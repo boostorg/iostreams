@@ -66,6 +66,7 @@ public: // stream needs access.
 
     // Declared in linked_streambuf.
     T* component() { return storage_.get(); }
+    const T* component() const { return storage_.get(); }
 protected:
     BOOST_IOSTREAMS_USING_PROTECTED_STREAMBUF_MEMBERS(base_type)
     direct_streambuf();

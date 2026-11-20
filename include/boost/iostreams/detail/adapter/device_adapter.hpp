@@ -35,6 +35,7 @@ private:
 public:
     explicit device_adapter(param_type t) : t_(t) { }
     T& component() { return t_; }
+    const T& component() const { return t_; }
 
     void close() 
     {

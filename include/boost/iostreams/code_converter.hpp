@@ -283,7 +283,9 @@ public:
         // Direct device access.
 
     Device& operator*() { return detail::unwrap_direct(dev()); }
+    const Device& operator*() const { return detail::unwrap_direct(dev()); }
     Device* operator->() { return &detail::unwrap_direct(dev()); }
+    const Device* operator->() const { return &detail::unwrap_direct(dev()); }
 private:
     template<typename T> // Used for forwarding.
     void open_impl(const T& t BOOST_IOSTREAMS_CONVERTER_PARAMS()) 

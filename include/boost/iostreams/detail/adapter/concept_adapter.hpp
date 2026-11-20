@@ -68,7 +68,9 @@ public:
     { BOOST_STATIC_ASSERT(!is_std_io<T>::value); }
 
     T& operator*() { return t_; }
+    const T& operator*() const { return t_; }
     T* operator->() { return &t_; }
+    const T* operator->() const { return &t_; }
 
     std::streamsize read(char_type* s, std::streamsize n)
     { return this->read(s, n, (basic_null_source<char_type>*) 0); }
