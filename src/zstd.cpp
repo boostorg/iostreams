@@ -56,7 +56,7 @@ void zstd_error::check BOOST_PREVENT_MACRO_SUBSTITUTION(size_t error)
 namespace detail {
 
 zstd_base::zstd_base()
-    : cstream_(ZSTD_createCStream()), dstream_(ZSTD_createDStream()), in_(new ZSTD_inBuffer), out_(new ZSTD_outBuffer), eof_(0)
+    : cstream_(ZSTD_createCStream()), dstream_(ZSTD_createDStream()), in_(new ZSTD_inBuffer), out_(new ZSTD_outBuffer), eof_(0), level(zstd::default_compression)
     { }
 
 zstd_base::~zstd_base()
