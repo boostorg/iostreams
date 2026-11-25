@@ -184,11 +184,13 @@ struct code_converter_impl {
 
     void close(BOOST_IOS::openmode which)
     {
-        if (which == BOOST_IOS::in && (flags_ & f_input_closed) == 0) {
+        const bool close_input = (which & BOOST_IOS::in) != 0;
+        const bool close_output = (which & BOOST_IOS::out) != 0;
+        if (close_input && (flags_ & f_input_closed) == 0) {
             flags_ |= f_input_closed;
             iostreams::close(dev(), BOOST_IOS::in);
         }
-        if (which == BOOST_IOS::out && (flags_ & f_output_closed) == 0) {
+        if (close_output && (flags_ & f_output_closed) == 0) {
             flags_ |= f_output_closed;
             detail::execute_all(
                 detail::flush_buffer(buf_.second(), dev(), can_write::value),
@@ -197,6 +199,10 @@ struct code_converter_impl {
                 detail::call_reset(buf_.first()),
                 detail::call_reset(buf_.second())
             );
+        }
+
+        if (close_input && close_output) {
+            flags_ &= ~f_open;
         }
     }
 
